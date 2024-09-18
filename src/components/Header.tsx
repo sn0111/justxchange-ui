@@ -15,7 +15,20 @@ export const Header = ()=>{
     </div>
   
     <div className="flex items-center gap-4 flex-1 justify-end">
-      <div className="hidden sm:flex w-full max-w-xs">
+      {/* <div className="flex items-center gap-3">
+          <a className="text-[#141C24] text-sm font-medium leading-normal" href="#">Sell</a>
+          <a className="text-[#141C24] text-sm font-medium leading-normal" href="#">Wishlist</a>
+        </div> */}
+      <div className="md:hidden sm:flex max-w-xs">
+        <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+              ></path>
+            </svg>
+        </button>
+      </div>
+      <div className="hidden md:flex w-full max-w-xs">
         <label className="flex w-full h-10">
           <div className="flex items-center bg-[#f0f2f5] rounded-l-xl pl-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
@@ -30,6 +43,16 @@ export const Header = ()=>{
           />
         </label>
       </div>
+
+      <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
+        <div className="text-[#141C24]" data-icon="Notification" data-size="20px" data-weight="regular">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+            <path
+              d="M216,128v80a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V56A16,16,0,0,1,48,40h80a8,8,0,0,1,0,16H48V208H200V128a8,8,0,0,1,16,0Zm16-68a36,36,0,1,1-36-36A36,36,0,0,1,232,60Zm-16,0a20,20,0,1,0-20,20A20,20,0,0,0,216,60Z"
+            ></path>
+          </svg>
+        </div>
+      </button>
   
       <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
         <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
@@ -49,3 +72,29 @@ export const Header = ()=>{
   </header>
   
 }
+
+/*
+<div className="hidden sm:flex w-full max-w-xs">
+      <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+          <path
+            d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+          ></path>
+        </svg>
+      </button>
+      
+        <label className="flex w-full h-10">
+          <div className="flex items-center bg-[#f0f2f5] rounded-l-xl pl-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+              ></path>
+            </svg>
+          </div>
+          <input
+            placeholder="Search"
+            className="form-input w-full border-none bg-[#f0f2f5] rounded-r-xl pl-2 text-base font-normal leading-normal"
+          />
+        </label>
+      </div>
+*/
