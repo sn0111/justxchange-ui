@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function ViewItem(){
     return <div className="px-40 flex flex-1 justify-center py-5">
     <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
@@ -68,7 +70,7 @@ export default function ViewItem(){
             className="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-10 w-fit"
             style={{backgroundImage: 'url("https://cdn.usegalileo.ai/stability/d7346a7c-e147-4fe0-a4d5-3a030d2d74bf.png");'}}
           ></div>
-          <p className="text-[#0d141c] text-base font-normal leading-normal flex-1 truncate">View seller's profile</p>
+          <p className="text-[#0d141c] text-base font-normal leading-normal flex-1 truncate">View seller&apos;s profile</p>
         </div>
         <div className="shrink-0">
           <div className="text-[#0d141c] flex size-7 items-center justify-center" data-icon="CaretRight" data-size="24px" data-weight="regular">
@@ -79,20 +81,51 @@ export default function ViewItem(){
         </div>
       </div>
       <div className="flex px-4 py-3 justify-end">
-        <button
-          className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#2589f4] text-slate-50 gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
-        >
-          <div className="text-slate-50" data-icon="ChatCircle" data-size="20px" data-weight="regular">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-              <path
-                d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"
-              ></path>
-            </svg>
-          </div>
-          <span className="truncate">Message</span>
-        </button>
+        <div className="px-3">
+          <button
+              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
+            >
+            <div className="text-[#0d141c]" data-icon="Flag" data-size="20px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M34.76,42A8,8,0,0,0,32,48V216a8,8,0,0,0,16,0V171.77c26.79-21.16,49.87-9.75,76.45,3.41,16.4,8.11,34.06,16.85,53,16.85,13.93,0,28.54-4.75,43.82-18a8,8,0,0,0,2.76-6V48A8,8,0,0,0,210.76,42c-28,24.23-51.72,12.49-79.21-1.12C103.07,26.76,70.78,10.79,34.76,42ZM208,164.25c-26.79,21.16-49.87,9.74-76.45-3.41-25-12.35-52.81-26.13-83.55-8.4V51.79c26.79-21.16,49.87-9.75,76.45,3.4,25,12.35,52.82,26.13,83.55,8.4Z"
+                ></path>
+              </svg>
+            </div>
+            <span className="truncate">Report</span>
+          </button>
+        </div>
+        <div className="px-3">
+          <button
+            className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
+          >
+            <div className="text-[#0d141c]" data-icon="Bookmark" data-size="20px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,16V161.57l-51.77-32.35a8,8,0,0,0-8.48,0L72,161.56V48ZM132.23,177.22a8,8,0,0,0-8.48,0L72,209.57V180.43l56-35,56,35v29.14Z"
+                ></path>
+              </svg>
+            </div>
+            <span className="truncate">Save</span>
+          </button>
+        </div>
+        <div className="pl-3">
+          <Link
+          href="/chat"
+            className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#2589f4] text-slate-50 gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
+          >
+            <div className="text-slate-50" data-icon="ChatCircle" data-size="20px" data-weight="regular">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                <path
+                  d="M128,24A104,104,0,0,0,36.18,176.88L24.83,210.93a16,16,0,0,0,20.24,20.24l34.05-11.35A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.54-.67L40,216,52.47,178.6a8,8,0,0,0-.66-6.54A88,88,0,1,1,128,216Z"
+                ></path>
+              </svg>
+            </div>
+            <span className="truncate">Message</span>
+          </Link>
+        </div>
       </div>
-      <div className="flex px-4 py-3 justify-end">
+      {/* <div className="flex px-4 py-3 justify-end">
         <button
           className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
         >
@@ -119,7 +152,7 @@ export default function ViewItem(){
           </div>
           <span className="truncate">Report</span>
         </button>
-      </div>
+      </div> */}
     </div>
   </div>
 }

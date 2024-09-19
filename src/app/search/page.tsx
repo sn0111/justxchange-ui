@@ -2,7 +2,7 @@ export default function Search(){
     return <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden" style={{fontFamily: 'Plus Jakarta Sans", "Noto Sans", sans-serif;'}}>
     <div className="layout-container flex h-full grow flex-col">
       <div className="gap-1 px-6 flex flex-1 justify-center py-5">
-        <div className="layout-content-container flex flex-col w-80">
+        <div className="hidden md:flex layout-content-container flex-col w-80">
           <div className="flex h-full min-h-[700px] flex-col justify-between bg-slate-50 p-4">
             <div className="flex flex-col gap-4">
               <h1 className="text-[#0d141c] text-base font-medium leading-normal">Listings</h1>

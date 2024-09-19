@@ -1,0 +1,45 @@
+/* Chat.css */
+
+/* Animation for expanding and collapsing chat list */
+.chat-list {
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .chat-list-expanded {
+    animation: slideIn 0.3s ease forwards;
+  }
+  
+  .chat-list-collapsed {
+    animation: slideOut 0.3s ease forwards;
+  }
+  
+  /* Slide In Animation */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Slide Out Animation */
+  @keyframes slideOut {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+  }
+  
+  /* Animation for icon hover effect */
+  .chat-icon:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+  

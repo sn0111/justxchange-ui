@@ -1,0 +1,15 @@
+.menu-enter {
+    transform: translateX(-100%);
+  }
+  .menu-enter-active {
+    transform: translateX(0);
+    transition: transform 300ms ease-in-out;
+  }
+  .menu-exit {
+    transform: translateX(0);
+  }
+  .menu-exit-active {
+    transform: translateX(-100%);
+    transition: transform 300ms ease-in-out;
+  }
+  

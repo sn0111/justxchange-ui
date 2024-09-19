@@ -1,4 +1,8 @@
+'use client';
+import { useRouter } from 'next/navigation';
+
 export default function Home() {
+  const router = useRouter();
   return <>
   <div className="@container">
     <div className="p-4">
@@ -39,8 +43,9 @@ export default function Home() {
     ].map((item) => (
       <div key={item.name} className="flex flex-col gap-3 pb-3">
         <div
-          className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+          className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer"
           style={{ backgroundImage: `url("${item.img}")` }}
+          onClick={()=>router.push("/view-item")}
         ></div>
         <div>
           <p className="text-[#111418] text-base font-medium leading-normal">{item.name}</p>

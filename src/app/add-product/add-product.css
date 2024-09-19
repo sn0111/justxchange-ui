@@ -1,0 +1,79 @@
+/* AddProduct.css */
+
+/* Container styles */
+.add-product-container {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #f9fafa;
+  }
+  
+  /* Form group styling */
+  .form-group {
+    margin-bottom: 24px;
+  }
+  
+  /* Input field styles */
+  .input-field {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    margin-bottom: 12px;
+  }
+  
+  /* Photo upload section */
+  .photo-upload-section {
+    display: flex;
+    gap: 12px;
+  }
+  
+  /* Thumbnail styles */
+  .photo-thumbnail {
+    width: 80px;
+    height: 80px;
+    background-size: cover;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+  }
+  
+  /* Category and Condition lists */
+  .category-list,
+  .condition-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  /* Category and condition items */
+  .category-item,
+  .condition-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+  }
+  
+  /* Buttons */
+  .cancel-button {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+  }
+  
+  .submit-button {
+    background: #3b82f6;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background: #2563eb;
+  }
+  
