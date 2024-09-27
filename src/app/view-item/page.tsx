@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { CaretRight, Flag, Bookmark, ChatCircle, CaretLeft, CaretRight as RightIcon } from "phosphor-react";
 
 export default function ViewItem() {

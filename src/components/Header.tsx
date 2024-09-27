@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react';
-import { FaBars, FaTimes, FaSearch, FaBell, FaUserCircle } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSearch, FaUserCircle } from 'react-icons/fa';
 import { CSSTransition } from 'react-transition-group'; // Import CSS Transition
 import './header.css'
 import { AiTwotoneHome } from "react-icons/ai";

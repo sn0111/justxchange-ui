@@ -2,18 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CaretRight, Flag, Bookmark, ChatCircle, CaretLeft, CaretRight as RightIcon } from "phosphor-react";
-
-function useWindowSize() {
-  const [size, setSize] = useState([0, 0]);
-  useEffect(() => {
-    const handleResize = () => setSize([window.innerWidth, window.innerHeight]);
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  return size;
-}
+import { CaretRight, Flag, Bookmark, ChatCircle } from "phosphor-react";
 
 export default function View() {
     const images = [

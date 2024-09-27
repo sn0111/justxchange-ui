@@ -25,7 +25,6 @@ export default function Chat1() {
     setImageWidth(width * 0.8)
     setIsExpanded(width >= 1024); // Expands at lg breakpoint (1024px)
   }, [width]);
-  const [showDetails, setShowDetails] = useState(false);
 
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
