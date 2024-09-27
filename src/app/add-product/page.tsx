@@ -3,7 +3,8 @@ import React from 'react';
 
 export default function AddProduct() {
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-sm">
+    <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
+    <div className="max-w-3xl md:mx-auto px-6 bg-white rounded-lg shadow-sm">
       {/* Title */}
       <h1 className="text-2xl font-semibold mb-6">Add Product</h1>
 
@@ -95,6 +96,7 @@ export default function AddProduct() {
         <button className="text-gray-600 hover:underline">Cancel</button>
         <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">Add Product</button>
       </div>
+    </div>
     </div>
   );
 }

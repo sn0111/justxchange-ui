@@ -45,7 +45,7 @@ export default function Home() {
         <div
           className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer"
           style={{ backgroundImage: `url("${item.img}")` }}
-          onClick={()=>router.push("/view-item")}
+          onClick={()=>router.push("/view")}
         ></div>
         <div>
           <p className="text-[#111418] text-base font-medium leading-normal">{item.name}</p>

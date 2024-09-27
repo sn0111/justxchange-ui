@@ -54,9 +54,9 @@ export const Header = () => {
           </label>
         </div>
 
-        <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
+        {/* <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
           <FaBell className="text-xl" />
-        </button>
+        </button> */}
 
         <FaUserCircle className="text-3xl cursor-pointer" />
 
