@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { FaListAlt, FaUserAlt, FaHeart, FaHistory } from 'react-icons/fa';
 
 export default function ProfilePage() {
@@ -42,13 +43,15 @@ export default function ProfilePage() {
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     className="w-12 h-12 rounded-md object-cover"
                     src="https://via.placeholder.com/50"
                     alt="Dining table and chairs"
-                  ></img>
+                  ></Image>
                   <div>
-                    <p className="text-lg font-medium">Dining table and chairs</p>
+                    <p className="text-lg font-medium">
+                      Dining table and chairs
+                    </p>
                     <p className="text-sm text-gray-500">Listed 3 weeks ago</p>
                   </div>
                 </div>
@@ -57,11 +60,11 @@ export default function ProfilePage() {
 
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     className="w-12 h-12 rounded-md object-cover"
                     src="https://via.placeholder.com/50"
                     alt="Macbook Pro 2018"
-                    ></img>
+                  ></Image>
                   <div>
                     <p className="text-lg font-medium">Macbook Pro 2018</p>
                     <p className="text-sm text-gray-500">Listed 2 weeks ago</p>
@@ -72,11 +75,11 @@ export default function ProfilePage() {
 
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     className="w-12 h-12 rounded-md object-cover"
                     src="https://via.placeholder.com/50"
                     alt="Mountain bike"
-                    ></img>
+                  ></Image>
                   <div>
                     <p className="text-lg font-medium">Mountain bike</p>
                     <p className="text-sm text-gray-500">Listed 1 week ago</p>
@@ -87,11 +90,11 @@ export default function ProfilePage() {
 
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     className="w-12 h-12 rounded-md object-cover"
                     src="https://via.placeholder.com/50"
                     alt="Sofa set"
-                    ></img>
+                  ></Image>
                   <div>
                     <p className="text-lg font-medium">Sofa set</p>
                     <p className="text-sm text-gray-500">Listed 4 days ago</p>
