@@ -1,7 +1,7 @@
 import { ICategory } from "@/interface";
 
 interface IAddProduct {
-  images: String[];
+  images: string[];
   categories: ICategory[];
   formState: {
     productName: string;

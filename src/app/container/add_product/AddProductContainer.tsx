@@ -2,7 +2,6 @@ import { AddProduct } from '@/app/_components/add_product';
 import { ICategory, IProduct } from '@/interface';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
-import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
 const AddProductContainer = () => {
@@ -15,8 +14,8 @@ const AddProductContainer = () => {
     userId: 1,
   });
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [product, setProduct] = useState<IProduct>();
-  const [images, setImages] = useState<String[]>(['', '', '', '', '']);
+//   const [product, setProduct] = useState<IProduct>();
+  const [images, setImages] = useState<string[]>(['', '', '', '', '']);
   const [imageIndex, setImageIndex] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -118,7 +117,7 @@ const AddProductContainer = () => {
       // setIsLoading(true);
       const responseData: { data: IProduct } = await makeRequest(config);
       if (responseData) {
-        setProduct(responseData.data);
+        // setProduct(responseData.data);
         setFormState({
           productName: '',
           description: '',
