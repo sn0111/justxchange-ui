@@ -1,16 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { CaretRight, Flag, Bookmark, ChatCircle } from 'phosphor-react';
+import { IProduct } from '@/interface';
 
 interface IProductDetails {
-  images: string[];
+  product: IProduct;
   currentIndex: number;
   goToPrevious: () => void;
   goToNext: () => void;
 }
 
 const ProductDetails = ({
-  images,
+  product,
   currentIndex,
   goToPrevious,
   goToNext,
@@ -18,13 +19,13 @@ const ProductDetails = ({
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
       <h2 className="pl-6 text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em]">
-        Dorm Bedding Set
+        {product?.productName}
       </h2>
       <div className="flex flex-col md:flex-row w-full p-6">
         <div
           className="relative md:h-full w-[100%] md:w-2/3 bg-center bg-no-repeat bg-cover aspect-[3/2] rounded-xl"
           style={{
-            backgroundImage: `url(${images[currentIndex]})`,
+            backgroundImage: `url(${product?.images && product?.images[currentIndex]})`,
           }}
         >
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
@@ -34,12 +35,14 @@ const ProductDetails = ({
             ></button>
 
             {/* You can map through the images array to dynamically create dots if needed */}
-            {images.map((_, index) => (
-              <span
-                key={index}
-                className={`w-3 h-3 rounded-full ${currentIndex === index ? 'bg-gray-500' : 'bg-gray-300'}`}
-              ></span>
-            ))}
+
+            {product?.images &&
+              product.images.map((_, index) => (
+                <span
+                  key={index}
+                  className={`w-3 h-3 rounded-full ${currentIndex === index ? 'bg-gray-500' : 'bg-gray-300'}`}
+                ></span>
+              ))}
 
             <button
               onClick={goToNext}
@@ -50,8 +53,7 @@ const ProductDetails = ({
 
         <div className="layout-content-container flex flex-col md:w-1/3 flex-1 mt-4 md:mt-0 md:ml-6">
           <p className="text-[#0d141c] text-base font-normal leading-normal pb-3 pt-2 px-4">
-            Brand new, never used. Twin XL comforter, sheet set, and pillow
-            case.
+            {product?.description}
           </p>
 
           <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:gap-4">
@@ -60,7 +62,7 @@ const ProductDetails = ({
                 Price
               </p>
               <p className="text-[#0d141c] text-sm font-normal leading-normal">
-                $50
+                {product?.amount}
               </p>
             </div>
             <div className="flex flex-col gap-1 border-t border-solid border-t-[#cedbe8] py-4 pl-2">
@@ -68,7 +70,7 @@ const ProductDetails = ({
                 Condition
               </p>
               <p className="text-[#0d141c] text-sm font-normal leading-normal">
-                New
+                {product?.condition}
               </p>
             </div>
             <div className="flex flex-col gap-1 border-t border-solid border-t-[#cedbe8] py-4 pr-2">
@@ -103,7 +105,7 @@ const ProductDetails = ({
                 className="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-10 w-10"
                 style={{
                   backgroundImage:
-                    'url("https://cdn.usegalileo.ai/stability/d7346a7c-e147-4fe0-a4d5-3a030d2d74bf.png");',
+                    'url("https://cdn.usegalileo.ai/stability/d7346a7c-e147-4fe0-a4d5-3a030d2d74bf.png")',
                 }}
               ></div>
               <p className="text-[#0d141c] text-base font-normal leading-normal flex-1 truncate">

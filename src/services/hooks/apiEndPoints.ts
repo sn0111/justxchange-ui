@@ -1,5 +1,11 @@
 export const API_ENDPOINTS = {
-  viewProduct: {
-    getProduct: (id: string) => `/product/${id}`,
+  product: {
+    getProductById: (id: string) => `/api/products/${id}`,
+    getImage: () => `/api/upload-image`,
+    addProduct: () => `/api/products`,
+    getProduct: () => `/api/products`,
+  },
+  category: {
+    getCategories: () => `/api/categories`,
   },
 };

@@ -1,1 +1,4 @@
-//create interfaces in this folder and import those here
+export * from "./ICategory";
+export * from "./IProduct";
+
+
