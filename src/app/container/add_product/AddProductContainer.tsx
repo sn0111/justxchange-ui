@@ -1,5 +1,7 @@
 import { AddProduct } from '@/app/_components/add_product';
+import LoaderComponent from '@/components/LoaderComponent';
 import { ICategory, IProduct } from '@/interface';
+import { notifyError, notifySuccess } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { useEffect, useRef, useState } from 'react';
@@ -14,10 +16,11 @@ const AddProductContainer = () => {
     userId: 1,
   });
   const [categories, setCategories] = useState<ICategory[]>([]);
-//   const [product, setProduct] = useState<IProduct>();
+  //   const [product, setProduct] = useState<IProduct>();
   const [images, setImages] = useState<string[]>(['', '', '', '', '']);
   const [imageIndex, setImageIndex] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     getCategories();
@@ -30,7 +33,7 @@ const AddProductContainer = () => {
       url: url,
     };
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const responseData: { data: ICategory[] } = await makeRequest(config);
       if (responseData) {
         setCategories(responseData.data);
@@ -42,7 +45,7 @@ const AddProductContainer = () => {
       //   error.msg || Messages.somethingWentWrong
       // );
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -85,28 +88,26 @@ const AddProductContainer = () => {
     };
 
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const responseData: { data: { imageUrl: string } } =
         await makeRequest(config);
       if (responseData) {
         const newImages = [...images];
         newImages[imageIndex] = responseData.data.imageUrl;
         setImages(newImages);
+        notifySuccess('Image uploaded successfully');
       }
     } catch (err) {
       console.log(err);
-      // const error = err as ;
-      // toast.error(
-      //   error.msg || Messages.somethingWentWrong
-      // );
+      notifyError('Image upload failed');
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   const addProduct = async () => {
     const url = API_ENDPOINTS.product.addProduct();
-    const body = { ...formState, images: images.filter(img => img!='') };
+    const body = { ...formState, images: images.filter((img) => img != '') };
     console.log(body);
     const config = {
       method: 'post',
@@ -114,10 +115,9 @@ const AddProductContainer = () => {
       data: body,
     };
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const responseData: { data: IProduct } = await makeRequest(config);
       if (responseData) {
-        // setProduct(responseData.data);
         setFormState({
           productName: '',
           description: '',
@@ -127,20 +127,19 @@ const AddProductContainer = () => {
           userId: 1,
         });
         setImages(['', '', '', '', '']);
+        notifySuccess('Product added succesfully');
       }
     } catch (err) {
       console.log(err);
-      // const error = err as ;
-      // toast.error(
-      //   error.msg || Messages.somethingWentWrong
-      // );
+        notifyError('Failed to add product');
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div>
+      {isLoading && <LoaderComponent />}
       <AddProduct
         images={images}
         categories={categories}

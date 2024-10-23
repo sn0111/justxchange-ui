@@ -3,6 +3,7 @@ import {
   ListCategories,
   ListProducts,
 } from '@/app/_components/home';
+import LoaderComponent from '@/components/LoaderComponent';
 import { ICategory, IProduct } from '@/interface';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
@@ -13,6 +14,7 @@ const HomeContainer = () => {
   const router = useRouter();
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     getCategories();
@@ -26,7 +28,7 @@ const HomeContainer = () => {
       url: url,
     };
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const responseData: { data: ICategory[] } = await makeRequest(config);
       if (responseData) {
         setCategories(responseData.data);
@@ -38,7 +40,7 @@ const HomeContainer = () => {
       //   error.msg || Messages.somethingWentWrong
       // );
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -49,7 +51,7 @@ const HomeContainer = () => {
       url: url,
     };
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const responseData: { data: IProduct[] } = await makeRequest(config);
       if (responseData) {
         setProducts(responseData.data);
@@ -61,12 +63,13 @@ const HomeContainer = () => {
       //   error.msg || Messages.somethingWentWrong
       // );
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div>
+      {isLoading && <LoaderComponent/>}
       <ImageView />
       <ListCategories categories={categories} />
       <ListProducts router={router} products={products} />

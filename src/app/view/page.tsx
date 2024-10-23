@@ -1,7 +1,10 @@
 'use client';
 
+import withAuth from '@/lib/auth/withAuth';
 import { ProductViewContainer } from '../container/product_view';
 
-export default function View() {
+function View() {
   return <ProductViewContainer />;
 }
+
+export default withAuth(View);

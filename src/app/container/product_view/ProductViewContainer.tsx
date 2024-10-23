@@ -1,4 +1,5 @@
 import { ProductDetails } from '@/app/_components/product_view';
+import LoaderComponent from '@/components/LoaderComponent';
 import { IProduct } from '@/interface';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
@@ -8,6 +9,7 @@ import { useEffect, useState } from 'react';
 const ProductViewContainer = () => {
   // variables , api calls, function declarations should be in this file
   const [product, setProduct] = useState<IProduct>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     console.log(localStorage.getItem('productId'));
@@ -23,7 +25,7 @@ const ProductViewContainer = () => {
       url: url,
     };
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const responseData: { data: IProduct } = await makeRequest(config);
       if (responseData) {
         setProduct(responseData.data);
@@ -35,7 +37,7 @@ const ProductViewContainer = () => {
       //   error.msg || Messages.somethingWentWrong
       // );
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +77,7 @@ const ProductViewContainer = () => {
         product details and profile - component <ProductDetails />
       </div>
       <div>product action footer</div> */}
-
+      {isLoading && <LoaderComponent />}
       {product && (
         <ProductDetails
           product={product}

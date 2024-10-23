@@ -1,8 +1,11 @@
 'use client';
+import withAuth from '@/lib/auth/withAuth';
 import { HomeContainer } from './container/home';
 
-export default function Home() {
+function Home() {
   return (
     <HomeContainer />
   );
 }
+
+export default withAuth(Home)

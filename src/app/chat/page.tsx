@@ -1,8 +1,11 @@
 'use client';
+import withAuth from '@/lib/auth/withAuth';
 import { ChatViewContainer } from '../container/chat_view';
 
-export default function Chat() {
+function Chat() {
   return (
     <ChatViewContainer/>
   );
 }
+
+export default withAuth(Chat);

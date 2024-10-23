@@ -1,7 +1,10 @@
+import withAuth from '@/lib/auth/withAuth';
 import { ProfileContainer } from '../container/profile_view';
 
-export default function ProfilePage() {
+function ProfilePage() {
   return (
     <ProfileContainer/>
   );
 }
+
+export default withAuth(ProfilePage);

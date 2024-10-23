@@ -25,7 +25,7 @@ const ChatViewContainer = () => {
   }, [width]);
   return (
     <div>
-      <ChatView isExpanded={isExpanded} imageWidth={imageWidth}/>
+      <ChatView isExpanded={isExpanded} imageWidth={imageWidth} />
     </div>
   );
 };

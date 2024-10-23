@@ -1,8 +1,11 @@
 'use client';
+import withAuth from '@/lib/auth/withAuth';
 import { SearchProductsContainer } from '../container/search_product';
 
-export default function Search() {
+function Search() {
   return (
     <SearchProductsContainer/>
   );
 }
+
+export default withAuth(Search);

@@ -31,8 +31,8 @@ const AddProduct = ({
   addProduct,
 }: IAddProduct) => {
   return (
-    <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
-      <div className="max-w-3xl md:mx-auto px-6 bg-white rounded-lg shadow-sm">
+    <div className="relative flex size-full py-4 min-h-screen flex-col bg-slate-50 group/design-root">
+      <div className="max-w-3xl md:mx-auto p-6 bg-white rounded-lg shadow-sm">
         <h1 className="text-2xl font-semibold mb-6">Add Product</h1>
 
         <div className="space-y-4 mb-6">

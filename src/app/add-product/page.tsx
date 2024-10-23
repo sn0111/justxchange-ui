@@ -1,7 +1,10 @@
 'use client';
 import React from 'react';
 import { AddProductContainer } from '../container/add_product';
+import withAuth from '@/lib/auth/withAuth';
 
-export default function AddProduct() {
+function AddProduct() {
   return <AddProductContainer/>
 }
+
+export default withAuth(AddProduct);

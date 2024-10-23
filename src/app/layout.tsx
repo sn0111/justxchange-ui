@@ -3,6 +3,9 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { AuthProvider } from './context/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const geistSans = localFont({
   src: '../public/fonts/GeistVF.woff',
@@ -30,13 +33,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        <div className="px-4 md:px-10 lg:px-40 xl:px-60 2xl:px-96 justify-center py-5">
-          <div className="layout-content-container flex flex-col max-w-[1150px] flex-1">
-            {children}
+        <AuthProvider>
+          <Header />
+          <div className="px-4 md:px-10 lg:px-40 xl:px-60 2xl:px-96 justify-center py-5">
+            <div className="layout-content-container flex flex-col max-w-[1150px] flex-1">
+              {children}
+            </div>
           </div>
-        </div>
-        <Footer />
+          <Footer />
+          <ToastContainer />
+        </AuthProvider>
       </body>
     </html>
   );
