@@ -1,16 +1,18 @@
-'use client'
+'use client';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
   const AuthenticatedComponent = (props: any) => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, login } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-      if (!isAuthenticated) {
+      if (!isAuthenticated && localStorage.getItem('token') === '') {
         router.replace('/login');
+      } else {
+        login(localStorage.getItem('token') || '');
       }
     }, [isAuthenticated, router]);
 

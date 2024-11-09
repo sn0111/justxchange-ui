@@ -1,18 +1,20 @@
-// components/Login.tsx
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Link from 'next/link'; // Import Link from Next.js
+import Link from 'next/link';
 import { useAuth } from '@/app/context/AuthContext';
+import { useState } from 'react';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { useRouter } from 'next/navigation';
 
 interface LoginFormValues {
-  email: string;
+  mobileNumber: string;
   password: string;
 }
 
 const loginSchema = yup.object().shape({
-  email: yup.string().email('Invalid email').required('Email is required'),
+  mobileNumber: yup.string().required('Mobile Number is required'),
   password: yup
     .string()
     .min(6, 'Password must be at least 6 characters')
@@ -21,6 +23,8 @@ const loginSchema = yup.object().shape({
 
 const Login = () => {
   const { login } = useAuth();
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -33,7 +37,12 @@ const Login = () => {
     // Simulate API call
     setTimeout(() => {
       login('dummyToken');
+      router.push('/');
     }, 1000);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -46,25 +55,39 @@ const Login = () => {
       <h1 className="text-2xl font-bold mb-6">Login</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <input
-          {...register('email')}
-          placeholder="Email"
-          className="w-full p-3 mb-4 border rounded-lg"
+          {...register('mobileNumber')}
+          placeholder="Mobile number"
+          className="w-full p-2 mb-2 border rounded-lg"
         />
-        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+        {errors.mobileNumber && (
+          <p className="text-red-500">{errors.mobileNumber.message}</p>
+        )}
 
-        <input
-          type="password"
-          {...register('password')}
-          placeholder="Password"
-          className="w-full p-3 mb-4 border rounded-lg"
-        />
+        <div className="relative w-full">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            {...register('password')}
+            placeholder="Password"
+            className="w-full p-2 mb-2 border rounded-lg"
+          />
+          <div
+            className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? (
+              <AiOutlineEyeInvisible className="w-5 h-5 text-gray-500" />
+            ) : (
+              <AiOutlineEye className="w-5 h-5 text-gray-500" />
+            )}
+          </div>
+        </div>
         {errors.password && (
           <p className="text-red-500">{errors.password.message}</p>
         )}
 
         <button
           type="submit"
-          className="w-full p-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+          className="w-full p-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
         >
           Login
         </button>
