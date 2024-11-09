@@ -9,8 +9,10 @@ import Link from 'next/link';
 interface SignupFormValues {
   mobile?: string;
   otp?: string;
+  password: string;
   name?: string;
   email?: string;
+  college?: string;
 }
 
 const mobileSchema = yup.object().shape({
@@ -30,6 +32,7 @@ const otpSchema = yup.object().shape({
 const profileSchema = yup.object().shape({
   name: yup.string().required('Name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
+  college: yup.string().required('College is required'),
 });
 
 const Signup = () => {
@@ -80,7 +83,7 @@ const Signup = () => {
         <input
           {...register('mobile')}
           placeholder="Mobile Number"
-          className="w-full p-3 mb-4 border rounded-lg"
+          className="w-full p-2 border rounded-lg"
         />
         {errors.mobile && (
           <p className="text-red-500">{errors.mobile.message}</p>
@@ -89,7 +92,7 @@ const Signup = () => {
         {step === 1 && ( // Show "Send OTP" button only at step 1
           <button
             type="submit"
-            className="w-full p-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            className="w-full mt-2 p-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
           >
             Send OTP
           </button>
@@ -100,14 +103,14 @@ const Signup = () => {
             <input
               {...register('otp')}
               placeholder="Enter OTP"
-              className="w-full p-3 mb-4 border rounded-lg"
+              className="w-full p-2 mt-2 border rounded-lg"
             />
             {errors.otp && <p className="text-red-500">{errors.otp.message}</p>}
 
             {step != 3 && (
               <button
                 type="submit"
-                className="w-full p-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                className="w-full p-2 mt-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
               >
                 Verify OTP
               </button>
@@ -125,9 +128,18 @@ const Signup = () => {
               className="w-full"
             >
               <input
+                {...register('password')}
+                placeholder="password"
+                className="w-full p-2 mt-2 border rounded-lg"
+              />
+              {errors.password && (
+                <p className="text-red-500">{errors.password.message}</p>
+              )}
+
+              <input
                 {...register('name')}
                 placeholder="Full Name"
-                className="w-full p-3 mb-4 border rounded-lg"
+                className="w-full p-2 mt-2 border rounded-lg"
               />
               {errors.name && (
                 <p className="text-red-500">{errors.name.message}</p>
@@ -136,15 +148,24 @@ const Signup = () => {
               <input
                 {...register('email')}
                 placeholder="Email"
-                className="w-full p-3 mb-4 border rounded-lg"
+                className="w-full p-2 mt-2 border rounded-lg"
               />
               {errors.email && (
                 <p className="text-red-500">{errors.email.message}</p>
               )}
+
+              <input
+                {...register('college')}
+                placeholder="College"
+                className="w-full p-2 mt-2 border rounded-lg"
+              />
+              {errors.college && (
+                <p className="text-red-500">{errors.college.message}</p>
+              )}    
             </motion.div>
             <button
               type="submit"
-              className="w-full p-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+              className="w-full p-2 mt-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
             >
               Create Profile
             </button>

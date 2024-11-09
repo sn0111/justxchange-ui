@@ -1,3 +1,4 @@
+'use client'
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -9,7 +10,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
 
     useEffect(() => {
       if (!isAuthenticated) {
-        router.push('/login');
+        router.replace('/login');
       }
     }, [isAuthenticated, router]);
 
