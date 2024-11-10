@@ -118,23 +118,23 @@ const ProductDetails = ({
           </div>
         </div>
       </div>
-      <div className="flex px-4 py-3 justify-end">
-        <div className="px-3">
-          <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]">
+      <div className="flex-row sm:flex px-4 py-3 justify-end">
+        <div className="pb-2 pr-2 sm:px-2 flex">
+          <button className="flex min-w-[84px] ml-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]">
             <Flag size={20} color="#0d141c" />
             <span className="truncate">Report</span>
           </button>
         </div>
-        <div className="px-3">
-          <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]">
+        <div className="pb-2 pr-2 sm:px-2">
+          <button className="flex min-w-[84px] ml-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]">
             <Bookmark size={20} color="#0d141c" />
             <span className="truncate">Save</span>
           </button>
         </div>
-        <div className="px-3">
+        <div className="pr-2 sm:px-2">
           <Link
             href="/chat"
-            className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#2589f4] text-white gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
+            className="flex w-[130px] ml-auto cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#2589f4] text-white gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
           >
             <ChatCircle size={20} color="white" />
             <span className="truncate">Message</span>

@@ -11,7 +11,7 @@ const ImageView = () => {
         >
           <div className="flex flex-col gap-2 text-left">
             <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-black leading-tight tracking-[-0.033em]">
-              Welcome to Campus Bazaar
+              Welcome to JustXchange
             </h1>
             <h2 className="text-white text-base md:text-lg font-normal leading-normal">
               Buy, sell, and exchange anything on your campus

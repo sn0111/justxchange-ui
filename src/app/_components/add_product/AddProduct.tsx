@@ -1,4 +1,6 @@
-import { ICategory } from "@/interface";
+import { ICategory } from '@/interface';
+import { motion, AnimatePresence } from 'framer-motion';
+import { AiOutlineClose } from 'react-icons/ai';
 
 interface IAddProduct {
   images: string[];
@@ -6,10 +8,10 @@ interface IAddProduct {
   formState: {
     productName: string;
     description: string;
-    amount: string;
+    amount: number;
     categoryId: number;
     condition: string;
-    userId: number
+    userId: number;
   };
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleDivClick: (index: number) => void;
@@ -18,6 +20,10 @@ interface IAddProduct {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   addProduct: () => void;
+  handleRemoveImage: (index: number) => void;
+  viewImageModal: boolean;
+  selectedImage: string;
+  closeImageModal: () => void;
 }
 
 const AddProduct = ({
@@ -29,6 +35,10 @@ const AddProduct = ({
   handleFileChange,
   handleInputChange,
   addProduct,
+  handleRemoveImage,
+  viewImageModal,
+  selectedImage,
+  closeImageModal,
 }: IAddProduct) => {
   return (
     <div className="relative flex size-full py-4 min-h-screen flex-col bg-slate-50 group/design-root">
@@ -56,21 +66,30 @@ const AddProduct = ({
         <div className="mb-6">
           <label className="block text-lg font-medium mb-2">Photos</label>
           <p className="text-sm text-gray-500 mb-3">Add up to 5 photos</p>
-          <div className="flex space-x-3">
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5">
             {images.map((img, index) => (
               <div
                 key={index}
-                className="w-20 h-20 bg-center bg-cover rounded-lg border border-gray-300 cursor-pointer"
+                className="relative w-20 h-20 sm:w-20 sm:h-20 bg-center bg-cover rounded-lg border border-gray-300 cursor-pointer"
                 style={{ backgroundImage: `url(${img})` }}
                 onClick={() => handleDivClick(index)}
-              ></div>
+              >
+                <AiOutlineClose
+                  className="absolute -top-1 -right-1 text-white bg-black rounded-full p-1 cursor-pointer"
+                  size={16}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents triggering onClick of the parent div
+                    handleRemoveImage(index);
+                  }}
+                />
+              </div>
             ))}
             <input
               type="file"
-              accept="image/*" // Allow only image files
-              style={{ display: 'none' }} // Hide the input
-              ref={fileInputRef} // Reference to trigger click
-              onChange={handleFileChange} // Handle file change
+              accept="image/*"
+              style={{ display: 'none' }}
+              ref={fileInputRef}
+              onChange={handleFileChange}
             />
           </div>
         </div>
@@ -96,7 +115,36 @@ const AddProduct = ({
             ))}
           </div>
         </div>
-
+        <AnimatePresence>
+          {viewImageModal && (
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="relative max-w-md mx-auto bg-white rounded-lg overflow-hidden"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.8 }}
+                transition={{ duration: 0.3 }}
+              >
+                <button
+                  onClick={closeImageModal}
+                  className="absolute top-3 right-3 p-1 bg-black bg-opacity-70 rounded-full text-white"
+                >
+                  <AiOutlineClose size={20} />
+                </button>
+                <img
+                  src={selectedImage}
+                  alt="Selected"
+                  className="w-full h-auto"
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="mb-6">
           <label className="block text-lg font-medium mb-2">Condition</label>
           <div className="grid grid-cols-2 gap-3">
@@ -127,7 +175,7 @@ const AddProduct = ({
           </label>
           <div className="flex space-x-4">
             <input
-              type="text"
+              type="number"
               name="amount"
               value={formState.amount}
               placeholder="Price"

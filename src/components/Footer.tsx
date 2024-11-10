@@ -5,12 +5,12 @@ export const Footer = () => {
         {/* About Section */}
         <div>
           <h3 className="text-lg font-semibold text-[#111418]">
-            About Campus Bazaar
+            About JustXchange
           </h3>
           <p className="mt-4 text-sm text-[#60758a]">
-            Campus Bazaar is the go-to platform for students to buy, sell, and
+            JustXchange is the go-to platform for students to buy, sell, and
             exchange goods and services. Join a community where you can find the
-            best deals on campus essentials.
+            best deals on student essentials.
           </p>
         </div>
 
@@ -118,7 +118,7 @@ export const Footer = () => {
       </div>
 
       <div className="mt-8 border-t border-solid border-[#e4e4e4] pt-4 text-center text-sm text-[#60758a]">
-        <p>&copy; 2024 Campus Bazaar. All rights reserved.</p>
+        <p>&copy; 2024 JustXchange. All rights reserved.</p>
       </div>
     </footer>
   );

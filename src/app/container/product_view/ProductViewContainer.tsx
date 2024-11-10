@@ -72,11 +72,6 @@ const ProductViewContainer = () => {
 
   return (
     <div>
-      {/* example format for view layout - <div>product image </div>
-      <div>
-        product details and profile - component <ProductDetails />
-      </div>
-      <div>product action footer</div> */}
       {isLoading && <LoaderComponent />}
       {product && (
         <ProductDetails

@@ -15,6 +15,7 @@ const HomeContainer = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectCategory, setSelectCategory] = useState<number>(0);
 
   useEffect(() => {
     getCategories();
@@ -67,11 +68,39 @@ const HomeContainer = () => {
     }
   };
 
+  const handleSelectCategory = async (id: number) => {
+    setSelectCategory(id);
+    const url = API_ENDPOINTS.product.getProductByCategory(id);
+    const config = {
+      method: 'get',
+      url: url,
+    };
+    try {
+      setIsLoading(true);
+      const responseData: { data: IProduct[] } = await makeRequest(config);
+      if (responseData) {
+        setProducts(responseData.data);
+      }
+    } catch (err) {
+      console.log(err);
+      // const error = err as ;
+      // toast.error(
+      //   error.msg || Messages.somethingWentWrong
+      // );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
-      {isLoading && <LoaderComponent/>}
+      {isLoading && <LoaderComponent />}
       <ImageView />
-      <ListCategories categories={categories} />
+      <ListCategories
+        categories={categories}
+        selectCategory={selectCategory}
+        handleSelectCategory={handleSelectCategory}
+      />
       <ListProducts router={router} products={products} />
     </div>
   );

@@ -10,7 +10,7 @@ const AddProductContainer = () => {
   const [formState, setFormState] = useState({
     productName: '',
     description: '',
-    amount: '',
+    amount: 0.0,
     categoryId: 0,
     condition: '',
     userId: 1,
@@ -21,6 +21,8 @@ const AddProductContainer = () => {
   const [imageIndex, setImageIndex] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [viewImageModal, setShowImageModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
 
   useEffect(() => {
     getCategories();
@@ -50,10 +52,20 @@ const AddProductContainer = () => {
   };
 
   const handleDivClick = (index: number) => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-      setImageIndex(index);
+    if (images[index] !== '') {
+      setSelectedImage(images[index]);
+      setShowImageModal(true);
+    } else {
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+        setImageIndex(index);
+      }
     }
+  };
+
+  const closeImageModal = () => {
+    setShowImageModal(false);
+    setSelectedImage('');
   };
 
   // Function to handle the file upload (onChange event)
@@ -89,11 +101,12 @@ const AddProductContainer = () => {
 
     try {
       setIsLoading(true);
-      const responseData: { data: { imageUrl: string } } =
+      const responseData: { imageUrl: string; message: string } =
         await makeRequest(config);
+      console.log(responseData);
       if (responseData) {
         const newImages = [...images];
-        newImages[imageIndex] = responseData.data.imageUrl;
+        newImages[imageIndex] = responseData.imageUrl;
         setImages(newImages);
         notifySuccess('Image uploaded successfully');
       }
@@ -116,25 +129,31 @@ const AddProductContainer = () => {
     };
     try {
       setIsLoading(true);
-      const responseData: { data: IProduct } = await makeRequest(config);
+      const responseData: { data: IProduct; message: string } =
+        await makeRequest(config);
       if (responseData) {
         setFormState({
           productName: '',
           description: '',
-          amount: '',
+          amount: 0.0,
           categoryId: 0,
           condition: '',
           userId: 1,
         });
         setImages(['', '', '', '', '']);
-        notifySuccess('Product added succesfully');
+        notifySuccess(responseData.message);
       }
-    } catch (err) {
-      console.log(err);
-        notifyError('Failed to add product');
+    } catch (err: any) {
+      console.log(err.response);
+      notifyError(err.response.data.error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = images.filter((_, i) => i !== index);
+    setImages(updatedImages);
   };
 
   return (
@@ -149,6 +168,10 @@ const AddProductContainer = () => {
         handleFileChange={handleFileChange}
         handleInputChange={handleInputChange}
         addProduct={addProduct}
+        handleRemoveImage={handleRemoveImage}
+        viewImageModal={viewImageModal}
+        selectedImage={selectedImage}
+        closeImageModal={closeImageModal}
       />
     </div>
   );

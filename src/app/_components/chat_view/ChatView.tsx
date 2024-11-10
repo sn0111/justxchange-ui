@@ -272,7 +272,7 @@ const ChatView = ({ isExpanded, imageWidth }: IChatView) => {
 
             <div className="flex flex-1 items-center bg-[#E4E9F1] rounded-xl px-4">
               <textarea
-                placeholder="Type a message"
+                placeholder="Type here"
                 className="form-input w-full flex-1 resize-none overflow-hidden text-[#141C24] bg-[#E4E9F1] placeholder:text-[#3F5374] rounded-xl focus:outline-none focus:ring-0 border-none h-12 max-h-32"
                 rows={1}
                 onInput={(e) => {
