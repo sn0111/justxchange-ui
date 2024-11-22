@@ -1,10 +1,15 @@
 export interface IProduct {
-    productId?: number;
-    productName: string;
-    description: string;
-    amount: number;
-    categoryId: number;
-    userId: number;
-    images?: string[];
-    condition: string;
+  id: string;
+  productId: number;
+  description: string;
+  productName: string;
+  amount: number;
+  categoryId: number;
+  userId: number;
+  images: string[];
+  condition: string | null;
+  createdDate: string;
+  updatedDate: string;
+  createdBy: number;
+  updatedBy: number;
 }

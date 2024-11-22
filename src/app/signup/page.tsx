@@ -1,13 +1,14 @@
 'use client';
-import Signup from '@/components/Signup';
+import { SignUpContainer } from '../_components/signup';
 
 const SignupPage = () => {
   return (
     <div
       className="flex-grow flex items-center justify-center p-4 bg-gray-100"
-      style={{ height: '70vh' }}
+      style={{ minHeight: '70vh' }}
     >
-      <Signup />
+      {/* <Signup /> */}
+      <SignUpContainer />
     </div>
   );
 };

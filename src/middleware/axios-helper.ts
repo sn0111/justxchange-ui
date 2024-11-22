@@ -15,6 +15,7 @@ export const makeRequest = async (options: AxiosRequestConfig) => {
       headers: {
         // 'Content-Type': headers?.['Content-Type'] || 'application/json', // Default to JSON
         ...headers,
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
       ...restOptions,
     });

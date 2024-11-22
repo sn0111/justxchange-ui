@@ -1,5 +1,6 @@
-"use client"
-import Login from "@/components/Login";
+'use client';
+
+import { LoginContainer } from '../container/login';
 
 const LoginPage = () => {
   return (
@@ -7,7 +8,8 @@ const LoginPage = () => {
       className="flex-grow flex items-center justify-center p-4 bg-gray-100"
       style={{ height: '60vh' }}
     >
-      <Login />
+      {/* <Login /> */}
+      <LoginContainer />
     </div>
   );
 };

@@ -121,7 +121,6 @@ const AddProductContainer = () => {
   const addProduct = async () => {
     const url = API_ENDPOINTS.product.addProduct();
     const body = { ...formState, images: images.filter((img) => img != '') };
-    console.log(body);
     const config = {
       method: 'post',
       url: url,
@@ -145,7 +144,7 @@ const AddProductContainer = () => {
       }
     } catch (err: any) {
       console.log(err.response);
-      notifyError(err.response.data.error);
+      notifyError(err.response.data.exceptionMessage);
     } finally {
       setIsLoading(false);
     }

@@ -1,6 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { FaBars, FaTimes, FaSearch, FaUserCircle } from 'react-icons/fa';
+import {
+  FaBars,
+  FaTimes,
+  FaSearch,
+  FaUserCircle,
+  FaSignOutAlt,
+} from 'react-icons/fa';
 import { CSSTransition } from 'react-transition-group'; // Import CSS Transition
 import { AiTwotoneHome } from 'react-icons/ai';
 import { LiaSellcast } from 'react-icons/lia';
@@ -11,7 +17,7 @@ import { useAuth } from '@/app/context/AuthContext';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   // Toggle function to handle menu visibility
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -63,6 +69,11 @@ export const Header = () => {
             </div>
 
             <FaUserCircle className="text-3xl cursor-pointer" />
+
+            <FaSignOutAlt
+              className="text-3xl cursor-pointer"
+              onClick={logout}
+            />
 
             {!isMenuOpen && (
               <div className="md:hidden items-center gap-4 text-[#111418]">
@@ -135,6 +146,12 @@ export const Header = () => {
               <IoIosHeartEmpty className="text-xl" />
               <a href="#" className="text-sm font-medium">
                 Whishlist
+              </a>
+            </li>
+            <li className="flex items-center gap-3">
+              <FaSignOutAlt className="text-3xl cursor-pointer" />
+              <a href="#" className="text-sm font-medium" onClick={logout}>
+                Logout
               </a>
             </li>
           </ul>

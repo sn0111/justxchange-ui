@@ -10,4 +10,15 @@ export const API_ENDPOINTS = {
   category: {
     getCategories: () => `/categories`,
   },
+  chat: {
+    createChat: () => `/chat`,
+    getChats: () => `/chats`,
+    sendMessage: () => `/message`,
+  },
+  auth: {
+    loginUser: () => `/login-user`,
+    saveUser: () => `/save-user`,
+    sendOtp: (mobileNumber: string) => `/signup/${mobileNumber}`,
+    verifyOtp: () => `/verify-otp`,
+  },
 };

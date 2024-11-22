@@ -1,11 +1,27 @@
+import { IChat } from '@/interface/IChat';
 import { IoSend } from 'react-icons/io5';
 
 interface IChatView {
   isExpanded: boolean;
   imageWidth: number;
+  userChats: IChat[];
+  selectedChatIndex: number;
+  setSelectedChatIndex: (id: number) => void;
+  sendMessage: () => void;
+  message: string;
+  setMessage: (message: string) => void;
 }
 
-const ChatView = ({ isExpanded, imageWidth }: IChatView) => {
+const ChatView = ({
+  isExpanded,
+  imageWidth,
+  userChats,
+  selectedChatIndex,
+  setSelectedChatIndex,
+  sendMessage,
+  message,
+  setMessage,
+}: IChatView) => {
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
       <div className="flex flex-col lg:flex-row p-6">
@@ -17,150 +33,34 @@ const ChatView = ({ isExpanded, imageWidth }: IChatView) => {
           } gap-2 lg:w-80 duration-300`}
           style={{ width: isExpanded ? '18rem' : `${imageWidth}px` }}
         >
-          {/* Chat Item 1 */}
-          <div
-            className={`flex items-center gap-4 bg-[#F8F9FB] min-h-[72px] py-2 hover:bg-[#E4E9F1] cursor-pointer ${
-              isExpanded ? '' : 'justify-center'
-            }`}
-          >
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
-              style={{
-                backgroundImage:
-                  'url("https://cdn.usegalileo.ai/stability/35d90491-b61f-45a6-adb3-7656162f05ba.png")',
-              }}
-            ></div>
-            {isExpanded && (
-              <div className="flex flex-col justify-center">
-                <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
-                  Biology Textbook
-                </p>
-                <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
-                  Hey, I&apos;m interested in the textbook. Can you do $40?
-                </p>
+          {userChats.map((chat, index) => {
+            return (
+              <div
+                key={index}
+                className={`flex items-center gap-4  min-h-[72px] py-2 hover:bg-[#E4E9F1] cursor-pointer ${
+                  isExpanded ? '' : 'justify-center'
+                } ${selectedChatIndex === index ? 'bg-[#E4E9F1]' : 'bg-[#F8F9FB]'}`}
+                onClick={() => setSelectedChatIndex(index)}
+              >
+                <div
+                  className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
+                  style={{
+                    backgroundImage: `url("${chat.product.images[0]}")`,
+                  }}
+                ></div>
+                {isExpanded && (
+                  <div className="flex flex-col justify-center">
+                    <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
+                      {chat.product.productName}
+                    </p>
+                    <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
+                      Hey, I&apos;m interested in the textbook. Can you do $40?
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-
-          {/* Chat Item 2 */}
-          <div
-            className={`flex items-center gap-4 bg-[#F8F9FB] min-h-[72px] py-2 hover:bg-[#E4E9F1] cursor-pointer ${
-              isExpanded ? '' : 'justify-center'
-            }`}
-          >
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
-              style={{
-                backgroundImage:
-                  'url("https://cdn.usegalileo.ai/stability/18a47b3d-9cae-45be-83c9-0cfa9502e7fa.png")',
-              }}
-            ></div>
-            {isExpanded && (
-              <div className="flex flex-col justify-center">
-                <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
-                  Chemistry Textbook
-                </p>
-                <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
-                  Hi, I can do $45. It&apos;s brand new and never used.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Chat Item 3 */}
-          <div
-            className={`flex items-center gap-4 bg-[#F8F9FB] min-h-[72px] py-2 hover:bg-[#E4E9F1] cursor-pointer ${
-              isExpanded ? '' : 'justify-center'
-            }`}
-          >
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
-              style={{
-                backgroundImage:
-                  'url("https://cdn.usegalileo.ai/stability/d61c8f93-923e-4a48-982d-e0c934d75a97.png")',
-              }}
-            ></div>
-            {isExpanded && (
-              <div className="flex flex-col justify-center">
-                <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
-                  Math Textbook
-                </p>
-                <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
-                  Ok, let&apos;s do $45. How do we proceed from here?
-                </p>
-              </div>
-            )}
-          </div>
-          <div
-            className={`flex items-center gap-4 bg-[#F8F9FB] min-h-[72px] py-2 hover:bg-[#E4E9F1] cursor-pointer ${
-              isExpanded ? '' : 'justify-center'
-            }`}
-          >
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
-              style={{
-                backgroundImage:
-                  'url("https://cdn.usegalileo.ai/stability/d61c8f93-923e-4a48-982d-e0c934d75a97.png")',
-              }}
-            ></div>
-            {isExpanded && (
-              <div className="flex flex-col justify-center">
-                <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
-                  Math Textbook
-                </p>
-                <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
-                  Ok, let&apos;s do $45. How do we proceed from here?
-                </p>
-              </div>
-            )}
-          </div>
-          <div
-            className={`flex items-center gap-4 bg-[#F8F9FB] min-h-[72px] py-2 hover:bg-[#E4E9F1] cursor-pointer ${
-              isExpanded ? '' : 'justify-center'
-            }`}
-          >
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
-              style={{
-                backgroundImage:
-                  'url("https://cdn.usegalileo.ai/stability/d61c8f93-923e-4a48-982d-e0c934d75a97.png")',
-              }}
-            ></div>
-            {isExpanded && (
-              <div className="flex flex-col justify-center">
-                <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
-                  Math Textbook
-                </p>
-                <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
-                  Ok, let&apos;s do $45. How do we proceed from here?
-                </p>
-              </div>
-            )}
-          </div>
-          <div
-            className={`flex items-center gap-4 bg-[#F8F9FB] min-h-[72px] py-2 hover:bg-[#E4E9F1] cursor-pointer ${
-              isExpanded ? '' : 'justify-center'
-            }`}
-          >
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
-              style={{
-                backgroundImage:
-                  'url("https://cdn.usegalileo.ai/stability/d61c8f93-923e-4a48-982d-e0c934d75a97.png")',
-              }}
-            ></div>
-            {isExpanded && (
-              <div className="flex flex-col justify-center">
-                <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
-                  Math Textbook
-                </p>
-                <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
-                  Ok, let&apos;s do $45. How do we proceed from here?
-                </p>
-              </div>
-            )}
-          </div>
-          {/* Add more chat items similarly as needed */}
+            );
+          })}
         </div>
         <div className="flex flex-1 flex-col bg-white rounded-lg shadow-lg">
           {/* Chat Header */}
@@ -172,24 +72,29 @@ const ChatView = ({ isExpanded, imageWidth }: IChatView) => {
 
           {/* Chat Messages */}
           <div className="flex flex-1 flex-col overflow-y-auto max-h-[500px] min-h-[500px] bg-white rounded-lg">
-            <div className="flex items-end gap-3 p-4">
-              <div
-                className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
-                style={{
-                  backgroundImage:
-                    'url("https://cdn.usegalileo.ai/stability/1a46c76c-ecaa-48af-aa38-ecb4bcc99d2d.png")',
-                }}
-              ></div>
-              <div className="flex flex-1 flex-col gap-1 items-start">
-                <p className="text-[#3F5374] text-[13px] font-normal leading-normal max-w-[360px]">
-                  Siqi Chen
-                </p>
-                <p className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#E4E9F1] text-[#141C24]">
-                  Hey, I&apos;m interested in the textbook. Can you do $40?
-                </p>
-              </div>
-            </div>
-
+            {userChats.length > 0 &&
+              userChats[0].message.map((message, index) => {
+                return (
+                  <div className="flex items-end gap-3 p-4">
+                    <div
+                      className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
+                      style={{
+                        backgroundImage:
+                          'url("https://cdn.usegalileo.ai/stability/1a46c76c-ecaa-48af-aa38-ecb4bcc99d2d.png")',
+                      }}
+                    ></div>
+                    <div className="flex flex-1 flex-col gap-1 items-start">
+                      <p className="text-[#3F5374] text-[13px] font-normal leading-normal max-w-[360px]">
+                        Siqi Chen
+                      </p>
+                      <p className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#E4E9F1] text-[#141C24]">
+                        Hey, I&apos;m interested in the textbook. Can you do
+                        $40?
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             <div className="flex items-end gap-3 p-4 justify-end">
               <div className="flex flex-1 flex-col gap-1 items-end">
                 <p className="text-[#3F5374] text-[13px] font-normal leading-normal max-w-[360px] text-right">
@@ -207,7 +112,7 @@ const ChatView = ({ isExpanded, imageWidth }: IChatView) => {
                 }}
               ></div>
             </div>
-            <div className="flex items-end gap-3 p-4">
+            {/* <div className="flex items-end gap-3 p-4">
               <div
                 className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
                 style={{
@@ -240,8 +145,8 @@ const ChatView = ({ isExpanded, imageWidth }: IChatView) => {
                     'url("https://cdn.usegalileo.ai/sdxl10/559d5a52-d216-481a-bf44-a4a16128965d.png")',
                 }}
               ></div>
-            </div>
-            <div className="flex items-end gap-3 p-4">
+            </div> */}
+            {/* <div className="flex items-end gap-3 p-4">
               <div
                 className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
                 style={{
@@ -257,7 +162,7 @@ const ChatView = ({ isExpanded, imageWidth }: IChatView) => {
                   Hey, I&apos;m interested in the textbook. Can you do $40?
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Chat Input */}
@@ -275,13 +180,18 @@ const ChatView = ({ isExpanded, imageWidth }: IChatView) => {
                 placeholder="Type here"
                 className="form-input w-full flex-1 resize-none overflow-hidden text-[#141C24] bg-[#E4E9F1] placeholder:text-[#3F5374] rounded-xl focus:outline-none focus:ring-0 border-none h-12 max-h-32"
                 rows={1}
+                value={message}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement; // Type assertion to HTMLTextAreaElement
                   target.style.height = '30px'; // Reset height to auto before calculating new height
                   target.style.height = `${target.scrollHeight}px`; // Set height to scrollHeight
                 }}
+                onChange={(e) => setMessage(e.target.value)}
               />
-              <button className="ml-3 min-w-[44px] h-8 flex items-center justify-center bg-[#F4C753] text-[#141C24] rounded-xl">
+              <button
+                onClick={sendMessage}
+                className="ml-3 min-w-[44px] h-8 flex items-center justify-center bg-[#F4C753] text-[#141C24] rounded-xl"
+              >
                 <IoSend size={20} />
               </button>
             </div>

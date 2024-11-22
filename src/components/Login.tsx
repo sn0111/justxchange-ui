@@ -7,6 +7,10 @@ import { useAuth } from '@/app/context/AuthContext';
 import { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
+import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
+import LoaderComponent from './LoaderComponent';
+import { notifyError } from '@/lib/utils';
+import { makeRequest } from '@/middleware/axios-helper';
 
 interface LoginFormValues {
   mobileNumber: string;
@@ -25,6 +29,7 @@ const Login = () => {
   const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -33,12 +38,30 @@ const Login = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormValues) => {
-    // Simulate API call
-    setTimeout(() => {
-      login('dummyToken');
-      router.push('/');
-    }, 1000);
+  const onSubmit = async (data: LoginFormValues) => {
+    const url = API_ENDPOINTS.auth.loginUser();
+    const config = {
+      method: 'post',
+      url: url,
+      data: {
+        ...data,
+        mobileNumber: '+91' + data.mobileNumber,
+      },
+    };
+    try {
+      setIsLoading(true);
+      const responseData = await makeRequest(config);
+      if (responseData) {
+        login(responseData.data.token);
+        router.push('/');
+      }
+    } catch (err: any) {
+      console.log(err);
+      notifyError(err.response.data.exceptionMessage);
+    } finally {
+      setIsLoading(false);
+    }
+    setTimeout(() => {}, 1000);
   };
 
   const togglePasswordVisibility = () => {
@@ -52,6 +75,7 @@ const Login = () => {
       transition={{ duration: 0.5 }}
       className="flex flex-col items-center justify-center w-full max-w-md p-6 bg-white rounded-lg shadow-md"
     >
+      {isLoading && <LoaderComponent />}
       <h1 className="text-2xl font-bold mb-6">Login</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <input

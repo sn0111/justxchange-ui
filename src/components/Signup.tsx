@@ -62,7 +62,7 @@ const Signup = () => {
   const onSubmitMobile = (data: any) => {
     console.log(`Sending OTP to ${data.mobileNumber}`);
     setMobileNumber(data.mobileNumber);
-    setStep(2); // Move to OTP step
+    setStep(2);
   };
 
   const onSubmitOtp = (data: any) => {
