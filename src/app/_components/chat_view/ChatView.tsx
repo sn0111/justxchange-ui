@@ -1,26 +1,28 @@
-import { IChat } from '@/interface/IChat';
+import { IChat, IMessage } from '@/interface/IChat';
 import { IoSend } from 'react-icons/io5';
 
 interface IChatView {
   isExpanded: boolean;
   imageWidth: number;
   userChats: IChat[];
-  selectedChatIndex: number;
-  setSelectedChatIndex: (id: number) => void;
+  selectedChat: string;
+  setSelectedChat: (id: string) => void;
   sendMessage: () => void;
   message: string;
   setMessage: (message: string) => void;
+  chatMessages: IMessage[]
 }
 
 const ChatView = ({
   isExpanded,
   imageWidth,
   userChats,
-  selectedChatIndex,
-  setSelectedChatIndex,
+  selectedChat,
+  setSelectedChat,
   sendMessage,
   message,
   setMessage,
+  chatMessages
 }: IChatView) => {
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
@@ -39,8 +41,8 @@ const ChatView = ({
                 key={index}
                 className={`flex items-center gap-4  min-h-[72px] py-2 hover:bg-[#E4E9F1] cursor-pointer ${
                   isExpanded ? '' : 'justify-center'
-                } ${selectedChatIndex === index ? 'bg-[#E4E9F1]' : 'bg-[#F8F9FB]'}`}
-                onClick={() => setSelectedChatIndex(index)}
+                } ${selectedChat === chat.id ? 'bg-[#E4E9F1]' : 'bg-[#F8F9FB]'}`}
+                onClick={() => setSelectedChat(chat.id)}
               >
                 <div
                   className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
@@ -72,10 +74,10 @@ const ChatView = ({
 
           {/* Chat Messages */}
           <div className="flex flex-1 flex-col overflow-y-auto max-h-[500px] min-h-[500px] bg-white rounded-lg">
-            {userChats.length > 0 &&
-              userChats[0].message.map((message, index) => {
-                return (
-                  <div className="flex items-end gap-3 p-4">
+            {chatMessages.length > 0 &&
+              chatMessages.map((msg, index) => {
+                return msg.userId != Number(localStorage.getItem("userId")) ? (
+                  <div key={index} className="flex items-end gap-3 p-4">
                     <div
                       className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
                       style={{
@@ -88,30 +90,30 @@ const ChatView = ({
                         Siqi Chen
                       </p>
                       <p className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#E4E9F1] text-[#141C24]">
-                        Hey, I&apos;m interested in the textbook. Can you do
-                        $40?
+                        {msg.message}
                       </p>
                     </div>
                   </div>
-                );
+                ):<div key={index} className="flex items-end gap-3 p-4 justify-end">
+                <div className="flex flex-1 flex-col gap-1 items-end">
+                  <p className="text-[#3F5374] text-[13px] font-normal leading-normal max-w-[360px] text-right">
+                    Diane Smith
+                  </p>
+                  <p className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#F4C753] text-[#141C24]">
+                    {msg.message}
+                  </p>
+                </div>
+                <div
+                  className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
+                  style={{
+                    backgroundImage:
+                      'url("https://cdn.usegalileo.ai/sdxl10/559d5a52-d216-481a-bf44-a4a16128965d.png")',
+                  }}
+                >  
+                </div>
+              </div>;
               })}
-            <div className="flex items-end gap-3 p-4 justify-end">
-              <div className="flex flex-1 flex-col gap-1 items-end">
-                <p className="text-[#3F5374] text-[13px] font-normal leading-normal max-w-[360px] text-right">
-                  Diane Smith
-                </p>
-                <p className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#F4C753] text-[#141C24]">
-                  Hi, I can do $45. It&apos;s brand new and I never used it.
-                </p>
-              </div>
-              <div
-                className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
-                style={{
-                  backgroundImage:
-                    'url("https://cdn.usegalileo.ai/sdxl10/559d5a52-d216-481a-bf44-a4a16128965d.png")',
-                }}
-              ></div>
-            </div>
+            
             {/* <div className="flex items-end gap-3 p-4">
               <div
                 className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"

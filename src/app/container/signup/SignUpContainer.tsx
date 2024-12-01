@@ -125,6 +125,7 @@ const SignUpContainer = () => {
       const responseData = await makeRequest(config);
       if (responseData) {
         login(responseData.data.token);
+        localStorage.setItem("userId", responseData.data.userId)
         router.push('/');
       }
     } catch (err: any) {

@@ -1,7 +1,7 @@
 import { ChatView } from '@/app/_components/chat_view';
 import LoaderComponent from '@/components/LoaderComponent';
 import { useSocket } from '@/hooks/useSocket';
-import { IChat } from '@/interface/IChat';
+import { IChat, IMessage } from '@/interface/IChat';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { useEffect, useState } from 'react';
@@ -20,14 +20,15 @@ function useWindowSize() {
 }
 
 const ChatViewContainer = () => {
-  const socket = useSocket(Number(localStorage.getItem('userId')));
+  const socket = useSocket(Number(1));
   const [isExpanded, setIsExpanded] = useState(true);
   const [width] = useWindowSize();
   const [imageWidth, setImageWidth] = useState(Number);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userChats, setUserChats] = useState<IChat[]>([]);
-  const [selectedChatIndex, setSelectedChatIndex] = useState<number>(0);
+  const [selectedChat, setSelectedChat] = useState<string>("");
   const [message, setMessage] = useState<string>('');
+  const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
 
   // Update expanded state based on screen size
   useEffect(() => {
@@ -39,7 +40,6 @@ const ChatViewContainer = () => {
     const initializeChat = async () => {
       setIsLoading(true);
       await createChat();
-      await getChats();
       setIsLoading(false);
     };
 
@@ -49,8 +49,8 @@ const ChatViewContainer = () => {
   useEffect(() => {
     if (socket) {
       socket.on('receiveMessage', (message) => {
-        console.log(message);
-        // setMessages((prevMessages) => [...prevMessages, message]);
+        console.log(message)
+        setChatMessages((prevMessages) => [...prevMessages, message])
       });
     }
   }, [socket]);
@@ -64,9 +64,10 @@ const ChatViewContainer = () => {
     };
     try {
       // setIsLoading(true);
-      const responseData: { data: any } = await makeRequest(config);
+      const responseData: { data: IChat } = await makeRequest(config);
       if (responseData) {
-        // setUserChats(responseData.data);
+        await getChats(responseData.data.id);
+        setSelectedChat(responseData.data.id)
       }
     } catch (err) {
       console.log(err);
@@ -75,7 +76,7 @@ const ChatViewContainer = () => {
     }
   };
 
-  const getChats = async () => {
+  const getChats = async (chatUuid: string) => {
     const url = API_ENDPOINTS.chat.getChats();
     const config = {
       method: 'get',
@@ -86,7 +87,8 @@ const ChatViewContainer = () => {
       const responseData: { data: [] } = await makeRequest(config);
       if (responseData) {
         setUserChats(responseData.data);
-        console.log(responseData.data);
+        const chatIndex = userChats.findIndex(chat=> chat.id === chatUuid);
+        setChatMessages(userChats[chatIndex].message)
       }
     } catch (err) {
       console.log(err);
@@ -96,25 +98,56 @@ const ChatViewContainer = () => {
   };
 
   const sendMessage = async () => {
-    const url = API_ENDPOINTS.chat.sendMessage();
-    const chatId = userChats[selectedChatIndex].chatId;
-    const config = {
-      method: 'post',
-      url: url,
-      data: { chatId: Number(chatId), messageText: message },
-    };
-    try {
-      // setIsLoading(true);
-      const responseData: { data: any } = await makeRequest(config);
-      if (responseData) {
-        // setUserChats(responseData.data);
+    // const url = API_ENDPOINTS.chat.sendMessage();
+    const chatIndex = userChats.findIndex(chat=> chat.id === selectedChat);
+    if(chatIndex > 0){
+      const chatId = userChats[chatIndex].chatId;
+      // const config = {
+      //   method: 'post',
+      //   url: url,
+      //   data: { chatId: Number(chatId), messageText: message },
+      // };
+      try {
+        const messageData = { chatId: Number(chatId), message: message , userId: 1};
+        if (socket) socket.emit('sendMessage', messageData);
+        // setIsLoading(true);
+        // const responseData: { data: any } = await makeRequest(config);
+        // if (responseData) {
+        //   // setUserChats(responseData.data);
+        // }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        // setIsLoading(false);
       }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      // setIsLoading(false);
     }
   };
+  
+  // const getChatMessages = async () => {
+  //   const url = API_ENDPOINTS.chat.getChatMessages(1);
+  //   const config = {
+  //     method: 'get',
+  //     url: url,
+  //   };
+  //   try {
+  //     // setIsLoading(true);
+  //     const responseData: { data: [] } = await makeRequest(config);
+  //     if (responseData) {
+  //       setUserChats(responseData.data);
+  //       console.log(responseData.data);
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     // setIsLoading(false);
+  //   }
+  // };
+
+  const handleSelectChat = (id: string)=>{
+    setSelectedChat(id);
+    const chatIndex = userChats.findIndex(chat=> chat.id === id);
+    setChatMessages(userChats[chatIndex].message)
+  }
 
   return (
     <div>
@@ -123,11 +156,12 @@ const ChatViewContainer = () => {
         isExpanded={isExpanded}
         imageWidth={imageWidth}
         userChats={userChats}
-        selectedChatIndex={selectedChatIndex}
-        setSelectedChatIndex={setSelectedChatIndex}
+        selectedChat={selectedChat}
+        setSelectedChat={handleSelectChat}
         sendMessage={sendMessage}
         message={message}
         setMessage={setMessage}
+        chatMessages = {chatMessages}
       />
     </div>
   );

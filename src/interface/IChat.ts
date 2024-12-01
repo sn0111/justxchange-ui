@@ -10,7 +10,15 @@ export interface IChat {
   updatedDate: string;
   product: IProduct;
   buyer: IUser;
-  message: Message[];
+  message: IMessage[];
 }
 
-export interface Message {}
+export interface IMessage {
+  id: string;
+  message: string;
+  chatId: number;
+  messageId: number;
+  userId: number;
+  createdDate: string;
+  updatedDate: string;
+}
