@@ -18,9 +18,9 @@ interface ISignUpView {
   mobileForm: UseFormReturn<IMobileFormValues>;
   otpForm: UseFormReturn<IOTPFormValues>;
   profileForm: UseFormReturn<IProfileFormValues>;
-  onSubmitMobile: (data: any) => void;
-  onSubmitOtp: (data: any) => void;
-  onSubmitProfile: (data: any) => void;
+  onSubmitMobile: (data: IMobileFormValues) => void;
+  onSubmitOtp: (data: IOTPFormValues) => void;
+  onSubmitProfile: (data: IProfileFormValues) => void;
   togglePasswordVisibility: () => void;
   showPassword: boolean;
 }
@@ -41,7 +41,7 @@ const SignUpView = ({
       initial={{ opacity: 0, x: 100 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center w-full max-w-md p-6 bg-white rounded-lg shadow-md"
+      className="flex flex-col items-center justify-center w-[20rem] p-6 bg-white rounded-lg shadow-md"
     >
       <h1 className="text-2xl font-bold mb-6">Sign Up</h1>
 
@@ -52,11 +52,18 @@ const SignUpView = ({
         >
           <input
             {...mobileForm.register('mobileNumber')}
-            placeholder="Mobile Number"
             className="w-full p-2 border rounded-lg"
+            placeholder="Mobile number (10 digits)"
+            maxLength={10}
+            type="tel"
+            inputMode="numeric"
+            onInput={(e: React.FormEvent<HTMLInputElement>) => {
+              const target = e.currentTarget;
+              target.value = target.value.replace(/[^0-9]/g, '');
+            }}
           />
           {mobileForm.formState.errors.mobileNumber && (
-            <p className="text-red-500">
+            <p className="text-red-500 text-xs w-full">
               {mobileForm.formState.errors.mobileNumber.message}
             </p>
           )}
@@ -74,7 +81,14 @@ const SignUpView = ({
           <input
             value={mobileNumber}
             disabled
-            placeholder="Mobile Number"
+            placeholder="Mobile number (10 digits)"
+            maxLength={10}
+            type="tel"
+            inputMode="numeric"
+            onInput={(e: React.FormEvent<HTMLInputElement>) => {
+              const target = e.currentTarget;
+              target.value = target.value.replace(/[^0-9]/g, '');
+            }}
             className="w-full p-2 border rounded-lg shadow-sm focus:outline-none 
            focus:ring-2 focus:ring-green-500 border-gray-300 
            disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -114,7 +128,14 @@ const SignUpView = ({
               <input
                 value={mobileNumber}
                 disabled
-                placeholder="Mobile Number"
+                placeholder="Mobile number (10 digits)"
+                maxLength={10}
+                type="tel"
+                inputMode="numeric"
+                onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                  const target = e.currentTarget;
+                  target.value = target.value.replace(/[^0-9]/g, '');
+                }}
                 className="w-full p-2 border rounded-lg shadow-sm focus:outline-none 
            focus:ring-2 focus:ring-green-500 border-gray-300 
            disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -188,7 +209,7 @@ const SignUpView = ({
       )}
 
       <p className="mt-4 text-gray-600">
-        Already have an account?{' '}
+        {`Already have an account? `}
         <Link href="/login" className="text-blue-600 hover:underline">
           Login
         </Link>

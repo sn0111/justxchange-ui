@@ -5,19 +5,20 @@ import { useEffect } from 'react';
 
 const withAuth = (WrappedComponent: React.ComponentType) => {
   const AuthenticatedComponent = (props: any) => {
-    const { isAuthenticated, login } = useAuth();
+    const { authenticationToken, login } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-      if (!isAuthenticated && localStorage.getItem('token') === '') {
+      if (!authenticationToken && localStorage.getItem('token') === '') {
         router.replace('/login');
       } else {
         login(localStorage.getItem('token') || '');
       }
-    }, [isAuthenticated, router]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [authenticationToken, router]);
 
     // Only render the component if the user is authenticated
-    return isAuthenticated && <WrappedComponent {...props} />;
+    return authenticationToken && <WrappedComponent {...props} />;
   };
 
   return AuthenticatedComponent;

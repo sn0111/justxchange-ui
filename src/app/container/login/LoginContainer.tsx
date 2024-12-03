@@ -10,9 +10,13 @@ import { makeRequest } from '@/middleware/axios-helper';
 import { ILoginFormValues } from '@/interface';
 import LoaderComponent from '@/components/LoaderComponent';
 import { LoginView } from '@/app/_components/login';
+import { IAxiosError } from '@/interface/IAxiosErrRes';
 
 const loginSchema = yup.object().shape({
-  mobileNumber: yup.string().required('Mobile Number is required'),
+  mobileNumber: yup
+    .string()
+    .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
+    .required('Mobile number is required'),
   password: yup
     .string()
     .min(6, 'Password must be at least 6 characters')
@@ -46,9 +50,11 @@ const LoginContainer = () => {
         localStorage.setItem('userId', responseData.data.userId);
         router.push('/');
       }
-    } catch (err: any) {
-      console.log(err);
-      notifyError(err.response.data.exceptionMessage);
+    } catch (err) {
+      const error = err as IAxiosError;
+      notifyError(
+        error.response?.data.exceptionMessage ?? 'Something went wrong'
+      );
     } finally {
       setIsLoading(false);
     }

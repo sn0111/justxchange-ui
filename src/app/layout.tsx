@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
 import { AuthProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 
 const geistSans = localFont({
   src: '../public/fonts/GeistVF.woff',
@@ -31,16 +31,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <AuthProvider>
-          <Header />
-          <div className="px-4 md:px-10 lg:px-40 xl:px-60 2xl:px-96 justify-center py-5">
-            <div className="layout-content-container flex flex-col max-w-[1150px] flex-1">
+          {/* Header Section */}
+          <div className="fixed top-0 left-0 w-full z-10 bg-white shadow-md">
+            <Header />
+          </div>
+
+          {/* Main Content Section */}
+          <div className="flex-1 pt-[80px] pb-[20px] overflow-auto">
+            <div className="layout-content-container flex flex-col max-w-[1150px] mx-auto">
               {children}
             </div>
           </div>
-          <Footer />
+
+          {/* Footer Section */}
+          <div className="footer-content mt-auto">
+            <Footer />
+          </div>
+
+          {/* Toast Notifications */}
           <ToastContainer />
         </AuthProvider>
       </body>
