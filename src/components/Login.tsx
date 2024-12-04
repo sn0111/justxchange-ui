@@ -11,6 +11,8 @@ import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import LoaderComponent from './LoaderComponent';
 import { notifyError } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
+import { IAxiosError } from '@/interface/IAxiosErrRes';
+import { Messages } from '@/lib/messages';
 
 interface LoginFormValues {
   mobileNumber: string;
@@ -55,9 +57,11 @@ const Login = () => {
         login(responseData.data.token);
         router.push('/');
       }
-    } catch (err: any) {
-      console.log(err);
-      notifyError(err.response.data.exceptionMessage);
+    } catch (err) {
+      const error = err as IAxiosError;
+      notifyError(
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
+      );
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +122,7 @@ const Login = () => {
       </form>
 
       <p className="mt-4 text-gray-600">
-        Don't have an account?{' '}
+        {`Don't have an account?`}
         <Link href="/signup" className="text-blue-600 hover:underline">
           Sign up
         </Link>
