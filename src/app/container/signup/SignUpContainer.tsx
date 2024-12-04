@@ -7,6 +7,7 @@ import {
   IProfileFormValues,
 } from '@/interface';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
+import { Messages } from '@/lib/messages';
 import { notifyError } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
@@ -77,7 +78,7 @@ const SignUpContainer = () => {
     } catch (err) {
       const error = err as IAxiosError;
       notifyError(
-        error.response?.data.exceptionMessage ?? 'Something went wrong'
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
       );
     } finally {
       setIsLoading(false);
@@ -106,7 +107,7 @@ const SignUpContainer = () => {
     } catch (err) {
       const error = err as IAxiosError;
       notifyError(
-        error.response?.data.exceptionMessage ?? 'Something went wrong'
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
       );
     } finally {
       setIsLoading(false);
@@ -136,7 +137,7 @@ const SignUpContainer = () => {
     } catch (err) {
       const error = err as IAxiosError;
       notifyError(
-        error.response?.data.exceptionMessage ?? 'Something went wrong'
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
       );
     } finally {
       setIsLoading(false);

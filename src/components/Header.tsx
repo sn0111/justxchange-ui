@@ -76,7 +76,7 @@ export const Header = () => {
                 </div>
                 <input
                   placeholder="Search"
-                  className="form-input w-full border-none bg-[#f0f2f5] rounded-r-xl pl-2 text-base font-normal leading-normal"
+                  className="form-input w-full border-none bg-[#f0f2f5] rounded-r-xl pl-2 text-base font-normal leading-normal focus:outline-none focus:ring-0 "
                 />
               </label>
             </div>

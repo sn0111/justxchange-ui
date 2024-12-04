@@ -11,6 +11,7 @@ import { ILoginFormValues } from '@/interface';
 import LoaderComponent from '@/components/LoaderComponent';
 import { LoginView } from '@/app/_components/login';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
+import { Messages } from '@/lib/messages';
 
 const loginSchema = yup.object().shape({
   mobileNumber: yup
@@ -53,7 +54,7 @@ const LoginContainer = () => {
     } catch (err) {
       const error = err as IAxiosError;
       notifyError(
-        error.response?.data.exceptionMessage ?? 'Something went wrong'
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
       );
     } finally {
       setIsLoading(false);

@@ -1,6 +1,8 @@
 import { AddProduct } from '@/app/_components/add_product';
 import LoaderComponent from '@/components/LoaderComponent';
 import { ICategory, IProduct } from '@/interface';
+import { IAxiosError } from '@/interface/IAxiosErrRes';
+import { Messages } from '@/lib/messages';
 import { notifyError, notifySuccess } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
@@ -142,9 +144,11 @@ const AddProductContainer = () => {
         setImages(['', '', '', '', '']);
         notifySuccess(responseData.message);
       }
-    } catch (err: any) {
-      console.log(err.response);
-      notifyError(err.response.data.exceptionMessage);
+    } catch (err) {
+      const error = err as IAxiosError;
+      notifyError(
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
+      );
     } finally {
       setIsLoading(false);
     }
