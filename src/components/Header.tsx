@@ -16,14 +16,22 @@ import Link from 'next/link';
 import iconImage from '../public/images/icon.jpeg';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
+const SearchButton = () => (
+  <Link href="/search">
+    <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none max-w-xs flex">
+      <FaSearch className="text-xl" />
+    </button>
+  </Link>
+);
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { authenticationToken, logout } = useAuth();
-
+  const currentPath = usePathname();
   useEffect(() => {
-    console.log(authenticationToken);
-  }, [authenticationToken]);
+    console.log(currentPath);
+  }, [currentPath]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -62,22 +70,12 @@ export const Header = () => {
                 </span>
               </Link>
             </div>
-            <Link href="/search">
-              <span className="md:hidden sm:flex max-w-xs">
-                <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
-                  <FaSearch className="text-xl" />
-                </button>
-              </span>
-            </Link>
-            <div className="hidden md:flex w-full max-w-xs">
-              <Link href="/search">
-                <span>
-                  <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
-                    <FaSearch className="text-xl" />
-                  </button>
-                </span>
-              </Link>
-            </div>
+            {/* Conditionally hide SearchButton */}
+            {!currentPath.includes('/search') && (
+              <div className="sm:flex">
+                <SearchButton />
+              </div>
+            )}
             <FaUserCircle className="text-3xl cursor-pointer" />
             <FaSignOutAlt
               className="text-3xl cursor-pointer"
