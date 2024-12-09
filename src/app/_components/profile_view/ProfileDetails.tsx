@@ -1,4 +1,5 @@
 import { IProduct } from '@/interface';
+import Image from 'next/image';
 import { FaHeart, FaHistory, FaListAlt, FaUserAlt } from 'react-icons/fa';
 
 interface IProfileView {
@@ -49,7 +50,7 @@ const ProfileDetails = ({ products }: IProfileView) => {
               className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50 rounded-lg space-y-2 sm:space-y-0"
             >
               <div className="flex items-center gap-4">
-                <img
+                <Image
                   className="w-12 h-12 rounded-md object-cover"
                   src={item.images[0]}
                   alt={item.productName}

@@ -6,12 +6,14 @@ import {
   IOTPFormValues,
   IProfileFormValues,
 } from '@/interface';
+import { IAxiosError } from '@/interface/IAxiosErrRes';
+import { Messages } from '@/lib/messages';
 import { notifyError } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -73,9 +75,11 @@ const SignUpContainer = () => {
       if (responseData) {
         setStep(2);
       }
-    } catch (err: any) {
-      console.log(err);
-      notifyError(err.response.data.exceptionMessage);
+    } catch (err) {
+      const error = err as IAxiosError;
+      notifyError(
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
+      );
     } finally {
       setIsLoading(false);
     }
@@ -100,9 +104,11 @@ const SignUpContainer = () => {
       if (responseData) {
         setStep(3);
       }
-    } catch (err: any) {
-      console.log(err);
-      notifyError(err.response.data.exceptionMessage);
+    } catch (err) {
+      const error = err as IAxiosError;
+      notifyError(
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
+      );
     } finally {
       setIsLoading(false);
     }
@@ -125,12 +131,14 @@ const SignUpContainer = () => {
       const responseData = await makeRequest(config);
       if (responseData) {
         login(responseData.data.token);
-        localStorage.setItem("userId", responseData.data.userId)
+        localStorage.setItem('userId', responseData.data.userId);
         router.push('/');
       }
-    } catch (err: any) {
-      console.log(err);
-      notifyError(err.response.data.exceptionMessage);
+    } catch (err) {
+      const error = err as IAxiosError;
+      notifyError(
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
+      );
     } finally {
       setIsLoading(false);
     }

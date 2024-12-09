@@ -27,23 +27,31 @@ const LoginView = ({
       {/* {isLoading && <LoaderComponent />} */}
       <h1 className="text-2xl font-bold mb-6">Login</h1>
       <form onSubmit={loginForm.handleSubmit(loginSubmit)} className="w-full">
-        <input
-          {...loginForm.register('mobileNumber')}
-          placeholder="Mobile number"
-          className="w-full p-2 mb-2 border rounded-lg"
-        />
-        {loginForm.formState.errors.mobileNumber && (
-          <p className="text-red-500">
-            {loginForm.formState.errors.mobileNumber.message}
-          </p>
-        )}
-
-        <div className="relative w-full">
+        <div className="mb-2">
+          <input
+            {...loginForm.register('mobileNumber')}
+            placeholder="Mobile number (10 digits)"
+            className="w-full p-2 border rounded-lg"
+            maxLength={10}
+            type="tel"
+            inputMode="numeric"
+            onInput={(e: React.FormEvent<HTMLInputElement>) => {
+              const target = e.currentTarget;
+              target.value = target.value.replace(/[^0-9]/g, '');
+            }}
+          />
+          {loginForm.formState.errors.mobileNumber && (
+            <p className="text-red-500 text-xs">
+              {loginForm.formState.errors.mobileNumber.message}
+            </p>
+          )}
+        </div>
+        <div className="relative w-full ">
           <input
             type={showPassword ? 'text' : 'password'}
             {...loginForm.register('password')}
             placeholder="Password"
-            className="w-full p-2 mb-2 border rounded-lg"
+            className="w-full p-2 border rounded-lg"
           />
           <div
             className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
@@ -57,21 +65,21 @@ const LoginView = ({
           </div>
         </div>
         {loginForm.formState.errors.password && (
-          <p className="text-red-500">
+          <p className="text-red-500 text-xs">
             {loginForm.formState.errors.password.message}
           </p>
         )}
 
         <button
           type="submit"
-          className="w-full p-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+          className="w-full p-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
         >
           Login
         </button>
       </form>
 
       <p className="mt-4 text-gray-600">
-        Don't have an account?{' '}
+        {`Don't have an account? `}
         <Link href="/signup" className="text-blue-600 hover:underline">
           Sign up
         </Link>
