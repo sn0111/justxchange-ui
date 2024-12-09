@@ -4,6 +4,7 @@ export const API_ENDPOINTS = {
     getImage: () => `/upload-image`,
     addProduct: () => `/products`,
     getProduct: () => `/products`,
+    getUserProducts: () => `/user/products`,
     getProductByCategory: (categoryId: number) =>
       `/products/category/${categoryId}`,
   },

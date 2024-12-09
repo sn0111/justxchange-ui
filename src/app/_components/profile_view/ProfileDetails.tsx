@@ -1,6 +1,11 @@
+import { IProduct } from '@/interface';
 import { FaHeart, FaHistory, FaListAlt, FaUserAlt } from 'react-icons/fa';
 
-const ProfileDetails = () => {
+interface IProfileView {
+  products: IProduct[];
+}
+
+const ProfileDetails = ({ products }: IProfileView) => {
   return (
     <div className="flex flex-col lg:flex-row  bg-gray-100 ">
       {/* Sidebar */}
@@ -37,33 +42,8 @@ const ProfileDetails = () => {
         </div>
 
         {/* Listings */}
-        <div className="space-y-4">
-          {[
-            {
-              title: 'Dining table and chairs',
-              date: '3 weeks ago',
-              price: '$300',
-              imgSrc: 'https://via.placeholder.com/50',
-            },
-            {
-              title: 'Macbook Pro 2018',
-              date: '2 weeks ago',
-              price: '$800',
-              imgSrc: 'https://via.placeholder.com/50',
-            },
-            {
-              title: 'Mountain bike',
-              date: '1 week ago',
-              price: '$250',
-              imgSrc: 'https://via.placeholder.com/50',
-            },
-            {
-              title: 'Sofa set',
-              date: '4 days ago',
-              price: '$350',
-              imgSrc: 'https://via.placeholder.com/50',
-            },
-          ].map((item, index) => (
+        <div className="space-y-4 min-h-96">
+          {products.map((item, index) => (
             <div
               key={index}
               className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50 rounded-lg space-y-2 sm:space-y-0"
@@ -71,17 +51,19 @@ const ProfileDetails = () => {
               <div className="flex items-center gap-4">
                 <img
                   className="w-12 h-12 rounded-md object-cover"
-                  src={item.imgSrc}
-                  alt={item.title}
+                  src={item.images[0]}
+                  alt={item.productName}
                   width={48}
                   height={48}
                 />
                 <div>
-                  <p className="text-lg font-medium">{item.title}</p>
-                  <p className="text-sm text-gray-500">Listed {item.date}</p>
+                  <p className="text-lg font-medium">{item.productName}</p>
+                  <p className="text-sm text-gray-500">
+                    Listed {item.createdDate}
+                  </p>
                 </div>
               </div>
-              <p className="text-lg font-medium">{item.price}</p>
+              <p className="text-lg font-medium">{item.amount}</p>
             </div>
           ))}
         </div>

@@ -67,8 +67,9 @@ export const Header = () => {
                 />
               </label>
             </div>
-
-            <FaUserCircle className="text-3xl cursor-pointer" />
+            <Link href="/profile">
+              <FaUserCircle className="text-3xl cursor-pointer" />
+            </Link>
 
             <FaSignOutAlt
               className="text-3xl cursor-pointer"
