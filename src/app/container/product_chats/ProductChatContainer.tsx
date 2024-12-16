@@ -4,6 +4,7 @@ import { useSocket } from '@/hooks/useSocket';
 import { IChat, IMessage } from '@/interface/IChat';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 // Hook to get window size
@@ -19,16 +20,22 @@ function useWindowSize() {
   return size;
 }
 
-const ChatViewContainer = () => {
+const ProductChatContainer = () => {
   const socket = useSocket(Number(1));
   const [isExpanded, setIsExpanded] = useState(true);
   const [width] = useWindowSize();
   const [imageWidth, setImageWidth] = useState(Number);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [userChats, setUserChats] = useState<IChat[]>([]);
+  const [proeductChats, setProductChats] = useState<IChat[]>([]);
   const [selectedChat, setSelectedChat] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const productId = searchParams.get('productId');
+    console.log(productId);
+  });
 
   // Update expanded state based on screen size
   useEffect(() => {
@@ -37,13 +44,12 @@ const ChatViewContainer = () => {
   }, [width]);
 
   useEffect(() => {
-    const initializeChat = async () => {
-      setIsLoading(true);
-      await createChat();
-      setIsLoading(false);
-    };
-
-    initializeChat();
+    // const initializeChat = async () => {
+    //   setIsLoading(true);
+    //   await createChat();
+    //   setIsLoading(false);
+    // };
+    // initializeChat();
   }, []);
 
   useEffect(() => {
@@ -76,8 +82,8 @@ const ChatViewContainer = () => {
     }
   };
 
-  const getChats = async (chatUuid: string) => {
-    const url = API_ENDPOINTS.chat.getChats();
+  const getChats = async (productUuid: string) => {
+    const url = API_ENDPOINTS.chat.getProductChats(productUuid);
     const config = {
       method: 'get',
       url: url,
@@ -86,9 +92,8 @@ const ChatViewContainer = () => {
       // setIsLoading(true);
       const responseData: { data: [] } = await makeRequest(config);
       if (responseData) {
-        setUserChats(responseData.data);
-        const chatIndex = userChats.findIndex((chat) => chat.id === chatUuid);
-        setChatMessages(userChats[chatIndex].message);
+        setProductChats(responseData.data);
+        setChatMessages(proeductChats[0].message);
       }
     } catch (err) {
       console.log(err);
@@ -99,9 +104,11 @@ const ChatViewContainer = () => {
 
   const sendMessage = async () => {
     // const url = API_ENDPOINTS.chat.sendMessage();
-    const chatIndex = userChats.findIndex((chat) => chat.id === selectedChat);
+    const chatIndex = proeductChats.findIndex(
+      (chat) => chat.id === selectedChat
+    );
     if (chatIndex > 0) {
-      const chatId = userChats[chatIndex].chatId;
+      const chatId = proeductChats[chatIndex].chatId;
       // const config = {
       //   method: 'post',
       //   url: url,
@@ -149,8 +156,8 @@ const ChatViewContainer = () => {
 
   const handleSelectChat = (id: string) => {
     setSelectedChat(id);
-    const chatIndex = userChats.findIndex((chat) => chat.id === id);
-    setChatMessages(userChats[chatIndex].message);
+    const chatIndex = proeductChats.findIndex((chat) => chat.id === id);
+    setChatMessages(proeductChats[chatIndex].message);
   };
 
   return (
@@ -159,7 +166,7 @@ const ChatViewContainer = () => {
       <ChatView
         isExpanded={isExpanded}
         imageWidth={imageWidth}
-        userChats={userChats}
+        userChats={proeductChats}
         selectedChat={selectedChat}
         setSelectedChat={handleSelectChat}
         sendMessage={sendMessage}
@@ -171,4 +178,4 @@ const ChatViewContainer = () => {
   );
 };
 
-export default ChatViewContainer;
+export default ProductChatContainer;

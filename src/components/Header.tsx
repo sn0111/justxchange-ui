@@ -70,33 +70,15 @@ export const Header = () => {
                 </span>
               </Link>
             </div>
-            <Link href="/search" className="md:hidden sm:flex max-w-xs">
-              <button className="relative cursor-pointer bg-[#f0f2f5] rounded-xl p-2.5 text-[#111418] focus:outline-none">
-                <FaSearch className="text-xl" />
-              </button>
-            </Link>
-            <div className="hidden md:flex w-full max-w-xs">
-              <label className="flex w-full h-10">
-                <div className="flex items-center bg-[#f0f2f5] rounded-l-xl pl-4">
-                  <FaSearch className="text-lg" />
-                </div>
-                <input
-                  placeholder="Search"
-                  className="form-input w-full border-none bg-[#f0f2f5] rounded-r-xl pl-2 text-base font-normal leading-normal"
-                />
-              </label>
-            </div>
-            <Link href="/profile">
-              <FaUserCircle className="text-3xl cursor-pointer" />
-            </Link>
-
             {/* Conditionally hide SearchButton */}
             {!currentPath.includes('/search') && (
               <div className="sm:flex">
                 <SearchButton />
               </div>
             )}
-            <FaUserCircle className="text-3xl cursor-pointer" />
+            <Link href="/profile">
+              <FaUserCircle className="text-3xl cursor-pointer" />
+            </Link>
             <FaSignOutAlt
               className="text-3xl cursor-pointer"
               onClick={logout}

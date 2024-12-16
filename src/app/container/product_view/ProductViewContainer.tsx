@@ -3,6 +3,7 @@ import LoaderComponent from '@/components/LoaderComponent';
 import { IProduct } from '@/interface';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
+import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -10,10 +11,11 @@ const ProductViewContainer = () => {
   // variables , api calls, function declarations should be in this file
   const [product, setProduct] = useState<IProduct>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    console.log(localStorage.getItem('productId'));
-    getProductInfo(localStorage.getItem('productId') || '');
+    const productId = searchParams.get('productId') || '';
+    getProductInfo(productId);
   }, []);
 
   //example for api call with util function, same should be repeated everywhere for api call

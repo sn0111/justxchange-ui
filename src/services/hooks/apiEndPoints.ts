@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
     getChats: () => `/chats`,
     sendMessage: () => `/message`,
     getChatMessages: (chatId: number) => `/messages/${chatId}`,
+    getProductChats: (productUuid: string) => `/product/chats/${productUuid}`,
   },
   auth: {
     loginUser: () => `/login-user`,
