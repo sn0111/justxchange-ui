@@ -12,6 +12,7 @@ import { IoIosChatbubbles } from 'react-icons/io';
 import UserProducts from './UserProducts';
 import UserProfile from './UserProfile';
 import Wishlists from './WishLists';
+import UserTransactions from './UserTransactions';
 
 interface IProfileView {
   products: IProduct[];
@@ -79,6 +80,14 @@ const ProfileDetails = ({
       {step == 1 && <UserProfile />}
       {step == 2 && (
         <Wishlists
+          products={products}
+          router={router}
+          selectPage={selectPage}
+          selectedPage={selectedPage}
+        />
+      )}
+      {step == 3 && (
+        <UserTransactions
           products={products}
           router={router}
           selectPage={selectPage}

@@ -1,2 +1,2 @@
-import ProfileDetails from "./ProfileDetails";
+import ProfileDetails from './ProfileDetails';
 export { ProfileDetails };

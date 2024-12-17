@@ -6,19 +6,19 @@ import React from 'react';
 import { FaInfoCircle } from 'react-icons/fa';
 import { IoIosChatbubbles } from 'react-icons/io';
 
-interface IUserProducts {
+interface IUserTransactions {
   products: IProduct[];
   router: AppRouterInstance;
   selectPage: (pageNumber: number) => void;
   selectedPage: number;
 }
 
-const UserProducts = ({
+const UserTransactions = ({
   products,
   router,
   selectPage,
   selectedPage,
-}: IUserProducts) => {
+}: IUserTransactions) => {
   return (
     <main className="flex-1 p-4 lg:p-6 bg-gray-50">
       {/* Header */}
@@ -84,4 +84,4 @@ const UserProducts = ({
   );
 };
 
-export default UserProducts;
+export default UserTransactions;

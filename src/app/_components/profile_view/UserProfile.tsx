@@ -1,11 +1,10 @@
-import FloatingLabelInput from '@/components/FloatingLabelInput';
 import React from 'react';
 
 const UserProfile = () => {
   return (
     <main className="flex-1 p-4 lg:p-6 flex justify-center items-center">
       {/* Header */}
-      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl max-h-[70vh] min-h-[70vh]">
         <div className="flex items-center justify-center mb-6">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s" // Replace with actual image path
