@@ -1,2 +1,2 @@
-import AddProduct from "./AddProduct";
-export { AddProduct  };
+import AddProduct from './AddProduct';
+export { AddProduct };

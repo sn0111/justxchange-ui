@@ -1,5 +1,7 @@
 import { ICategory } from '@/interface';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import { ChangeEvent } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 
 interface IAddProduct {
@@ -17,7 +19,9 @@ interface IAddProduct {
   handleDivClick: (index: number) => void;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleInputChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => void;
   addProduct: () => void;
   handleRemoveImage: (index: number) => void;
@@ -49,14 +53,14 @@ const AddProduct = ({
           <input
             type="text"
             name="productName"
-            value={formState.productName}
+            value={formState.productName || ''} // Ensure controlled input
             placeholder="Product name"
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <textarea
             name="description"
-            value={formState.description}
+            value={formState.description || ''} // Ensure controlled input
             placeholder="Description"
             onChange={handleInputChange}
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -67,7 +71,7 @@ const AddProduct = ({
           <label className="block text-lg font-medium mb-2">Photos</label>
           <p className="text-sm text-gray-500 mb-3">Add up to 5 photos</p>
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5">
-            {images.map((img, index) => (
+            {images?.map((img, index) => (
               <div
                 key={index}
                 className="relative w-20 h-20 sm:w-20 sm:h-20 bg-center bg-cover rounded-lg border border-gray-300 cursor-pointer"
@@ -115,6 +119,7 @@ const AddProduct = ({
             ))}
           </div>
         </div>
+
         <AnimatePresence>
           {viewImageModal && (
             <motion.div
@@ -136,7 +141,7 @@ const AddProduct = ({
                 >
                   <AiOutlineClose size={20} />
                 </button>
-                <img
+                <Image
                   src={selectedImage}
                   alt="Selected"
                   className="w-full h-auto"
@@ -145,6 +150,7 @@ const AddProduct = ({
             </motion.div>
           )}
         </AnimatePresence>
+
         <div className="mb-6">
           <label className="block text-lg font-medium mb-2">Condition</label>
           <div className="grid grid-cols-2 gap-3">
@@ -177,7 +183,7 @@ const AddProduct = ({
             <input
               type="number"
               name="amount"
-              value={formState.amount}
+              value={formState.amount || 0} // Ensure controlled input
               placeholder="Price"
               onChange={handleInputChange}
               className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

@@ -1,11 +1,13 @@
 'use client';
-import withAuth from '@/lib/auth/withAuth';
-import { HomeContainer } from './container/home';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-function Home() {
-  return (
-    <HomeContainer />
-  );
+export default function RedirectToHome() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/home'); // Redirect to /home
+  }, [router]);
+
+  return null; // Render nothing while redirecting
 }
-
-export default withAuth(Home)

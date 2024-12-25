@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
-  images: {
-    domains: ['justxchange-1.s3.ap-south-1.amazonaws.com'],
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/home',
+        permanent: true, // Set to `true` for a 301 redirect or `false` for a 302 redirect
+      },
+    ];
   },
 };
 

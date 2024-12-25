@@ -1,3 +1,4 @@
+'use client';
 import { ChatView } from '@/app/_components/chat_view';
 import LoaderComponent from '@/components/LoaderComponent';
 import { useSocket } from '@/hooks/useSocket';
@@ -8,8 +9,7 @@ import { useEffect, useState } from 'react';
 
 // Hook to get window size
 function useWindowSize() {
-  const [size, setSize] = useState([0, 0]);
-
+  const [size, setSize] = useState([1024, 768]); // Default to common screen dimensions
   useEffect(() => {
     const handleResize = () => setSize([window.innerWidth, window.innerHeight]);
     window.addEventListener('resize', handleResize);
@@ -32,8 +32,11 @@ const ChatViewContainer = () => {
 
   // Update expanded state based on screen size
   useEffect(() => {
-    setImageWidth(width * 0.8);
-    setIsExpanded(width >= 1024); // Expands at lg breakpoint (1024px)
+    if (width !== 0) {
+      // Avoid calculating based on initial default values
+      setImageWidth(width * 0.8);
+      setIsExpanded(width >= 1024); // Expands at lg breakpoint (1024px)
+    }
   }, [width]);
 
   useEffect(() => {
@@ -44,6 +47,7 @@ const ChatViewContainer = () => {
     };
 
     initializeChat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

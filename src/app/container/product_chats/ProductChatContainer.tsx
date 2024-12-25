@@ -1,3 +1,5 @@
+'use client';
+
 import { ChatView } from '@/app/_components/chat_view';
 import LoaderComponent from '@/components/LoaderComponent';
 import { useSocket } from '@/hooks/useSocket';
@@ -9,8 +11,7 @@ import { useEffect, useState } from 'react';
 
 // Hook to get window size
 function useWindowSize() {
-  const [size, setSize] = useState([0, 0]);
-
+  const [size, setSize] = useState([1024, 768]); // Default to common screen dimensions
   useEffect(() => {
     const handleResize = () => setSize([window.innerWidth, window.innerHeight]);
     window.addEventListener('resize', handleResize);
@@ -25,7 +26,7 @@ const ProductChatContainer = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [width] = useWindowSize();
   const [imageWidth, setImageWidth] = useState(Number);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading] = useState<boolean>(false);
   const [proeductChats, setProductChats] = useState<IChat[]>([]);
   const [selectedChat, setSelectedChat] = useState<string>('');
   const [message, setMessage] = useState<string>('');
@@ -39,8 +40,11 @@ const ProductChatContainer = () => {
 
   // Update expanded state based on screen size
   useEffect(() => {
-    setImageWidth(width * 0.8);
-    setIsExpanded(width >= 1024); // Expands at lg breakpoint (1024px)
+    if (width !== 0) {
+      // Avoid calculating based on initial default values
+      setImageWidth(width * 0.8);
+      setIsExpanded(width >= 1024); // Expands at lg breakpoint (1024px)
+    }
   }, [width]);
 
   useEffect(() => {
@@ -61,6 +65,7 @@ const ProductChatContainer = () => {
     }
   }, [socket]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const createChat = async () => {
     const url = API_ENDPOINTS.chat.createChat();
     const config = {

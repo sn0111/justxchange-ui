@@ -31,11 +31,11 @@ const AddProductContainer = () => {
     const productId = searchParams.get('productId') || '';
     getCategories();
     getProductInfo(productId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getProductInfo = async (productId: string) => {
     const url = API_ENDPOINTS.product.getProductById(productId);
-    console.log(url);
     const config = {
       method: 'get',
       url: url,
@@ -46,22 +46,17 @@ const AddProductContainer = () => {
       if (responseData) {
         const product = responseData.data;
         setFormState({
-          productName: product.productName,
-          description: product.description,
-          amount: product.amount,
-          categoryId: product.categoryId,
+          productName: product.productName || '',
+          description: product.description || '',
+          amount: product.amount || 0.0,
+          categoryId: product.categoryId || 0,
           condition: product.condition || '',
-          userId: product.userId,
+          userId: product.userId || 1,
         });
-        setImages(product.images);
-        // setProduct(responseData.data);
+        setImages(product.images || ['', '', '', '', '']);
       }
     } catch (err) {
       console.log(err);
-      // const error = err as ;
-      // toast.error(
-      //   error.msg || Messages.somethingWentWrong
-      // );
     } finally {
       setIsLoading(false);
     }
@@ -77,14 +72,10 @@ const AddProductContainer = () => {
       setIsLoading(true);
       const responseData: { data: ICategory[] } = await makeRequest(config);
       if (responseData) {
-        setCategories(responseData.data);
+        setCategories(responseData.data || []);
       }
     } catch (err) {
       console.log(err);
-      // const error = err as ;
-      // toast.error(
-      //   error.msg || Messages.somethingWentWrong
-      // );
     } finally {
       setIsLoading(false);
     }
@@ -107,20 +98,25 @@ const AddProductContainer = () => {
     setSelectedImage('');
   };
 
-  // Function to handle the file upload (onChange event)
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      console.log('File uploaded:', file);
       uploadProductImage(file);
     }
   };
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = event.target;
-    setFormState((prevState) => ({ ...prevState, [name]: value }));
+
+    // If the event target is a select element, handle its value correctly
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value || '',
+    }));
   };
 
   const uploadProductImage = async (file: File) => {
@@ -141,10 +137,9 @@ const AddProductContainer = () => {
       setIsLoading(true);
       const responseData: { imageUrl: string; message: string } =
         await makeRequest(config);
-      console.log(responseData);
       if (responseData) {
         const newImages = [...images];
-        newImages[imageIndex] = responseData.imageUrl;
+        newImages[imageIndex] = responseData.imageUrl || '';
         setImages(newImages);
         notifySuccess('Image uploaded successfully');
       }
@@ -158,7 +153,7 @@ const AddProductContainer = () => {
 
   const addProduct = async () => {
     const url = API_ENDPOINTS.product.addProduct();
-    const body = { ...formState, images: images.filter((img) => img != '') };
+    const body = { ...formState, images: images.filter((img) => img !== '') };
     const config = {
       method: 'post',
       url: url,

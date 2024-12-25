@@ -30,30 +30,38 @@ export const AuthProvider = ({
 
     if (token && expirationTime) {
       const now = new Date().getTime();
+
       if (now > parseInt(expirationTime, 10)) {
         // Token expired
+        console.log('Token expired'); // Debugging token expiration
         logout();
       } else {
         setAuthenticationToken(token);
 
         // Set a timeout to logout the user when the token expires
         const timeRemaining = parseInt(expirationTime, 10) - now;
+        console.log('Time remaining before logout:', timeRemaining); // Debugging remaining time
         const timer = setTimeout(logout, timeRemaining);
 
         return () => clearTimeout(timer); // Cleanup timeout on unmount
       }
+    } else {
+      console.log('No token found in localStorage');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = (token: string) => {
-    const expirationTime = new Date().getTime() + 3600 * 1000;
+    const expirationTime = new Date().getTime() + 30 * 60 * 1000; // Set expiration to 30 minutes (30 * 60 * 1000ms)
     localStorage.setItem('token', token);
     localStorage.setItem('tokenExpiration', expirationTime.toString());
     setAuthenticationToken(token);
 
-    // Set a timeout to logout the user after 1jr
-    const timer = setTimeout(logout, 3600 * 1000);
+    // Debugging expiration time
+    console.log('Token expiration set to:', expirationTime);
+
+    // Set a timeout to logout the user after 1 minute
+    const timer = setTimeout(logout, 60000); // 60000ms = 1 minute
     return () => clearTimeout(timer); // Cleanup previous timeout if any
   };
 

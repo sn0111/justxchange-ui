@@ -3,8 +3,10 @@ import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-const withAuth = (WrappedComponent: React.ComponentType) => {
-  const AuthenticatedComponent = (props: any) => {
+const withAuth = <P extends object>(
+  WrappedComponent: React.ComponentType<P>
+) => {
+  const AuthenticatedComponent = (props: P) => {
     const { authenticationToken, login } = useAuth();
     const router = useRouter();
 
@@ -18,7 +20,7 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
     }, [authenticationToken, router]);
 
     // Only render the component if the user is authenticated
-    return authenticationToken && <WrappedComponent {...props} />;
+    return authenticationToken ? <WrappedComponent {...props} /> : null;
   };
 
   return AuthenticatedComponent;

@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAuth } from '@/app/context/AuthContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { notifyError } from '@/lib/utils';
@@ -33,6 +33,13 @@ const LoginContainer = () => {
     resolver: yupResolver(loginSchema),
   });
 
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      router.push('/home');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onSubmit = async (data: ILoginFormValues) => {
     const url = API_ENDPOINTS.auth.loginUser();
     const config = {
@@ -49,7 +56,7 @@ const LoginContainer = () => {
       if (responseData) {
         login(responseData.data.token);
         localStorage.setItem('userId', responseData.data.userId);
-        router.push('/');
+        router.push('/home');
       }
     } catch (err) {
       const error = err as IAxiosError;

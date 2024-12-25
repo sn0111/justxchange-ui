@@ -1,4 +1,3 @@
-// components/Loading.tsx (Client Component)
 'use client';
 
 import { useEffect, useState } from 'react';
