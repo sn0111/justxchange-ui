@@ -16,7 +16,7 @@ const ProductViewContainer = () => {
   useEffect(() => {
     const productId = searchParams.get('productId') || '';
     getProductInfo(productId);
-  }, []);
+  }, [searchParams]);
 
   //example for api call with util function, same should be repeated everywhere for api call
   const getProductInfo = async (productId: string) => {

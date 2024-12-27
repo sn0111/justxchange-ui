@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 
-let socket: any;
+let socket: Socket;
 
 export default function Home() {
   const [message, setMessage] = useState('');

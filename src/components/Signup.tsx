@@ -11,6 +11,11 @@ import {
   AiOutlineEyeInvisible,
 } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
+import {
+  IMobileFormValues,
+  IOTPFormValues,
+  IProfileFormValues,
+} from '@/interface';
 
 // Validation schemas
 const mobileSchema = yup.object().shape({
@@ -59,19 +64,19 @@ const Signup = () => {
   });
 
   // Handlers
-  const onSubmitMobile = (data: any) => {
+  const onSubmitMobile = (data: IMobileFormValues) => {
     console.log(`Sending OTP to ${data.mobileNumber}`);
     setMobileNumber(data.mobileNumber);
     setStep(2);
   };
 
-  const onSubmitOtp = (data: any) => {
+  const onSubmitOtp = (data: IOTPFormValues) => {
     console.log(`Verifying OTP: ${data.otp}`);
     // Simulate OTP verification here, if needed
     setStep(3); // Move to profile creation step
   };
 
-  const onSubmitProfile = (data: any) => {
+  const onSubmitProfile = (data: IProfileFormValues) => {
     console.log('wrok.');
     console.log(`Creating profile for ${data.name}, ${data.email}`);
     login('dummyToken');

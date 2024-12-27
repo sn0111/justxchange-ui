@@ -1,18 +1,11 @@
-import { IProduct } from '@/interface';
+import { IProduct, IUserFormValues } from '@/interface';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import Image from 'next/image';
-import {
-  FaHeart,
-  FaHistory,
-  FaInfoCircle,
-  FaListAlt,
-  FaUserAlt,
-} from 'react-icons/fa';
-import { IoIosChatbubbles } from 'react-icons/io';
+import { FaHeart, FaHistory, FaListAlt, FaUserAlt } from 'react-icons/fa';
 import UserProducts from './UserProducts';
 import UserProfile from './UserProfile';
 import Wishlists from './WishLists';
 import UserTransactions from './UserTransactions';
+import { UseFormReturn } from 'react-hook-form';
 
 interface IProfileView {
   products: IProduct[];
@@ -21,6 +14,8 @@ interface IProfileView {
   setStep: (step: number) => void;
   selectPage: (pageNumber: number) => void;
   selectedPage: number;
+  profileForm: UseFormReturn<IUserFormValues>;
+  onProfileSubmit: (data: IUserFormValues) => void;
 }
 
 const ProfileDetails = ({
@@ -30,6 +25,8 @@ const ProfileDetails = ({
   setStep,
   selectPage,
   selectedPage,
+  profileForm,
+  onProfileSubmit,
 }: IProfileView) => {
   return (
     <div className="flex flex-col lg:flex-row  bg-gray-50 ">
@@ -77,7 +74,12 @@ const ProfileDetails = ({
           selectedPage={selectedPage}
         />
       )}
-      {step == 1 && <UserProfile />}
+      {step == 1 && (
+        <UserProfile
+          profileForm={profileForm}
+          onProfileSubmit={onProfileSubmit}
+        />
+      )}
       {step == 2 && (
         <Wishlists
           products={products}

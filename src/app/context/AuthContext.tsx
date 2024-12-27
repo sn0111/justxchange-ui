@@ -61,7 +61,7 @@ export const AuthProvider = ({
     console.log('Token expiration set to:', expirationTime);
 
     // Set a timeout to logout the user after 1 minute
-    const timer = setTimeout(logout, 60000); // 60000ms = 1 minute
+    const timer = setTimeout(logout, expirationTime); // 60000ms = 1 minute
     return () => clearTimeout(timer); // Cleanup previous timeout if any
   };
 

@@ -1,15 +1,25 @@
+import { IUserFormValues } from '@/interface';
+import Image from 'next/image';
 import React from 'react';
+import { UseFormReturn } from 'react-hook-form';
 
-const UserProfile = () => {
+interface IUserProfile {
+  profileForm: UseFormReturn<IUserFormValues>;
+  onProfileSubmit: (data: IUserFormValues) => void;
+}
+
+const UserProfile = ({ profileForm, onProfileSubmit }: IUserProfile) => {
   return (
     <main className="flex-1 p-4 lg:p-6 flex justify-center items-center">
       {/* Header */}
-      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl max-h-[70vh] min-h-[70vh]">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl lg:max-h-[70vh] lg:min-h-[70vh]">
         <div className="flex items-center justify-center mb-6">
-          <img
+          <Image
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s" // Replace with actual image path
             alt="Profile Picture"
             className="w-24 h-24 rounded-full object-cover"
+            height={24}
+            width={24}
           />
         </div>
         <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -21,6 +31,7 @@ const UserProfile = () => {
               User Name
             </label>
             <input
+              {...profileForm.register('firstName')}
               type="text"
               id="firstName"
               className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
@@ -31,9 +42,15 @@ const UserProfile = () => {
               Email
             </label>
             <input
+              {...profileForm.register('email')}
               type="email"
               id="email"
-              className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
+              disabled
+              className="border
+         block 
+         disabled:opacity-50 
+         disabled:pointer-events-none 
+         disabled:bg-gray-100 w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
             />
           </div>
           {/* <div className="col-span-1 md:col-span-2">
@@ -55,12 +72,32 @@ const UserProfile = () => {
               className="block text-gray-600 text-sm mb-2"
               htmlFor="contactNumber"
             >
+              Registered Number
+            </label>
+            <input
+              {...profileForm.register('mobileNumber')}
+              type="tel"
+              id="registeredNumber"
+              disabled
+              className="border
+         block 
+         disabled:opacity-50 
+         disabled:pointer-events-none 
+         disabled:bg-gray-100 w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
+            />
+          </div>
+          <div className="">
+            <label
+              className="block text-gray-600 text-sm mb-2"
+              htmlFor="contactNumber"
+            >
               Contact Number
             </label>
             <input
+              {...profileForm.register('contactNumber')}
               type="tel"
               id="contactNumber"
-              placeholder="+91-8223635900"
+              placeholder=""
               className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
             />
           </div>
@@ -72,6 +109,7 @@ const UserProfile = () => {
               Collage
             </label>
             <input
+              {...profileForm.register('college')}
               type="text"
               className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
             />
@@ -83,7 +121,10 @@ const UserProfile = () => {
             >
               Address
             </label>
-            <textarea className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500" />
+            <textarea
+              {...profileForm.register('address')}
+              className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
+            />
           </div>
         </form>
         <div className="flex items-center justify-center pt-4">

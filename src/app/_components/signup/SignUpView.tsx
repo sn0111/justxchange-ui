@@ -169,13 +169,13 @@ const SignUpView = ({
               </p>
             )}
             <input
-              {...profileForm.register('firstName')}
+              {...profileForm.register('name')}
               placeholder="Full Name"
               className="w-full p-2 border rounded-lg mb-2"
             />
-            {profileForm.formState.errors.firstName && (
+            {profileForm.formState.errors.name && (
               <p className="text-red-500">
-                {profileForm.formState.errors.firstName.message}
+                {profileForm.formState.errors.name.message}
               </p>
             )}
             <input

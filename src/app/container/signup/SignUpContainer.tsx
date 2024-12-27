@@ -32,7 +32,7 @@ const otpSchema = yup.object().shape({
 });
 
 const profileSchema = yup.object().shape({
-  firstName: yup.string().required('Name is required'),
+  name: yup.string().required('Name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
   password: yup.string().required('Password is required'),
   college: yup.string().required('College is required'),
@@ -123,7 +123,7 @@ const SignUpContainer = () => {
 
   const onSubmitProfile = async (data: IProfileFormValues) => {
     console.log(profileForm.formState.errors);
-    console.log(`Creating profile for ${data.firstName}, ${data.email}`);
+    console.log(`Creating profile for ${data.name}, ${data.email}`);
     const url = API_ENDPOINTS.auth.saveUser();
     const config = {
       method: 'post',

@@ -9,6 +9,12 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    domains: [
+      'justxchange-1.s3.ap-south-1.amazonaws.com',
+      'encrypted-tbn0.gstatic.com',
+    ], // Add your allowed domains here
+  },
 };
 
 export default nextConfig;

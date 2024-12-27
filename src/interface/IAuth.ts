@@ -12,7 +12,7 @@ export interface IOTPFormValues {
 }
 
 export interface IProfileFormValues {
-  firstName: string;
+  name: string;
   email: string;
   password: string;
   college: string;
@@ -35,4 +35,25 @@ export interface IUser {
   updatedBy: number;
   otp: string | null;
   otpExpiry: string | null;
+  address: IAddress[];
+}
+
+export interface IAddress {
+  id: string;
+  addressId: string;
+  address: string;
+  mobileNumber: string;
+  userId: number;
+  createdBy: string;
+  updatedBy: string;
+}
+
+export interface IUserFormValues {
+  id: string;
+  firstName: string;
+  email: string;
+  mobileNumber: string;
+  college: string;
+  address: string;
+  contactNumber: string;
 }

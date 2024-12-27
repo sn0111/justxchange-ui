@@ -1,5 +1,6 @@
 import Pagination from '@/components/Pagination';
 import { IProduct } from '@/interface';
+import { formatProductDate } from '@/lib/utils';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import Image from 'next/image';
 import React from 'react';
@@ -46,9 +47,11 @@ const UserProducts = ({
                   height={48}
                 />
                 <div>
-                  <p className="text-lg font-medium">{item.productName}</p>
+                  <p className="text-lg font-medium">
+                    {item.productName} ₹{item.amount}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    Listed {item.createdDate}
+                    {formatProductDate(item.createdDate)}
                   </p>
                 </div>
               </div>

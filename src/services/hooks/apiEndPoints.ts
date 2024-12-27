@@ -24,4 +24,8 @@ export const API_ENDPOINTS = {
     sendOtp: (mobileNumber: string) => `/signup/${mobileNumber}`,
     verifyOtp: () => `/verify-otp`,
   },
+  user: {
+    userprofile: () => `/user-profile`,
+    saveProfile: () => '/save-profile',
+  },
 };

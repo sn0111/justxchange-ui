@@ -65,27 +65,26 @@ const ProductChatContainer = () => {
     }
   }, [socket]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const createChat = async () => {
-    const url = API_ENDPOINTS.chat.createChat();
-    const config = {
-      method: 'post',
-      url: url,
-      data: { productId: Number(localStorage.getItem('productId')) },
-    };
-    try {
-      // setIsLoading(true);
-      const responseData: { data: IChat } = await makeRequest(config);
-      if (responseData) {
-        await getChats(responseData.data.id);
-        setSelectedChat(responseData.data.id);
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      // setIsLoading(false);
-    }
-  };
+  // const createChat = async () => {
+  //   const url = API_ENDPOINTS.chat.createChat();
+  //   const config = {
+  //     method: 'post',
+  //     url: url,
+  //     data: { productId: Number(localStorage.getItem('productId')) },
+  //   };
+  //   try {
+  //     // setIsLoading(true);
+  //     const responseData: { data: IChat } = await makeRequest(config);
+  //     if (responseData) {
+  //       await getChats(responseData.data.id);
+  //       setSelectedChat(responseData.data.id);
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     // setIsLoading(false);
+  //   }
+  // };
 
   const getChats = async (productUuid: string) => {
     const url = API_ENDPOINTS.chat.getProductChats(productUuid);
