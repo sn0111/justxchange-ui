@@ -2,13 +2,12 @@ import { ProfileDetails } from '@/app/_components/profile_view';
 import LoaderComponent from '@/components/LoaderComponent';
 import {
   IProduct,
-  IProfileFormValues,
   IUser,
   IUserFormValues,
 } from '@/interface';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
 import { Messages } from '@/lib/messages';
-import { notifyError } from '@/lib/utils';
+import { notifyError, notifySuccess } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 const userSchema = yup.object().shape({
-  id: yup.string().required('ID is required'),
+  // id: yup.string().required('ID is required'),
   firstName: yup.string().required('First name is required'),
   email: yup
     .string()
@@ -26,19 +25,20 @@ const userSchema = yup.object().shape({
     .required('Email is required'),
   mobileNumber: yup
     .string()
-    .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
+    // .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
     .required('Mobile number is required'),
   college: yup.string().required('College is required'),
   address: yup.string().required('Address is required'),
   contactNumber: yup
     .string()
-    .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
-    .required('Mobile number is required'),
+    // .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
+    .required('Contact number is required'),
 });
 
 const ProfileContainer = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [wishLists, setWishLists] = useState<IProduct[]>([]);
   const router = useRouter();
   const [step, setStep] = useState<number>(0);
   const [selectedPage, setSelectedPage] = useState<number>(1);
@@ -51,6 +51,7 @@ const ProfileContainer = () => {
     console.log(localStorage.getItem('productId'));
     getUserProducts();
     getUserProfile();
+    getUserWishlists();
   }, []);
 
   const getUserProducts = async () => {
@@ -86,7 +87,7 @@ const ProfileContainer = () => {
       if (responseData) {
         const user = responseData.data;
         profileForm.reset({
-          id: user.id,
+          // id: user.id,
           firstName: user.firstName,
           email: user.email,
           mobileNumber: user.mobileNumber,
@@ -118,12 +119,32 @@ const ProfileContainer = () => {
       setIsLoading(true);
       const responseData = await makeRequest(config);
       if (responseData) {
+        notifySuccess(responseData.data)
       }
     } catch (err) {
       const error = err as IAxiosError;
       notifyError(
         error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
       );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getUserWishlists = async () => {
+    const url = API_ENDPOINTS.product.getWishlists();
+    const config = {
+      method: 'get',
+      url: url,
+    };
+    try {
+      setIsLoading(true);
+      const responseData: { data: IProduct[] } = await makeRequest(config);
+      if (responseData) {
+        setWishLists(responseData.data);
+      }
+    } catch (err) {
+      console.log(err);
     } finally {
       setIsLoading(false);
     }
@@ -141,6 +162,7 @@ const ProfileContainer = () => {
         selectedPage={selectedPage}
         profileForm={profileForm}
         onProfileSubmit={onProfileSubmit}
+        wishLists={wishLists}
       />
     </div>
   );

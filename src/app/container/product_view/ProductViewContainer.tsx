@@ -1,6 +1,9 @@
 import { ProductDetails } from '@/app/_components/product_view';
 import LoaderComponent from '@/components/LoaderComponent';
 import { IProduct } from '@/interface';
+import { IAxiosError } from '@/interface/IAxiosErrRes';
+import { Messages } from '@/lib/messages';
+import { notifyError, notifySuccess } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { useSearchParams } from 'next/navigation';
@@ -72,6 +75,28 @@ const ProductViewContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const addToWishlist = async (productUuid: string)=>{
+    const url = API_ENDPOINTS.product.addToWishlist(productUuid);
+    const config = {
+      method: 'get',
+      url: url,
+    };
+    try {
+      setIsLoading(true);
+      const responseData = await makeRequest(config);
+      if (responseData) {
+        notifySuccess(responseData.data)
+      }
+    } catch (err) {
+      const error = err as IAxiosError;
+      notifyError(
+        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <div>
       {isLoading && <LoaderComponent />}
@@ -81,6 +106,7 @@ const ProductViewContainer = () => {
           currentIndex={currentIndex}
           goToPrevious={goToPrevious}
           goToNext={goToNext}
+          addToWishlist={addToWishlist}
         />
       )}
     </div>

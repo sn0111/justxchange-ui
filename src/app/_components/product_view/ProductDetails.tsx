@@ -8,6 +8,7 @@ interface IProductDetails {
   currentIndex: number;
   goToPrevious: () => void;
   goToNext: () => void;
+  addToWishlist: (productUuid: string) => void;
 }
 
 const ProductDetails = ({
@@ -15,6 +16,7 @@ const ProductDetails = ({
   currentIndex,
   goToPrevious,
   goToNext,
+  addToWishlist
 }: IProductDetails) => {
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
@@ -126,7 +128,7 @@ const ProductDetails = ({
           </button>
         </div>
         <div className="pb-2 pr-2 sm:px-2">
-          <button className="flex min-w-[84px] ml-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]">
+          <button onClick={()=>addToWishlist(product.id)} className="flex min-w-[84px] ml-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]">
             <Bookmark size={20} color="#0d141c" />
             <span className="truncate">Save</span>
           </button>

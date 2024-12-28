@@ -16,6 +16,7 @@ interface IProfileView {
   selectedPage: number;
   profileForm: UseFormReturn<IUserFormValues>;
   onProfileSubmit: (data: IUserFormValues) => void;
+  wishLists: IProduct[]
 }
 
 const ProfileDetails = ({
@@ -27,6 +28,7 @@ const ProfileDetails = ({
   selectedPage,
   profileForm,
   onProfileSubmit,
+  wishLists
 }: IProfileView) => {
   return (
     <div className="flex flex-col lg:flex-row  bg-gray-50 ">
@@ -82,7 +84,7 @@ const ProfileDetails = ({
       )}
       {step == 2 && (
         <Wishlists
-          products={products}
+          products={wishLists}
           router={router}
           selectPage={selectPage}
           selectedPage={selectedPage}

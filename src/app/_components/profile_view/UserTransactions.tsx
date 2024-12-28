@@ -31,7 +31,7 @@ const UserTransactions = ({
 
       {/* Listings */}
       <div className=" max-h-[70vh] min-h-[70vh] ">
-        <div className="space-y-4 max-h-[62vh] min-h-[62vh] overflow-scroll">
+        <div className="space-y-4 max-h-[62vh] min-h-[62vh] overflow-y-scroll">
           {products.map((item, index) => (
             <div
               key={index}
