@@ -1,6 +1,6 @@
 import { SearchProducts } from '@/app/_components/search_product';
 import LoaderComponent from '@/components/LoaderComponent';
-import { ICategory, IProduct } from '@/interface';
+import { ICategory, IProduct, IProductFilters, ISuggesions } from '@/interface';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { useRouter } from 'next/navigation';
@@ -12,17 +12,32 @@ const SearchProductsContainer = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [selectCategory, setSelectCategory] = useState<number>(0);
+  const [selectCategory, setSelectCategory] = useState<string>('');
   const [selectedPage, setSelectedPage] = useState<number>(1);
+  const [productsCount, setProductsCount] = useState<number>(0);
   const [query, setQuery] = useState('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<ISuggesions[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
  useEffect(() => {
     getCategories();
-    getProducts(0);
+    getProductsByCategory('', '', '', false)
+    
   }, []);
+
+  const getProductsByCategory=(categoryUuid: string, searchQuery: string, condition: string, filter: boolean)=>{
+    const body: IProductFilters={
+      productUuid: '',
+      categoryUuid: categoryUuid,
+      condition: condition,
+      isFilter: filter,
+      page: 1,
+      searchQuery: searchQuery,
+      size: 10
+    }
+    getProducts(body);
+  }
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -32,18 +47,25 @@ const SearchProductsContainer = () => {
       }
 
       setLoading(true);
+      const url = API_ENDPOINTS.product.productSuggestions();
+      const config = {
+        method: 'get',
+        url: url,
+        params: { query }
+      };
       try {
-
-        const s = [
-          "Laptop",
-          "Laptop Bag","Lap Desk"
-        ]
-        setSuggestions(s);
-      } catch (error) {
-        console.error('Error fetching suggestions:', error);
+        setIsLoading(true);
+        const responseData: { data: ISuggesions[] } = await makeRequest(config);
+        if (responseData?.data) {
+          setSuggestions(responseData.data);
+        }
+      } catch (err) {
+        console.log(err);
       } finally {
+        setIsLoading(false);
         setLoading(false);
       }
+
     };
 
     // Debounce API calls
@@ -58,7 +80,7 @@ const SearchProductsContainer = () => {
       setActiveIndex(activeIndex - 1);
     } else if (e.key === 'Enter' && activeIndex !== null) {
       // You can handle the suggestion click here, e.g., by setting the input to the selected suggestion
-      setQuery(suggestions[activeIndex]);
+      setQuery(suggestions[activeIndex].productName);
       setSuggestions([]); // Clear suggestions after selection
     }
   };
@@ -77,32 +99,30 @@ const SearchProductsContainer = () => {
       }
     } catch (err) {
       console.log(err);
-      // const error = err as ;
-      // toast.error(
-      //   error.msg || Messages.somethingWentWrong
-      // );
     } finally {
       setIsLoading(false);
     }
   };
 
 
-  const getProducts = async (id: number) => {
-    setSelectCategory(id)
-    let url = API_ENDPOINTS.product.getProduct();
-    if(id){
-      url = API_ENDPOINTS.product.getProductByCategory(id);
-    }
-    
+  const getProducts = async (body: IProductFilters) => {
+    if(body.categoryUuid)
+      setSelectCategory(body.categoryUuid)
+
+    const url = API_ENDPOINTS.product.filterProducts();
+
     const config = {
-      method: 'get',
+      method: 'post',
       url: url,
+      data: body,
     };
     try {
       setIsLoading(true);
-      const responseData: { data: IProduct[] } = await makeRequest(config);
+      const responseData = await makeRequest(config);
       if (responseData) {
-        setProducts(responseData.data);
+        setProducts(responseData.data.data);
+        setSuggestions([])
+        setProductsCount(responseData.data.meta.totalCount)
       }
     } catch (err) {
       console.log(err);
@@ -114,7 +134,7 @@ const SearchProductsContainer = () => {
   return (
     <div>
       {isLoading && <LoaderComponent />}
-      <SearchProducts router={router} categories={categories} products={products} selectCategory={selectCategory} getProducts={getProducts} selectPage={setSelectedPage} selectedPage={selectedPage} query={query} setQuery={setQuery} handleKeyDown={handleKeyDown} loading={loading} activeIndex={0} setActiveIndex={setActiveIndex} suggestions={[]} setSuggestions={()=>{}}/>
+      <SearchProducts router={router} categories={categories} products={products} selectCategory={selectCategory} getProductsByCategory={getProductsByCategory} selectPage={setSelectedPage} selectedPage={selectedPage} query={query} setQuery={setQuery} handleKeyDown={handleKeyDown} loading={loading} activeIndex={0} setActiveIndex={setActiveIndex} suggestions={suggestions} setSuggestions={setSuggestions} productsCount={productsCount}/>
     </div>
   );
 };

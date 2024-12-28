@@ -1,28 +1,22 @@
-import { ICategory } from '@/interface';
+import { ICategory, IProductForm } from '@/interface';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { ChangeEvent } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { AiOutlineClose } from 'react-icons/ai';
 
 interface IAddProduct {
   images: string[];
   categories: ICategory[];
-  formState: {
-    productName: string;
-    description: string;
-    amount: number;
-    categoryId: number;
-    condition: string;
-    userId: number;
-  };
+  productForm: UseFormReturn<IProductForm>;
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleDivClick: (index: number) => void;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleInputChange: (
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => void;
+  // handleInputChange: (
+  //   event: ChangeEvent<
+  //     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+  //   >
+  // ) => void;
   addProduct: () => void;
   handleRemoveImage: (index: number) => void;
   viewImageModal: boolean;
@@ -33,11 +27,11 @@ interface IAddProduct {
 const AddProduct = ({
   images,
   categories,
-  formState,
+  productForm,
   fileInputRef,
   handleDivClick,
   handleFileChange,
-  handleInputChange,
+  // handleInputChange,
   addProduct,
   handleRemoveImage,
   viewImageModal,
@@ -46,25 +40,41 @@ const AddProduct = ({
 }: IAddProduct) => {
   return (
     <div className="relative flex size-full py-4 min-h-screen flex-col bg-slate-50 group/design-root">
-      <div className="max-w-3xl md:mx-auto p-6 bg-white rounded-lg shadow-sm">
+      <form onSubmit={productForm.handleSubmit(addProduct)} className="max-w-3xl md:mx-auto p-6 bg-white rounded-lg shadow-sm">
         <h1 className="text-2xl font-semibold mb-6">Add Product</h1>
 
         <div className="space-y-4 mb-6">
-          <input
-            type="text"
-            name="productName"
-            value={formState.productName || ''} // Ensure controlled input
-            placeholder="Product name"
-            onChange={handleInputChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <textarea
-            name="description"
-            value={formState.description || ''} // Ensure controlled input
-            placeholder="Description"
-            onChange={handleInputChange}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          ></textarea>
+          <div className='p-2'>
+            <input
+              type="text"
+              // name="productName"
+              {...productForm.register('productName')}
+              // value={formState.productName || ''} // Ensure controlled input
+              placeholder="Product name"
+              // onChange={handleInputChange}
+              className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {productForm.formState.errors.productName && (
+              <p className="text-red-500 text-xs">
+                {productForm.formState.errors.productName.message}
+              </p>
+            )}
+          </div>
+          <div className='p-2'>
+            <textarea
+              // name="description"
+              // value={formState.description || ''} // Ensure controlled input
+              {...productForm.register('description')}
+              placeholder="Description"
+              // onChange={handleInputChange}
+              className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            ></textarea>
+            {productForm.formState.errors.description && (
+              <p className="text-red-500 text-xs">
+                {productForm.formState.errors.description.message}
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="mb-6">
@@ -108,15 +118,21 @@ const AddProduct = ({
               >
                 <input
                   type="radio"
-                  name="categoryId"
+                  // name="categoryId"
                   value={category.categoryId}
-                  checked={category.categoryId == formState.categoryId}
-                  onChange={handleInputChange}
+                  {...productForm.register('categoryId')}
+                  checked={category.categoryId == productForm.watch('categoryId')}
+                  // onChange={handleInputChange}
                   className="mr-2"
                 />
                 {category.categoryName}
               </label>
             ))}
+            {productForm.formState.errors.categoryId && (
+              <p className="text-red-500 text-xs">
+                {productForm.formState.errors.categoryId.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -162,45 +178,56 @@ const AddProduct = ({
                 >
                   <input
                     type="radio"
-                    name="condition"
+                    // name="condition"
                     value={condition}
-                    checked={formState.condition === condition}
-                    onChange={handleInputChange}
+                    {...productForm.register('condition')}
+                    checked={productForm.watch('condition') === condition}
+                    // onChange={handleInputChange}
                     className="mr-2"
                   />
                   {condition}
                 </label>
               )
             )}
+            {productForm.formState.errors.condition && (
+              <p className="text-red-500 text-xs">
+                {productForm.formState.errors.condition.message}
+              </p>
+            )}
           </div>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 col-span-1">
           <label className="block text-lg font-medium mb-2">
             Price or Exchange Terms
           </label>
           <div className="flex space-x-4">
             <input
               type="number"
-              name="amount"
-              value={formState.amount || 0} // Ensure controlled input
-              placeholder="Price"
-              onChange={handleInputChange}
+              // name="amount"
+              // value={formState.amount || 0} // Ensure controlled input
+              {...productForm.register('amount')}
+              // onChange={handleInputChange}
               className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          {productForm.formState.errors.amount && (
+            <p className="text-red-500 text-xs">
+              {productForm.formState.errors.amount.message}
+            </p>
+          )}
         </div>
 
         <div className="flex justify-between items-center">
-          <button className="text-gray-600 hover:underline">Cancel</button>
+          <button className="text-gray-600 hover:underline" onClick={()=>productForm.reset()}>Clear</button>
           <button
-            onClick={addProduct}
+            // onClick={addProduct}
             className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
           >
             Add Product
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

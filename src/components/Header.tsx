@@ -64,11 +64,6 @@ export const Header = () => {
                   Sell
                 </span>
               </Link>
-              <Link href="/wishlist">
-                <span className="text-[#141C24] text-sm font-medium leading-normal">
-                  Wishlist
-                </span>
-              </Link>
             </div>
             {/* Conditionally hide SearchButton */}
             {!currentPath.includes('/search') && (

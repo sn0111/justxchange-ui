@@ -15,6 +15,7 @@ const nextConfig = {
       'encrypted-tbn0.gstatic.com',
     ], // Add your allowed domains here
   },
+  reactStrictMode: false,
 };
 
 export default nextConfig;

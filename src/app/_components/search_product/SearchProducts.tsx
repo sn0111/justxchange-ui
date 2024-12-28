@@ -1,5 +1,5 @@
 import Pagination from '@/components/Pagination';
-import { ICategory, IProduct } from '@/interface';
+import { ICategory, IProduct, ISuggesions } from '@/interface';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import {
   FiMonitor,
@@ -11,8 +11,8 @@ interface ISearchProducts {
   router: AppRouterInstance;
   categories: ICategory[];
   products: IProduct[];
-  selectCategory: number;
-  getProducts:(id: number)=>void;
+  selectCategory: string;
+  getProductsByCategory:(categoryUuid: string, searchQuery: string, condition: string, filter: boolean)=>void;
   selectPage: (pageNumber: number) => void;
   selectedPage: number;
   query: string;
@@ -21,10 +21,11 @@ interface ISearchProducts {
   loading: boolean;
   activeIndex: number;
   setActiveIndex: (index:number)=>void;
-  suggestions: string[];
-  setSuggestions: (suggestions: string[])=>void;
+  suggestions: ISuggesions[];
+  setSuggestions: (suggestions: ISuggesions[])=>void;
+  productsCount: number;
 }
-const SearchProducts = ({ router, categories, products, selectCategory,  getProducts, selectPage, selectedPage, query, setQuery, handleKeyDown, loading, activeIndex, setActiveIndex, suggestions, setSuggestions }: ISearchProducts) => {
+const SearchProducts = ({ router, categories, products, selectCategory,  getProductsByCategory, selectPage, selectedPage, query, setQuery, handleKeyDown, loading, activeIndex, setActiveIndex, suggestions, setSuggestions, productsCount }: ISearchProducts) => {
 
 
 
@@ -42,13 +43,13 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
                   Choose Category
                 </h1>
                 <div className="flex flex-col gap-2">
-                  <div onClick={()=>getProducts(0)} className={`flex items-center gap-3 px-3 py-2 rounded-xl hover:cursor-pointer hover:bg-[#e7edf4] ${selectCategory===0 && 'bg-[#e7edf4]'}`}>
+                  <div onClick={()=>getProductsByCategory('', '' ,'', false)} className={`flex items-center gap-3 px-3 py-2 rounded-xl hover:cursor-pointer hover:bg-[#e7edf4] ${selectCategory==='' && 'bg-[#e7edf4]'}`}>
                     <FiTable className="text-[#0d141c]" size={24} />
                     <p className="text-[#0d141c] text-sm font-medium leading-normal">
                       All Listings
                     </p>
                   </div>
-                  {categories.map((item)=><div onClick={()=>getProducts(Number(item.categoryId))} key={item.id} className={`flex items-center gap-3 px-3 py-2 rounded-xl hover:cursor-pointer hover:bg-[#e7edf4] ${selectCategory==item.categoryId && 'bg-[#e7edf4]'}`}>
+                  {categories.map((item)=><div onClick={()=>getProductsByCategory(item.id, '', '', true)} key={item.id} className={`flex items-center gap-3 px-3 py-2 rounded-xl hover:cursor-pointer hover:bg-[#e7edf4] ${selectCategory===item.id && 'bg-[#e7edf4]'}`}>
                     <FiMonitor className="text-[#0d141c]" size={24} />
                     <p className="text-[#0d141c] text-sm font-medium leading-normal">
                       {item.categoryName}
@@ -103,19 +104,21 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
                   ) : suggestions.length > 0 ? (
                     suggestions.map((suggestion, index) => (
                       <div
-                        key={index}
+                        key={suggestion.id}
                         className={`px-4 py-2 text-sm cursor-pointer ${
                           activeIndex === index
                             ? 'bg-[#e7edf4] text-[#49719c]'
                             : 'hover:bg-[#f4f6f9] text-[#0d141c]'
                         }`}
                         onClick={() => {
-                          setQuery(suggestion);
+                          setActiveIndex(index)
+                          setQuery(suggestion.productName);
                           setSuggestions([]);
+                          getProductsByCategory('', suggestion.productName, '', true)
                         }}
                         onMouseEnter={() => setActiveIndex(index)}
                       >
-                        {suggestion}
+                        {suggestion.productName}
                       </div>
                     ))
                   ) : (
@@ -147,9 +150,9 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
               ))}
             </div>
             <div className="pt-3">
-              {Math.ceil(products.length / 10) > 0 && (
+              {Math.ceil(productsCount / 10) > 0 && (
                 <Pagination
-                  count={Math.ceil(products.length / 10)}
+                  count={Math.ceil(productsCount / 10)}
                   selectPage={selectPage}
                   selectedPage={selectedPage}
                 />

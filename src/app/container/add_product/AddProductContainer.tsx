@@ -1,22 +1,36 @@
 import { AddProduct } from '@/app/_components/add_product';
 import LoaderComponent from '@/components/LoaderComponent';
-import { ICategory, IProduct } from '@/interface';
+import { IProductForm, ICategory, IProduct } from '@/interface';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
 import { Messages } from '@/lib/messages';
 import { notifyError, notifySuccess } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+
+const productSchema = yup.object().shape({
+  productName: yup.string().required('Product name is required'),
+  description: yup.string().required('Description is required'),
+  amount: yup.number().required("Amount is required"),
+  categoryId: yup.number().required('CategoryId is required'),
+  condition: yup.string().required('Condition is required')
+});
 
 const AddProductContainer = () => {
-  const [formState, setFormState] = useState({
-    productName: '',
-    description: '',
-    amount: 0.0,
-    categoryId: 0,
-    condition: '',
-    userId: 1,
+  // const [formState, setFormState] = useState({
+  //   productName: '',
+  //   description: '',
+  //   amount: 0.0,
+  //   categoryId: 0,
+  //   condition: '',
+  //   userId: 1,
+  // });
+  const productForm = useForm<IProductForm>({
+    resolver: yupResolver(productSchema),
   });
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [images, setImages] = useState<string[]>(['', '', '', '', '']);
@@ -30,7 +44,8 @@ const AddProductContainer = () => {
   useEffect(() => {
     const productId = searchParams.get('productId') || '';
     getCategories();
-    getProductInfo(productId);
+    if(productId)
+      getProductInfo(productId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,14 +60,13 @@ const AddProductContainer = () => {
       const responseData: { data: IProduct } = await makeRequest(config);
       if (responseData) {
         const product = responseData.data;
-        setFormState({
+        productForm.reset({
           productName: product.productName || '',
           description: product.description || '',
           amount: product.amount || 0.0,
           categoryId: product.categoryId || 0,
-          condition: product.condition || '',
-          userId: product.userId || 1,
-        });
+          condition: product.condition || ''
+        })
         setImages(product.images || ['', '', '', '', '']);
       }
     } catch (err) {
@@ -105,19 +119,19 @@ const AddProductContainer = () => {
     }
   };
 
-  const handleInputChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = event.target;
+  // const handleInputChange = (
+  //   event: React.ChangeEvent<
+  //     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+  //   >
+  // ) => {
+  //   const { name, value } = event.target;
 
-    // If the event target is a select element, handle its value correctly
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: value || '',
-    }));
-  };
+  //   // If the event target is a select element, handle its value correctly
+  //   setFormState((prevState) => ({
+  //     ...prevState,
+  //     [name]: value || '',
+  //   }));
+  // };
 
   const uploadProductImage = async (file: File) => {
     const url = API_ENDPOINTS.product.getImage();
@@ -153,7 +167,8 @@ const AddProductContainer = () => {
 
   const addProduct = async () => {
     const url = API_ENDPOINTS.product.addProduct();
-    const body = { ...formState, images: images.filter((img) => img !== '') };
+    const body = { ...productForm.getValues(), images: images.filter((img) => img !== '') };
+    console.log(body)
     const config = {
       method: 'post',
       url: url,
@@ -164,14 +179,7 @@ const AddProductContainer = () => {
       const responseData: { data: IProduct; message: string } =
         await makeRequest(config);
       if (responseData) {
-        setFormState({
-          productName: '',
-          description: '',
-          amount: 0.0,
-          categoryId: 0,
-          condition: '',
-          userId: 1,
-        });
+        productForm.reset();
         setImages(['', '', '', '', '']);
         notifySuccess(responseData.message);
       }
@@ -196,11 +204,11 @@ const AddProductContainer = () => {
       <AddProduct
         images={images}
         categories={categories}
-        formState={formState}
+        productForm={productForm}
         fileInputRef={fileInputRef}
         handleDivClick={handleDivClick}
         handleFileChange={handleFileChange}
-        handleInputChange={handleInputChange}
+        // handleInputChange={handleInputChange}
         addProduct={addProduct}
         handleRemoveImage={handleRemoveImage}
         viewImageModal={viewImageModal}

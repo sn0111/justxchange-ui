@@ -9,7 +9,7 @@ const ListProducts = ({ router, products }: IListProducts) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4">
       {products.map((item) => (
-        <div key={item.productId} className="flex flex-col gap-3 pb-3">
+        <div key={item.id} className="flex flex-col gap-3 pb-3">
           <div
             className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer"
             style={{
