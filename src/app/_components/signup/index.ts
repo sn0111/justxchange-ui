@@ -1,3 +1,3 @@
 import SignUpContainer from '@/app/container/signup/SignUpContainer';
-
-export { SignUpContainer };
+import { OtpVerifier } from '../otp_verifier/OtpVerifier';
+export { SignUpContainer, OtpVerifier };

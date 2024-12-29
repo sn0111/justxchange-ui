@@ -54,6 +54,11 @@ const LoginContainer = () => {
       setIsLoading(true);
       const responseData = await makeRequest(config);
       if (responseData) {
+        if (responseData.data.requires2FA) {
+          //direct to signup with mobile number
+          router.push(`/login/verify?mobileNumber=${data.mobileNumber}`);
+          return;
+        }
         login(responseData.data.token);
         localStorage.setItem('userId', responseData.data.userId);
         router.push('/home');

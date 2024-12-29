@@ -33,7 +33,7 @@ const otpSchema = yup.object().shape({
 });
 
 const profileSchema = yup.object().shape({
-  name: yup.string().required('Name is required'),
+  firstName: yup.string().required('First name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
   password: yup.string().required('Password is required'),
   college: yup.string().required('College is required'),
@@ -78,7 +78,7 @@ const Signup = () => {
 
   const onSubmitProfile = (data: IProfileFormValues) => {
     console.log('wrok.');
-    console.log(`Creating profile for ${data.name}, ${data.email}`);
+    console.log(`Creating profile for ${data.firstName}, ${data.email}`);
     login('dummyToken');
     router.push('/');
   };
@@ -199,13 +199,13 @@ const Signup = () => {
               </p>
             )}
             <input
-              {...profileForm.register('name')}
-              placeholder="Full Name"
+              {...profileForm.register('firstName')}
+              placeholder="First Name"
               className="w-full p-2 border rounded-lg mb-2"
             />
-            {profileForm.formState.errors.name && (
+            {profileForm.formState.errors.firstName && (
               <p className="text-red-500">
-                {profileForm.formState.errors.name.message}
+                {profileForm.formState.errors.firstName.message}
               </p>
             )}
             <input

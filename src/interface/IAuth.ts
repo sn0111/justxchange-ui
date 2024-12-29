@@ -12,7 +12,7 @@ export interface IOTPFormValues {
 }
 
 export interface IProfileFormValues {
-  name: string;
+  firstName: string;
   email: string;
   password: string;
   college: string;
