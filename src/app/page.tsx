@@ -1,6 +1,6 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 
 export default function RedirectToHome() {
   const router = useRouter();
@@ -9,5 +9,5 @@ export default function RedirectToHome() {
     router.replace('/home'); // Redirect to /home
   }, [router]);
 
-  return null; // Render nothing while redirecting
+  return <div>loading...</div>; // Render nothing while redirecting
 }

@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import Loading from '@/components/loading';
+import { Suspense } from 'react';
 
 // Define your fonts
 const geistSans = localFont({
@@ -39,7 +40,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           {/* Global Loader */}
-          <Loading />
+          <Suspense><Loading /></Suspense>
 
           {/* Header Section */}
           <div className="fixed top-0 left-0 w-full z-10 bg-white shadow-md">

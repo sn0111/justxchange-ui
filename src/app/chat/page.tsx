@@ -1,10 +1,11 @@
 'use client';
 import withAuth from '@/lib/auth/withAuth';
 import { ChatViewContainer } from '../container/chat_view';
+import { Suspense } from 'react';
 
 function Chat() {
   return (
-    <ChatViewContainer/>
+    <Suspense><ChatViewContainer/></Suspense>
   );
 }
 

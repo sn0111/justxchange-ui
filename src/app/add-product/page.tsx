@@ -1,10 +1,10 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { AddProductContainer } from '../container/add_product';
 import withAuth from '@/lib/auth/withAuth';
 
 function AddProduct() {
-  return <AddProductContainer/>
+  return <Suspense><AddProductContainer/></Suspense>
 }
 
 export default withAuth(AddProduct);

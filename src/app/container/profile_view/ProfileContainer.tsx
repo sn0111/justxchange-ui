@@ -56,6 +56,7 @@ const ProfileContainer = () => {
     getUserProducts();
     getUserProfile();
     getUserWishlists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
