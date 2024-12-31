@@ -40,8 +40,8 @@ const AddProduct = ({
 }: IAddProduct) => {
   return (
     <div className="relative flex size-full py-4 min-h-screen flex-col bg-slate-50 group/design-root">
-      <form onSubmit={productForm.handleSubmit(addProduct)} className="max-w-3xl md:mx-auto p-6 bg-white rounded-lg shadow-sm">
-        <h1 className="text-2xl font-semibold mb-6">Add Product</h1>
+      <form className="max-w-3xl md:mx-auto p-6 bg-white rounded-lg shadow-sm">
+        <h1 className="text-2xl font-semibold mb-6">Sell Product</h1>
 
         <div className="space-y-4 mb-6">
           <div className='p-2'>
@@ -161,6 +161,8 @@ const AddProduct = ({
                   src={selectedImage}
                   alt="Selected"
                   className="w-full h-auto"
+                  height={500}
+                  width={500}
                 />
               </motion.div>
             </motion.div>
@@ -221,7 +223,7 @@ const AddProduct = ({
         <div className="flex justify-between items-center">
           <button className="text-gray-600 hover:underline" onClick={()=>productForm.reset()}>Clear</button>
           <button
-            // onClick={addProduct}
+            onClick={addProduct}
             className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
           >
             Add Product

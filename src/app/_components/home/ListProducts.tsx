@@ -1,3 +1,4 @@
+import DefaultNotFound from '@/components/DefaultNotFound';
 import { IProduct } from '@/interface';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
@@ -8,7 +9,7 @@ interface IListProducts {
 const ListProducts = ({ router, products }: IListProducts) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4">
-      {products.map((item) => (
+      {products.length> 0 ? products.map((item) => (
         <div key={item.id} className="flex flex-col gap-3 pb-3">
           <div
             className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer"
@@ -29,7 +30,7 @@ const ListProducts = ({ router, products }: IListProducts) => {
             </p>
           </div>
         </div>
-      ))}
+      )): <DefaultNotFound imageSrc='https://justxchange-1.s3.ap-south-1.amazonaws.com/uploads/1735562621067_default.png' text='No Products found' containerHeight='min-h-[60vh]'/>}
     </div>
   );
 };

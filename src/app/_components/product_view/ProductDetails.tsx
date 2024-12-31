@@ -135,7 +135,7 @@ const ProductDetails = ({
         </div>
         <div className="pr-2 sm:px-2">
           <Link
-            href="/chat"
+            href={`/chat`}
             className="flex w-[130px] ml-auto cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#2589f4] text-white gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
           >
             <ChatCircle size={20} color="white" />

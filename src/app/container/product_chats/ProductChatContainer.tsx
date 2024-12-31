@@ -54,6 +54,7 @@ const ProductChatContainer = () => {
     //   setIsLoading(false);
     // };
     // initializeChat();
+    
   }, []);
 
   useEffect(() => {

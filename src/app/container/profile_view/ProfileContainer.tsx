@@ -12,7 +12,7 @@ import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -33,6 +33,8 @@ const userSchema = yup.object().shape({
     .string()
     // .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
     .required('Contact number is required'),
+    is2FAEnabled: yup.boolean().default(false),
+  profileUrl: yup.string().required("Profile image required")
 });
 
 const ProfileContainer = () => {
@@ -42,6 +44,8 @@ const ProfileContainer = () => {
   const router = useRouter();
   const [step, setStep] = useState<number>(0);
   const [selectedPage, setSelectedPage] = useState<number>(1);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
 
   const profileForm = useForm<IUserFormValues>({
     resolver: yupResolver(userSchema),
@@ -53,6 +57,43 @@ const ProfileContainer = () => {
     getUserProfile();
     getUserWishlists();
   }, []);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      uploadProductImage(file);
+    }
+  };
+
+  const uploadProductImage = async (file: File) => {
+    const url = API_ENDPOINTS.product.getImage();
+    const formData = new FormData();
+    formData.append('image', file, file.name);
+
+    const config = {
+      method: 'POST',
+      url: url,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    };
+
+    try {
+      setIsLoading(true);
+      const responseData: { imageUrl: string; message: string } =
+        await makeRequest(config);
+      if (responseData) {
+        profileForm.setValue('profileUrl', responseData.imageUrl)
+        notifySuccess('Image uploaded successfully');
+      }
+    } catch (err) {
+      console.log(err);
+      notifyError('Image upload failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const getUserProducts = async () => {
     const url = API_ENDPOINTS.product.getUserProducts();
@@ -95,6 +136,8 @@ const ProfileContainer = () => {
           address: user.address.length > 0 ? user.address[0].address : '',
           contactNumber:
             user.address.length > 0 ? user.address[0].mobileNumber : '',
+          is2FAEnabled: user.is2FAEnabled,
+          profileUrl: user.profileUrl
         });
       }
     } catch (err) {
@@ -163,6 +206,8 @@ const ProfileContainer = () => {
         profileForm={profileForm}
         onProfileSubmit={onProfileSubmit}
         wishLists={wishLists}
+        fileInputRef={fileInputRef}
+        handleFileChange={handleFileChange}
       />
     </div>
   );

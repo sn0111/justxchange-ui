@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 // import { useState } from 'react';
 
+
 const SearchProductsContainer = () => {
   const router = useRouter();
   const [products, setProducts] = useState<IProduct[]>([]);

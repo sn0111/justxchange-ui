@@ -55,19 +55,23 @@ const UserProducts = ({
                   </p>
                 </div>
               </div>
-              <div>
+              <div className='flex'>
+                <div className='pr-3'>
                 <FaInfoCircle
                   className="text-xl cursor-pointer"
                   onClick={() =>
                     router.push(`/add-product?productId=${item.id}`)
                   }
                 />
+                </div>
+                <div className='pr-3'>
                 <IoIosChatbubbles
                   className="text-xl cursor-pointer"
                   onClick={() =>
-                    router.push(`/product-chats?productId=${item.id}`)
+                    router.push(`/chat?productId=${item.id}`)
                   }
                 />
+                </div>
               </div>
               {/* <p className="text-lg font-medium">{item.amount}</p> */}
             </div>

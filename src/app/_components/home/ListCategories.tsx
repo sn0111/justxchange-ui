@@ -1,4 +1,5 @@
 import { ICategory } from '@/interface';
+import { categoryIcons } from '@/lib/constants';
 
 interface ListCategories {
   categories: ICategory[];
@@ -12,18 +13,24 @@ const ListCategories = ({
 }: ListCategories) => {
   return (
     <div className="flex gap-3 p-3 flex-wrap pr-4">
-      {categories.map((item, key) => (
-        <div
-          key={key}
-          onClick={() => handleSelectCategory(item.id || '')}
-          className={`flex h-8 shrink-0 items-center cursor-pointer justify-center gap-x-2 rounded-xl pl-4 pr-4 ${selectCategory === item.id ? 'bg-[#7c9dce]' : 'bg-[#f0f2f5]'}`}
-        >
-          <p className="text-[#111418] text-sm font-medium leading-normal">
-            {item.categoryName}
-          </p>
-        </div>
-      ))}
+  {categories.map((item, key) => (
+    <div
+      key={key}
+      onClick={() => handleSelectCategory(item.id || '')}
+      className={`flex h-10 shrink-0 items-center cursor-pointer justify-center gap-2 rounded-lg pl-3 pr-3 border transition-colors duration-200 ${
+        selectCategory === item.id
+          ? 'bg-blue-500 border-blue-500 text-white'
+          : 'bg-white border-gray-300 text-gray-800 hover:bg-gray-100'
+      }`}
+    >
+      {/* Icon */}
+      <span className="w-5 h-5">{categoryIcons[item.categoryName]}</span>
+      {/* Category Name */}
+      <p className="text-sm font-medium">{item.categoryName}</p>
     </div>
+  ))}
+</div>
+
   );
 };
 

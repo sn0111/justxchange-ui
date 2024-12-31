@@ -1,11 +1,13 @@
+import DefaultNotFound from '@/components/DefaultNotFound';
 import Pagination from '@/components/Pagination';
 import { ICategory, IProduct, ISuggesions } from '@/interface';
+import { categoryIcons } from '@/lib/constants';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import {
-  FiMonitor,
   FiSearch,
   FiTable,
 } from 'react-icons/fi';
+
 
 interface ISearchProducts {
   router: AppRouterInstance;
@@ -50,7 +52,7 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
                     </p>
                   </div>
                   {categories.map((item)=><div onClick={()=>getProductsByCategory(item.id, '', '', true)} key={item.id} className={`flex items-center gap-3 px-3 py-2 rounded-xl hover:cursor-pointer hover:bg-[#e7edf4] ${selectCategory===item.id && 'bg-[#e7edf4]'}`}>
-                    <FiMonitor className="text-[#0d141c]" size={24} />
+                    {categoryIcons[item.categoryName]}
                     <p className="text-[#0d141c] text-sm font-medium leading-normal">
                       {item.categoryName}
                     </p>
@@ -101,7 +103,7 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
                 >
                   {loading ? (
                     <div className="px-4 py-2 text-center text-gray-500">Loading...</div>
-                  ) : suggestions.length > 0 ? (
+                  ) : suggestions.length > 0 && (
                     suggestions.map((suggestion, index) => (
                       <div
                         key={suggestion.id}
@@ -121,14 +123,12 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
                         {suggestion.productName}
                       </div>
                     ))
-                  ) : (
-                    <div className="px-4 py-2 text-center text-gray-500">No suggestions found.</div>
                   )}
                 </div>
               )}
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4 min-h-[73vh] overflow-y-scroll">
-              {products.map((item) => (
+              {products.length > 0 ? products.map((item) => (
                 <div key={item.id} className="flex flex-col gap-3 pb-3">
                   <div
                     className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer"
@@ -147,7 +147,7 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
                     </p>
                   </div>
                 </div>
-              ))}
+              )): <DefaultNotFound imageSrc='https://justxchange-1.s3.ap-south-1.amazonaws.com/uploads/1735562621067_default.png' text='No Products found'/>}
             </div>
             <div className="pt-3">
               {Math.ceil(productsCount / 10) > 0 && (

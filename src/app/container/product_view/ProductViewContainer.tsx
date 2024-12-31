@@ -18,7 +18,10 @@ const ProductViewContainer = () => {
 
   useEffect(() => {
     const productId = searchParams.get('productId') || '';
-    getProductInfo(productId);
+    if(productId){
+      getProductInfo(productId);
+      localStorage.setItem("productId", productId)
+    }
   }, [searchParams]);
 
   //example for api call with util function, same should be repeated everywhere for api call

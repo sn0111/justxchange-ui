@@ -57,11 +57,18 @@ export const AuthProvider = ({
     localStorage.setItem('tokenExpiration', expirationTime.toString());
     setAuthenticationToken(token);
 
-    // Debugging expiration time
-    console.log('Token expiration set to:', expirationTime);
+  // Calculate remaining time for token expiration
+  const timeRemaining = expirationTime - new Date().getTime();
+  
+  // Debugging expiration time and time remaining
+  console.log('Token expiration set to:', expirationTime);
+  console.log('Time remaining for token:', timeRemaining);
 
-    // Set a timeout to logout the user after 1 minute
-    const timer = setTimeout(logout, expirationTime); // 60000ms = 1 minute
+
+
+  // Set a timeout to logout the user when the token expires
+  const timer = setTimeout(logout, timeRemaining); 
+
     return () => clearTimeout(timer); // Cleanup previous timeout if any
   };
 

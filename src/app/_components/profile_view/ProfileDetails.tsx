@@ -16,7 +16,9 @@ interface IProfileView {
   selectedPage: number;
   profileForm: UseFormReturn<IUserFormValues>;
   onProfileSubmit: (data: IUserFormValues) => void;
-  wishLists: IProduct[]
+  wishLists: IProduct[];
+  fileInputRef: React.RefObject<HTMLInputElement>;
+  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfileDetails = ({
@@ -28,13 +30,15 @@ const ProfileDetails = ({
   selectedPage,
   profileForm,
   onProfileSubmit,
-  wishLists
+  wishLists,
+  fileInputRef,
+  handleFileChange
 }: IProfileView) => {
   return (
     <div className="flex flex-col lg:flex-row  bg-gray-50 ">
       {/* Sidebar */}
       <aside className="w-full lg:w-1/4 bg-white p-4 lg:p-6">
-        <h2 className="text-xl font-semibold mb-4 lg:mb-6">My Listings</h2>
+        <h2 className="text-xl font-semibold mb-4 lg:mb-6">Account Details</h2>
         <ul className="space-y-2 lg:space-y-4">
           <li
             className={`flex items-center gap-3 p-3 rounded-lg ${step === 0 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
@@ -80,6 +84,8 @@ const ProfileDetails = ({
         <UserProfile
           profileForm={profileForm}
           onProfileSubmit={onProfileSubmit}
+          fileInputRef={fileInputRef}
+          handleFileChange={handleFileChange}
         />
       )}
       {step == 2 && (

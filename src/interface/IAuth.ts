@@ -36,6 +36,8 @@ export interface IUser {
   otp: string | null;
   otpExpiry: string | null;
   address: IAddress[];
+  is2FAEnabled: boolean;
+  profileUrl: string;
 }
 
 export interface IAddress {
@@ -56,4 +58,6 @@ export interface IUserFormValues {
   college: string;
   address: string;
   contactNumber: string;
+  is2FAEnabled: boolean;
+  profileUrl: string;
 }

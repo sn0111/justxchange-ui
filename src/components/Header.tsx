@@ -59,12 +59,27 @@ export const Header = () => {
         {authenticationToken && (
           <>
             <div className="hidden md:flex items-center gap-3">
-              <Link href="/add-product">
-                <span className="text-[#141C24] text-sm font-medium leading-normal">
-                  Sell
-                </span>
-              </Link>
-            </div>
+  <Link href="/add-product">
+    <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-purple-700 focus:outline-none">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-5 h-5"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 4.5v15m7.5-7.5h-15"
+        />
+      </svg>
+      <span>Sell</span>
+    </button>
+  </Link>
+</div>
+
             {/* Conditionally hide SearchButton */}
             {!currentPath.includes('/search') && (
               <div className="sm:flex">

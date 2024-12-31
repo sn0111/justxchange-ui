@@ -1,11 +1,12 @@
 'use client';
 import { ChatView } from '@/app/_components/chat_view';
 import LoaderComponent from '@/components/LoaderComponent';
-import { useSocket } from '@/hooks/useSocket';
 import { IChat, IMessage } from '@/interface/IChat';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
-import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 
 // Hook to get window size
 function useWindowSize() {
@@ -18,9 +19,8 @@ function useWindowSize() {
   }, []);
   return size;
 }
-
 const ChatViewContainer = () => {
-  const socket = useSocket(Number(1));
+  // const socket = useSocket(Number(1));
   const [isExpanded, setIsExpanded] = useState(true);
   const [width] = useWindowSize();
   const [imageWidth, setImageWidth] = useState(Number);
@@ -29,6 +29,9 @@ const ChatViewContainer = () => {
   const [selectedChat, setSelectedChat] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
+  const searchParams = useSearchParams();
+  const [socket, setSocket] = useState<Socket | null>(null);
+
 
   // Update expanded state based on screen size
   useEffect(() => {
@@ -51,27 +54,60 @@ const ChatViewContainer = () => {
   }, []);
 
   useEffect(() => {
-    if (socket) {
-      socket.on('receiveMessage', (message) => {
-        console.log(message);
+    const newSocket = io('http://localhost:8090', {
+      transports: ['websocket', 'polling'], // Ensure proper transport
+    });
+
+    newSocket.on('connect', () => {
+      console.log('Connected to the server:', newSocket.id);
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('Disconnected from the server');
+    });
+    newSocket.emit('join', selectedChat);
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [selectedChat]);
+
+  useEffect(() => {
+    if (!socket) return;
+  
+    const handleMessage = (message: IMessage) => {
+      console.log('Message received:', message);
+      if(message.userId!=Number(localStorage.getItem("userId")))
         setChatMessages((prevMessages) => [...prevMessages, message]);
-      });
-    }
+    };
+  
+    socket.on('receiveMessage', handleMessage);
+  
+    // Cleanup
+    return () => {
+      socket.off('receiveMessage', handleMessage);
+    };
   }, [socket]);
 
   const createChat = async () => {
     const url = API_ENDPOINTS.chat.createChat();
+    const productUuid = localStorage.getItem('productId') || searchParams.get("productId");
     const config = {
       method: 'post',
       url: url,
-      data: { productId: Number(localStorage.getItem('productId')) },
+      data: { productId: productUuid },
     };
     try {
       // setIsLoading(true);
       const responseData: { data: IChat } = await makeRequest(config);
       if (responseData) {
-        await getChats(responseData.data.id);
-        setSelectedChat(responseData.data.id);
+        
+        let chatUuid = responseData.data.id;
+        if(Array.isArray(responseData.data))
+          chatUuid = responseData.data[0].id;
+        await getChats(chatUuid);
+        setSelectedChat(chatUuid);
       }
     } catch (err) {
       console.log(err);
@@ -85,14 +121,18 @@ const ChatViewContainer = () => {
     const config = {
       method: 'get',
       url: url,
+      params: searchParams.get("productId") ? { query : searchParams.get("productId")} : { query : ''}
     };
+
     try {
       // setIsLoading(true);
-      const responseData: { data: [] } = await makeRequest(config);
+      const responseData: { data: IChat[] } = await makeRequest(config);
       if (responseData) {
         setUserChats(responseData.data);
-        const chatIndex = userChats.findIndex((chat) => chat.id === chatUuid);
-        setChatMessages(userChats[chatIndex].message);
+        const chatIndex = responseData.data.findIndex((chat) => chat.id === chatUuid);
+        console.log(chatUuid)
+        setChatMessages(responseData.data[chatIndex].message);
+
       }
     } catch (err) {
       console.log(err);
@@ -101,11 +141,13 @@ const ChatViewContainer = () => {
     }
   };
 
-  const sendMessage = async () => {
+  const sendMessage = async (event: React.FormEvent) => {
+    event.preventDefault()
     // const url = API_ENDPOINTS.chat.sendMessage();
-    const chatIndex = userChats.findIndex((chat) => chat.id === selectedChat);
-    if (chatIndex > 0) {
-      const chatId = userChats[chatIndex].chatId;
+    console.log(selectedChat)
+    // const chatIndex = userChats.findIndex((chat) => chat.id === selectedChat);
+    if (selectedChat) {
+      // const chatId = userChats[chatIndex].chatId;
       // const config = {
       //   method: 'post',
       //   url: url,
@@ -113,11 +155,15 @@ const ChatViewContainer = () => {
       // };
       try {
         const messageData = {
-          chatId: Number(chatId),
+          chatId: selectedChat,
           message: message,
-          userId: 1,
+          userId: Number(localStorage.getItem("userId")),
         };
-        if (socket) socket.emit('sendMessage', messageData);
+        if (socket) {
+          socket.emit('sendMessage', messageData)
+          setChatMessages((prevMessages) => [...prevMessages, {chatId: 1, createdDate: new Date().toString(), updatedDate: new Date().toString(), id:'', message, messageId:0, userId: Number(localStorage.getItem('userId'))}]);
+          setMessage("");
+        };
         // setIsLoading(true);
         // const responseData: { data: any } = await makeRequest(config);
         // if (responseData) {
@@ -157,6 +203,16 @@ const ChatViewContainer = () => {
     setChatMessages(userChats[chatIndex].message);
   };
 
+  
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Scroll to the bottom when messages update
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
   return (
     <div>
       {isLoading && <LoaderComponent />}
@@ -170,6 +226,7 @@ const ChatViewContainer = () => {
         message={message}
         setMessage={setMessage}
         chatMessages={chatMessages}
+        chatContainerRef={chatContainerRef}
       />
     </div>
   );
