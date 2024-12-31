@@ -12,6 +12,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { motion } from 'framer-motion';
 
 const otpSchema = yup.object().shape({
   otp: yup
@@ -64,11 +65,19 @@ const OtpVerifierContainer = () => {
   return (
     <div>
       {isLoading && <LoaderComponent />}
-      <OtpVerifier
-        mobileNumber={mobileNumber as string}
-        otpForm={otpForm}
-        onOtpSubmit={otpForm.handleSubmit(onSubmitOtp)}
-      />
+      <motion.div
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center w-[20rem] p-6 bg-white rounded-lg shadow-md"
+      >
+        <h1 className="text-2xl font-bold mb-6">Verify Otp</h1>
+        <OtpVerifier
+          mobileNumber={mobileNumber as string}
+          otpForm={otpForm}
+          onOtpSubmit={otpForm.handleSubmit(onSubmitOtp)}
+        />
+      </motion.div>
     </div>
   );
 };

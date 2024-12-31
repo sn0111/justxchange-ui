@@ -7,7 +7,8 @@ export const API_ENDPOINTS = {
     getUserProducts: () => `/user/products`,
     getProductByCategory: (categoryId: number) =>
       `/products/category/${categoryId}`,
-    addToWishlist: (productUuid: string) => `/product/add-wishlist/${productUuid}`,
+    addToWishlist: (productUuid: string) =>
+      `/product/add-wishlist/${productUuid}`,
     getWishlists: () => `/product/user-wishlists`,
     filterProducts: () => `/filter/products`,
     productSuggestions: () => `/product/suggestions`,
