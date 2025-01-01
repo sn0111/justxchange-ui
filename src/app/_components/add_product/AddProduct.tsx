@@ -1,7 +1,6 @@
 import { ICategory, IProductForm } from '@/interface';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { ChangeEvent } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { AiOutlineClose } from 'react-icons/ai';
 
@@ -17,7 +16,7 @@ interface IAddProduct {
   //     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
   //   >
   // ) => void;
-  addProduct: () => void;
+  addProduct: (data: IProductForm) => void;
   handleRemoveImage: (index: number) => void;
   viewImageModal: boolean;
   selectedImage: string;
@@ -62,11 +61,8 @@ const AddProduct = ({
           </div>
           <div className='p-2'>
             <textarea
-              // name="description"
-              // value={formState.description || ''} // Ensure controlled input
               {...productForm.register('description')}
               placeholder="Description"
-              // onChange={handleInputChange}
               className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             ></textarea>
             {productForm.formState.errors.description && (
@@ -75,8 +71,32 @@ const AddProduct = ({
               </p>
             )}
           </div>
+          <div className='p-2'>
+            <input
+              type="text"
+              {...productForm.register('brand')}
+              placeholder="Brand name"
+              className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className='p-2'>
+              <input
+                type="text"
+                {...productForm.register('size')}
+                placeholder="Size"
+                className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+          </div>
+          <div className='p-2'>
+              <input
+                type="text"
+                {...productForm.register('color')}
+                placeholder="Color"
+                className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+          </div>
         </div>
-
+        
         <div className="mb-6">
           <label className="block text-lg font-medium mb-2">Photos</label>
           <p className="text-sm text-gray-500 mb-3">Add up to 5 photos</p>
@@ -221,9 +241,10 @@ const AddProduct = ({
         </div>
 
         <div className="flex justify-between items-center">
-          <button className="text-gray-600 hover:underline" onClick={()=>productForm.reset()}>Clear</button>
+          <button type='button' className="bg-gray-300 text-black hover:text-white px-6 py-2 rounded-lg hover:bg-gray-400" onClick={()=>productForm.reset()}>Clear</button>
           <button
-            onClick={addProduct}
+            type='button'
+            onClick={productForm.handleSubmit(addProduct)}
             className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
           >
             Add Product

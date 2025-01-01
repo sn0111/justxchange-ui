@@ -1,3 +1,5 @@
+import { IUser } from "./IAuth";
+
 export interface IProduct {
   id: string;
   productId: number;
@@ -8,10 +10,14 @@ export interface IProduct {
   userId: number;
   images: string[];
   condition: string | null;
+  brand: string | null;
+  size: string | null;
+  color: string | null;
   createdDate: string;
   updatedDate: string;
   createdBy: number;
   updatedBy: number;
+  user: IUser;
 }
 
 export interface IProductFilters {
@@ -35,4 +41,7 @@ export interface IProductForm {
   amount: number;
   categoryId: number;
   condition: string;
+  brand: string;
+  size: string;
+  color: string;
 }

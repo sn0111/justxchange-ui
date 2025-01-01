@@ -29,7 +29,5 @@ export const makeRequest = async (options: AxiosRequestConfig) => {
   } catch (error) {
     console.error(`An error occurred: ${error}`);
     notifyError(`${error}`)
-    // toast.error(`An error occurred: ${error}`);
-    throw error;
   }
 };

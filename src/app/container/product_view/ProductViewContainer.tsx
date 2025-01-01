@@ -14,6 +14,7 @@ const ProductViewContainer = () => {
   // variables , api calls, function declarations should be in this file
   const [product, setProduct] = useState<IProduct>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [billerView, setBillerView] = useState<boolean>(false)
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -110,6 +111,8 @@ const ProductViewContainer = () => {
           goToPrevious={goToPrevious}
           goToNext={goToNext}
           addToWishlist={addToWishlist}
+          billerView={billerView}
+          setBillerView={setBillerView}
         />
       )}
     </div>

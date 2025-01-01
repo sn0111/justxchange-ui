@@ -17,7 +17,10 @@ const productSchema = yup.object().shape({
   description: yup.string().required('Description is required'),
   amount: yup.number().required("Amount is required"),
   categoryId: yup.number().required('Category is required'),
-  condition: yup.string().required('Condition is required')
+  condition: yup.string().required('Condition is required'),
+  brand: yup.string().optional().default('None'),
+  size: yup.string().optional().default('None'),
+  color: yup.string().optional().default('None')
 });
 
 const AddProductContainer = () => {
@@ -66,7 +69,10 @@ const AddProductContainer = () => {
           description: product.description || '',
           amount: product.amount || 0.0,
           categoryId: Number(product.categoryId) || 0,
-          condition: product.condition || ''
+          condition: product.condition || '',
+          brand: product.brand || '',
+          size: product.size || '',
+          color: product.color || ''
         })
         setImages(product.images || ['', '', '', '', '']);
       }
@@ -166,7 +172,7 @@ const AddProductContainer = () => {
     }
   };
 
-  const addProduct = async () => {
+  const addProduct = async (data: IProductForm) => {
     let url = API_ENDPOINTS.product.addProduct();
     const productId = searchParams.get('productId') || '';
     let method = 'post'
@@ -174,7 +180,7 @@ const AddProductContainer = () => {
       method = 'put'
       url = url+"/"+productId
     }
-    const body = { ...productForm.getValues(), images: images.filter((img) => img !== '') };
+    const body = {...data, images: images.filter((img) => img !== '') };
     console.log(body)
     const config = {
       method: method,

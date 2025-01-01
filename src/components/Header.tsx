@@ -60,7 +60,7 @@ export const Header = () => {
           <>
             <div className="hidden md:flex items-center gap-3">
   <Link href="/add-product">
-    <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-purple-700 focus:outline-none">
+    <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
