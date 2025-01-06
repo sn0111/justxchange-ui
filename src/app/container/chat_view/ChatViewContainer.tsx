@@ -2,6 +2,7 @@
 import { ChatView } from '@/app/_components/chat_view';
 import LoaderComponent from '@/components/LoaderComponent';
 import { IChat, IMessage } from '@/interface/IChat';
+import { API_URL } from '@/lib/constants';
 import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { useSearchParams } from 'next/navigation';
@@ -32,7 +33,6 @@ const ChatViewContainer = () => {
   const searchParams = useSearchParams();
   const [socket, setSocket] = useState<Socket | null>(null);
 
-
   // Update expanded state based on screen size
   useEffect(() => {
     if (width !== 0) {
@@ -54,7 +54,7 @@ const ChatViewContainer = () => {
   }, []);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:8090', {
+    const newSocket = io(API_URL, {
       transports: ['websocket', 'polling'], // Ensure proper transport
     });
 
@@ -75,15 +75,15 @@ const ChatViewContainer = () => {
 
   useEffect(() => {
     if (!socket) return;
-  
+
     const handleMessage = (message: IMessage) => {
       console.log('Message received:', message);
-      if(message.userId!=Number(localStorage.getItem("userId")))
+      if (message.userId != Number(localStorage.getItem('userId')))
         setChatMessages((prevMessages) => [...prevMessages, message]);
     };
-  
+
     socket.on('receiveMessage', handleMessage);
-  
+
     // Cleanup
     return () => {
       socket.off('receiveMessage', handleMessage);
@@ -92,7 +92,8 @@ const ChatViewContainer = () => {
 
   const createChat = async () => {
     const url = API_ENDPOINTS.chat.createChat();
-    const productUuid = localStorage.getItem('productId') || searchParams.get("productId");
+    const productUuid =
+      localStorage.getItem('productId') || searchParams.get('productId');
     const config = {
       method: 'post',
       url: url,
@@ -102,9 +103,8 @@ const ChatViewContainer = () => {
       // setIsLoading(true);
       const responseData: { data: IChat } = await makeRequest(config);
       if (responseData) {
-        
         let chatUuid = responseData.data.id;
-        if(Array.isArray(responseData.data))
+        if (Array.isArray(responseData.data))
           chatUuid = responseData.data[0].id;
         await getChats(chatUuid);
         setSelectedChat(chatUuid);
@@ -121,7 +121,9 @@ const ChatViewContainer = () => {
     const config = {
       method: 'get',
       url: url,
-      params: searchParams.get("productId") ? { query : searchParams.get("productId")} : { query : ''}
+      params: searchParams.get('productId')
+        ? { query: searchParams.get('productId') }
+        : { query: '' },
     };
 
     try {
@@ -129,10 +131,11 @@ const ChatViewContainer = () => {
       const responseData: { data: IChat[] } = await makeRequest(config);
       if (responseData) {
         setUserChats(responseData.data);
-        const chatIndex = responseData.data.findIndex((chat) => chat.id === chatUuid);
-        console.log(chatUuid)
+        const chatIndex = responseData.data.findIndex(
+          (chat) => chat.id === chatUuid
+        );
+        console.log(chatUuid);
         setChatMessages(responseData.data[chatIndex].message);
-
       }
     } catch (err) {
       console.log(err);
@@ -142,9 +145,9 @@ const ChatViewContainer = () => {
   };
 
   const sendMessage = async (event: React.FormEvent) => {
-    event.preventDefault()
+    event.preventDefault();
     // const url = API_ENDPOINTS.chat.sendMessage();
-    console.log(selectedChat)
+    console.log(selectedChat);
     // const chatIndex = userChats.findIndex((chat) => chat.id === selectedChat);
     if (selectedChat) {
       // const chatId = userChats[chatIndex].chatId;
@@ -157,13 +160,24 @@ const ChatViewContainer = () => {
         const messageData = {
           chatId: selectedChat,
           message: message,
-          userId: Number(localStorage.getItem("userId")),
+          userId: Number(localStorage.getItem('userId')),
         };
         if (socket) {
-          socket.emit('sendMessage', messageData)
-          setChatMessages((prevMessages) => [...prevMessages, {chatId: 1, createdDate: new Date().toString(), updatedDate: new Date().toString(), id:'', message, messageId:0, userId: Number(localStorage.getItem('userId'))}]);
-          setMessage("");
-        };
+          socket.emit('sendMessage', messageData);
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              chatId: 1,
+              createdDate: new Date().toString(),
+              updatedDate: new Date().toString(),
+              id: '',
+              message,
+              messageId: 0,
+              userId: Number(localStorage.getItem('userId')),
+            },
+          ]);
+          setMessage('');
+        }
         // setIsLoading(true);
         // const responseData: { data: any } = await makeRequest(config);
         // if (responseData) {
@@ -203,13 +217,13 @@ const ChatViewContainer = () => {
     setChatMessages(userChats[chatIndex].message);
   };
 
-  
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Scroll to the bottom when messages update
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   }, [chatMessages]);
 

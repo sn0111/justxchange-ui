@@ -6,7 +6,6 @@ import { notifyError } from '@/lib/utils';
 export const makeRequest = async (options: AxiosRequestConfig) => {
   const { url, method = 'GET', headers, data, ...restOptions } = options; // Added method and data
   const fullUrl = `${API_URL}${url}`;
-  console.log(fullUrl);
 
   try {
     const response = await axios({
@@ -20,14 +19,39 @@ export const makeRequest = async (options: AxiosRequestConfig) => {
       },
       ...restOptions,
     });
-
-    if (response.status !== 200) {
-      throw new Error(Messages.emptyResponseErrorMsg);
+    if (response.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+      return;
     }
+    // if (response.status !== 200) {
+    //   throw new Error(Messages.emptyResponseErrorMsg);
+    // }
 
     return response.data;
-  } catch (error) {
-    console.error(`An error occurred: ${error}`);
-    notifyError(`${error}`)
+  } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response) {
+      const { status } = error.response;
+
+      if (status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+        return;
+      }
+
+      // Handle other status codes (e.g., 403, 404, 500, etc.)
+      // console.error(
+      //   `Error ${status}: ${error.response.data.message || 'An error occurred.'}`
+      // );
+      // notifyError(
+      //   `Error ${status}: ${error.response.data.message || 'An error occurred.'}`
+      // );
+    } else {
+      // Non-Axios error or unexpected error
+      // console.error(`Unexpected error: ${error.message || error}`);
+      // notifyError(`Unexpected error: ${error.message || error}`);
+    }
+    ` `;
+    throw error;
   }
 };

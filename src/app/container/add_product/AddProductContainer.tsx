@@ -15,12 +15,12 @@ import * as yup from 'yup';
 const productSchema = yup.object().shape({
   productName: yup.string().required('Product name is required'),
   description: yup.string().required('Description is required'),
-  amount: yup.number().required("Amount is required"),
+  amount: yup.number().required('Amount is required'),
   categoryId: yup.number().required('Category is required'),
   condition: yup.string().required('Condition is required'),
   brand: yup.string().optional().default('None'),
   size: yup.string().optional().default('None'),
-  color: yup.string().optional().default('None')
+  color: yup.string().optional().default('None'),
 });
 
 const AddProductContainer = () => {
@@ -43,12 +43,15 @@ const AddProductContainer = () => {
   const [viewImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const searchParams = useSearchParams();
+  const [productEdit, setProductEdit] = useState<boolean>(false);
 
   useEffect(() => {
     const productId = searchParams.get('productId') || '';
     getCategories();
-    if(productId)
+    if (productId) {
       getProductInfo(productId);
+      setProductEdit(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -63,18 +66,22 @@ const AddProductContainer = () => {
       const responseData: { data: IProduct } = await makeRequest(config);
       if (responseData) {
         const product = responseData.data;
-        console.log(product)
+        console.log(product);
         productForm.reset({
           productName: product.productName || '',
           description: product.description || '',
           amount: product.amount || 0.0,
-          categoryId: Number(product.categoryId) || 0,
+          categoryId: Number(product.categoryId),
           condition: product.condition || '',
           brand: product.brand || '',
           size: product.size || '',
-          color: product.color || ''
-        })
-        setImages(product.images || ['', '', '', '', '']);
+          color: product.color || '',
+        });
+        const updateImages = images;
+        updateImages.forEach(
+          (_, index) => (updateImages[index] = product.images[index] || '')
+        );
+        setImages(updateImages);
       }
     } catch (err) {
       console.log(err);
@@ -175,13 +182,13 @@ const AddProductContainer = () => {
   const addProduct = async (data: IProductForm) => {
     let url = API_ENDPOINTS.product.addProduct();
     const productId = searchParams.get('productId') || '';
-    let method = 'post'
-    if(productId){
-      method = 'put'
-      url = url+"/"+productId
+    let method = 'post';
+    if (productId) {
+      method = 'put';
+      url = url + '/' + productId;
     }
-    const body = {...data, images: images.filter((img) => img !== '') };
-    console.log(body)
+    const body = { ...data, images: images.filter((img) => img !== '') };
+    console.log(body);
     const config = {
       method: method,
       url: url,
@@ -207,10 +214,25 @@ const AddProductContainer = () => {
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = images.filter((_, i) => i !== index);
-    setImages(updatedImages);
+    const updatedImages = [...images]; // Create a shallow copy of the array
+    updatedImages[index] = ''; // Update the specific index
+    console.log(updatedImages);
+    setImages(updatedImages); // React will detect the change and re-render
   };
 
+  const clearProduct = () => {
+    productForm.reset({
+      amount: 0,
+      brand: '',
+      categoryId: 0,
+      color: '',
+      condition: '',
+      description: '',
+      productName: '',
+      size: '',
+    });
+    setImages(['', '', '', '', '']);
+  };
   return (
     <div>
       {isLoading && <LoaderComponent />}
@@ -227,6 +249,8 @@ const AddProductContainer = () => {
         viewImageModal={viewImageModal}
         selectedImage={selectedImage}
         closeImageModal={closeImageModal}
+        clearProduct={clearProduct}
+        productEdit={productEdit}
       />
     </div>
   );
