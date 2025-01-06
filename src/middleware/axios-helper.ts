@@ -1,7 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { Messages } from '@/lib/messages';
 import { API_URL } from '@/lib/constants';
-import { notifyError } from '@/lib/utils';
 
 export const makeRequest = async (options: AxiosRequestConfig) => {
   const { url, method = 'GET', headers, data, ...restOptions } = options; // Added method and data
@@ -29,7 +27,7 @@ export const makeRequest = async (options: AxiosRequestConfig) => {
     // }
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       const { status } = error.response;
 
