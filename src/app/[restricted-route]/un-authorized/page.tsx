@@ -1,3 +1,4 @@
+'use client';
 import UnauthorizedPage from '@/components/UnAuthorized';
 import React from 'react';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
-
+import { usePathname } from 'next/navigation';
 interface WithAuthProps {
   allowedRole?: string; // Allow passing role or nothing at all
 }
@@ -14,7 +14,7 @@ const withAuth = <P extends object>(
     const { authenticationToken, login, role } = useAuth();
     const router = useRouter();
     const [loading, setLoading] = useState(true);
-
+    const currentPath = usePathname();
     useEffect(() => {
       if (!authenticationToken && localStorage.getItem('token') === '') {
         router.replace('/login');
@@ -22,10 +22,9 @@ const withAuth = <P extends object>(
       } else {
         login(localStorage.getItem('token') || '');
       }
-
       // If there is an allowedRole, check if role matches
       if (allowedRole && role !== allowedRole) {
-        router.replace('/un-authorized');
+        router.replace(`${currentPath}/un-authorized`);
         return;
       }
 

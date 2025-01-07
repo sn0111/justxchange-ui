@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
     saveUser: () => `/save-user`,
     sendOtp: (mobileNumber: string) => `/signup/${mobileNumber}`,
     verifyOtp: () => `/verify-otp`,
+    forgotPassword: () => `/forgot-password`,
   },
   user: {
     userprofile: () => `/user-profile`,

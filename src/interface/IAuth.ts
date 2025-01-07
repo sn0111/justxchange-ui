@@ -18,6 +18,11 @@ export interface IProfileFormValues {
   college: string;
 }
 
+export interface IForgotPasswordFormValues {
+  password: string;
+  confirmPassword: string;
+}
+
 export interface IUser {
   id: string;
   userId: number;

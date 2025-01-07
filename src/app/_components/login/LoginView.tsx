@@ -76,6 +76,12 @@ const LoginView = ({
         >
           Login
         </button>
+        <Link
+          href="/forgot-password"
+          className="text-blue-600 text-sm hover:underline flex justify-end mt-1"
+        >
+          Forgot Password?
+        </Link>
       </form>
 
       <p className="mt-4 text-gray-600">
