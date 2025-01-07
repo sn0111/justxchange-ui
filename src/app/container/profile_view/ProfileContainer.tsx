@@ -31,6 +31,7 @@ const userSchema = yup.object().shape({
     // .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
     .required('Contact number is required'),
   is2FAEnabled: yup.boolean().default(false),
+  isContactView: yup.boolean().default(false),
   profileUrl: yup.string().required('Profile image required'),
 });
 
@@ -83,6 +84,7 @@ const ProfileContainer = () => {
       const responseData: { imageUrl: string; message: string } =
         await makeRequest(config);
       if (responseData) {
+        profileForm.setValue('profileUrl', responseData.imageUrl);
         profileForm.setValue('profileUrl', responseData.imageUrl);
         notifySuccess('Image uploaded successfully');
       }

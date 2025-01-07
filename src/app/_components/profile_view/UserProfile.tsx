@@ -10,29 +10,41 @@ interface IUserProfile {
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const UserProfile = ({ profileForm, onProfileSubmit, fileInputRef, handleFileChange }: IUserProfile) => {
+const UserProfile = ({
+  profileForm,
+  onProfileSubmit,
+  fileInputRef,
+  handleFileChange,
+}: IUserProfile) => {
   return (
     <main className="flex-1 p-4 lg:p-6 flex justify-center items-center">
       {/* Header */}
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl lg:max-h-[80vh] lg:min-h-[80vh]">
         <div className="flex items-center justify-center mb-6">
           <Image
-            src={profileForm.watch("profileUrl") ? profileForm.watch("profileUrl") : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s"} // Replace with actual image path
+            src={
+              profileForm.watch('profileUrl')
+                ? profileForm.watch('profileUrl')
+                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s'
+            } // Replace with actual image path
             alt="Profile Picture"
             className="w-24 h-24 rounded-full object-cover hover:cursor-pointer"
             height={24}
             width={24}
-            onClick={()=>fileInputRef.current && fileInputRef.current.click()}
+            onClick={() => fileInputRef.current && fileInputRef.current.click()}
           />
           <input
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              ref={fileInputRef}
-              onChange={handleFileChange}
-            />
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            ref={fileInputRef}
+            onChange={handleFileChange}
+          />
         </div>
-        <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form
+          onSubmit={profileForm.handleSubmit(onProfileSubmit)}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <div>
             <label
               className="block text-gray-600 text-sm mb-2"
@@ -47,9 +59,9 @@ const UserProfile = ({ profileForm, onProfileSubmit, fileInputRef, handleFileCha
               className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             {profileForm.formState.errors.firstName && (
-            <p className="text-red-500 text-xs">
-              {profileForm.formState.errors.firstName.message}
-            </p>
+              <p className="text-red-500 text-xs">
+                {profileForm.formState.errors.firstName.message}
+              </p>
             )}
           </div>
           <div>
@@ -64,9 +76,9 @@ const UserProfile = ({ profileForm, onProfileSubmit, fileInputRef, handleFileCha
               className="border block disabled:opacity-50 disabled:pointer-events-none disabled:bg-gray-100 w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             {profileForm.formState.errors.email && (
-            <p className="text-red-500 text-xs">
-              {profileForm.formState.errors.email.message}
-            </p>
+              <p className="text-red-500 text-xs">
+                {profileForm.formState.errors.email.message}
+              </p>
             )}
           </div>
           <div className="">
@@ -84,9 +96,9 @@ const UserProfile = ({ profileForm, onProfileSubmit, fileInputRef, handleFileCha
               className="border block disabled:opacity-50 disabled:pointer-events-none disabled:bg-gray-100 w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             {profileForm.formState.errors.mobileNumber && (
-            <p className="text-red-500 text-xs">
-              {profileForm.formState.errors.mobileNumber.message}
-            </p>
+              <p className="text-red-500 text-xs">
+                {profileForm.formState.errors.mobileNumber.message}
+              </p>
             )}
           </div>
           <div className="">
@@ -104,9 +116,9 @@ const UserProfile = ({ profileForm, onProfileSubmit, fileInputRef, handleFileCha
               className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             {profileForm.formState.errors.contactNumber && (
-            <p className="text-red-500 text-xs">
-              {profileForm.formState.errors.contactNumber.message}
-            </p>
+              <p className="text-red-500 text-xs">
+                {profileForm.formState.errors.contactNumber.message}
+              </p>
             )}
           </div>
           <div className="col-span-1 md:col-span-2">
@@ -122,9 +134,9 @@ const UserProfile = ({ profileForm, onProfileSubmit, fileInputRef, handleFileCha
               className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             {profileForm.formState.errors.college && (
-            <p className="text-red-500 text-xs">
-              {profileForm.formState.errors.college.message}
-            </p>
+              <p className="text-red-500 text-xs">
+                {profileForm.formState.errors.college.message}
+              </p>
             )}
           </div>
           <div className="col-span-1 md:col-span-2">
@@ -139,38 +151,82 @@ const UserProfile = ({ profileForm, onProfileSubmit, fileInputRef, handleFileCha
               className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             {profileForm.formState.errors.address && (
-            <p className="text-red-500 text-xs">
-              {profileForm.formState.errors.address.message}
-            </p>
+              <p className="text-red-500 text-xs">
+                {profileForm.formState.errors.address.message}
+              </p>
             )}
           </div>
-          <div className="col-span-1 md:col-span-2 flex">
-            <label
-              className="block text-gray-600 text-sm mb-2 pr-3"
-              htmlFor="is2FAEnabled"
-            >
-              Enable 2FA
-            </label>
-            <div
-              className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full ${
-                profileForm.watch('is2FAEnabled') ? 'bg-blue-500' : 'bg-gray-300'
-              }`}
-              onClick={() =>
-                profileForm.setValue('is2FAEnabled', !profileForm.getValues('is2FAEnabled'))
-              }
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
-                  profileForm.watch('is2FAEnabled') ? 'translate-x-5' : 'translate-x-1'
+          <div className="sm:flex">
+            <div className="col-span-1 md:col-span-2 flex">
+              <label
+                className="block text-gray-600 text-sm mb-2 pr-3"
+                htmlFor="is2FAEnabled"
+              >
+                Enable 2FA
+              </label>
+              <div
+                className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full ${
+                  profileForm.watch('is2FAEnabled')
+                    ? 'bg-blue-500'
+                    : 'bg-gray-300'
                 }`}
-              ></span>
+                onClick={() =>
+                  profileForm.setValue(
+                    'is2FAEnabled',
+                    !profileForm.getValues('is2FAEnabled')
+                  )
+                }
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
+                    profileForm.watch('is2FAEnabled')
+                      ? 'translate-x-5'
+                      : 'translate-x-1'
+                  }`}
+                ></span>
+              </div>
+              <input
+                type="checkbox"
+                id="is2FAEnabled"
+                {...profileForm.register('is2FAEnabled')}
+                className="hidden"
+              />
             </div>
-            <input
-              type="checkbox"
-              id="is2FAEnabled"
-              {...profileForm.register('is2FAEnabled')}
-              className="hidden"
-            />
+            <div className="col-span-1 md:col-span-2 flex sm:pl-5">
+              <label
+                className="block text-gray-600 text-sm mb-2 pr-3"
+                htmlFor="isContactView"
+              >
+                Contact No View
+              </label>
+              <div
+                className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full ${
+                  profileForm.watch('isContactView')
+                    ? 'bg-blue-500'
+                    : 'bg-gray-300'
+                }`}
+                onClick={() =>
+                  profileForm.setValue(
+                    'isContactView',
+                    !profileForm.getValues('isContactView')
+                  )
+                }
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
+                    profileForm.watch('isContactView')
+                      ? 'translate-x-5'
+                      : 'translate-x-1'
+                  }`}
+                ></span>
+              </div>
+              <input
+                type="checkbox"
+                id="isContactView"
+                {...profileForm.register('isContactView')}
+                className="hidden"
+              />
+            </div>
           </div>
 
           <div className="col-span-1 md:col-span-2 flex items-center justify-center">
@@ -182,7 +238,6 @@ const UserProfile = ({ profileForm, onProfileSubmit, fileInputRef, handleFileCha
             </button>
           </div>
         </form>
-        
       </div>
     </main>
   );

@@ -60,4 +60,5 @@ export interface IUserFormValues {
   contactNumber: string;
   is2FAEnabled: boolean;
   profileUrl: string;
+  isContactView: boolean;
 }

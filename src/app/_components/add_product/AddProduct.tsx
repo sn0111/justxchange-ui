@@ -1,6 +1,7 @@
 import { ICategory, IProductForm } from '@/interface';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { AiOutlineClose } from 'react-icons/ai';
 
@@ -21,6 +22,8 @@ interface IAddProduct {
   viewImageModal: boolean;
   selectedImage: string;
   closeImageModal: () => void;
+  clearProduct: () => void;
+  productEdit: boolean;
 }
 
 const AddProduct = ({
@@ -36,14 +39,22 @@ const AddProduct = ({
   viewImageModal,
   selectedImage,
   closeImageModal,
+  clearProduct,
+  productEdit,
 }: IAddProduct) => {
+  useEffect(() => {
+    console.log(images);
+  });
   return (
     <div className="relative flex size-full py-4 min-h-screen flex-col bg-slate-50 group/design-root">
       <form className="max-w-3xl md:mx-auto p-6 bg-white rounded-lg shadow-sm">
-        <h1 className="text-2xl font-semibold mb-6">Sell Product</h1>
+        <h1 className="text-2xl font-semibold mb-1">Sell Product</h1>
 
-        <div className="space-y-4 mb-6">
-          <div className='p-2'>
+        <div className="pl-2 pr-2 mb-4">
+          <div className="pt-2 pb-2">
+            <label className="block text-lg font-medium mb-1">
+              Product Name<span className="text-red-600">*</span>
+            </label>
             <input
               type="text"
               // name="productName"
@@ -59,7 +70,10 @@ const AddProduct = ({
               </p>
             )}
           </div>
-          <div className='p-2'>
+          <div className="pt-2 pb-2">
+            <label className="block text-lg font-medium mb-1">
+              Description<span className="text-red-600">*</span>
+            </label>
             <textarea
               {...productForm.register('description')}
               placeholder="Description"
@@ -71,7 +85,8 @@ const AddProduct = ({
               </p>
             )}
           </div>
-          <div className='p-2'>
+          <div className="pt-2 pb-2">
+            <label className="block text-lg font-medium mb-1">Brand Name</label>
             <input
               type="text"
               {...productForm.register('brand')}
@@ -79,33 +94,35 @@ const AddProduct = ({
               className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className='p-2'>
-              <input
-                type="text"
-                {...productForm.register('size')}
-                placeholder="Size"
-                className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+          <div className="pt-2 pb-2">
+            <label className="block text-lg font-medium mb-1">Size</label>
+            <input
+              type="text"
+              {...productForm.register('size')}
+              placeholder="Size"
+              className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
-          <div className='p-2'>
-              <input
-                type="text"
-                {...productForm.register('color')}
-                placeholder="Color"
-                className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+          <div className="pt-2">
+            <label className="block text-lg font-medium mb-1">Color</label>
+            <input
+              type="text"
+              {...productForm.register('color')}
+              placeholder="Color"
+              className="w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
         </div>
-        
-        <div className="mb-6">
-          <label className="block text-lg font-medium mb-2">Photos</label>
+
+        <div className="mb-2 p-2">
+          <label className="block text-lg font-medium mb-1">Photos</label>
           <p className="text-sm text-gray-500 mb-3">Add up to 5 photos</p>
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5">
             {images?.map((img, index) => (
               <div
                 key={index}
                 className="relative w-20 h-20 sm:w-20 sm:h-20 bg-center bg-cover rounded-lg border border-gray-300 cursor-pointer"
-                style={{ backgroundImage: `url(${img})` }}
+                style={{ backgroundImage: `url(${img || null})` }}
                 onClick={() => handleDivClick(index)}
               >
                 <AiOutlineClose
@@ -128,8 +145,10 @@ const AddProduct = ({
           </div>
         </div>
 
-        <div className="mb-6">
-          <label className="block text-lg font-medium mb-2">Category</label>
+        <div className="mb-3 p-2">
+          <label className="block text-lg font-medium mb-1">
+            Category<span className="text-red-600">*</span>
+          </label>
           <div className="grid grid-cols-2 gap-3">
             {categories.map((category, index) => (
               <label
@@ -141,7 +160,10 @@ const AddProduct = ({
                   // name="categoryId"
                   value={category.categoryId}
                   {...productForm.register('categoryId')}
-                  checked={category.categoryId == productForm.watch('categoryId')}
+                  checked={
+                    Number(productForm.watch('categoryId')) ===
+                    category.categoryId
+                  }
                   // onChange={handleInputChange}
                   className="mr-2"
                 />
@@ -172,6 +194,7 @@ const AddProduct = ({
                 transition={{ duration: 0.3 }}
               >
                 <button
+                  type="button"
                   onClick={closeImageModal}
                   className="absolute top-3 right-3 p-1 bg-black bg-opacity-70 rounded-full text-white"
                 >
@@ -189,8 +212,10 @@ const AddProduct = ({
           )}
         </AnimatePresence>
 
-        <div className="mb-6">
-          <label className="block text-lg font-medium mb-2">Condition</label>
+        <div className="mb-2 p-2">
+          <label className="block text-lg font-medium mb-1">
+            Condition<span className="text-red-600">*</span>
+          </label>
           <div className="grid grid-cols-2 gap-3">
             {['New', 'Like New', 'Used', 'Heavily Used'].map(
               (condition, index) => (
@@ -219,9 +244,9 @@ const AddProduct = ({
           </div>
         </div>
 
-        <div className="mb-6 col-span-1">
-          <label className="block text-lg font-medium mb-2">
-            Price or Exchange Terms
+        <div className="mb-3 col-span-1 p-2">
+          <label className="block text-lg font-medium mb-1">
+            Price or Exchange Terms<span className="text-red-600">*</span>
           </label>
           <div className="flex space-x-4">
             <input
@@ -240,14 +265,25 @@ const AddProduct = ({
           )}
         </div>
 
-        <div className="flex justify-between items-center">
-          <button type='button' className="bg-gray-300 text-black hover:text-white px-6 py-2 rounded-lg hover:bg-gray-400" onClick={()=>productForm.reset()}>Clear</button>
+        <div
+          className={`flex justify-${!productEdit ? 'between' : 'end'} items-center p-2`}
+        >
+          {!productEdit && (
+            <button
+              type="button"
+              className="bg-gray-300 text-black hover:text-white px-6 py-2 rounded-lg hover:bg-gray-400"
+              onClick={clearProduct}
+            >
+              Clear
+            </button>
+          )}
           <button
-            type='button'
+            type="button"
+            disabled={!productForm.formState.isDirty}
             onClick={productForm.handleSubmit(addProduct)}
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            Add Product
+            {!productEdit ? 'Add' : 'Update'} Product
           </button>
         </div>
       </form>
