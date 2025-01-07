@@ -4,6 +4,7 @@ import { CaretRight, Flag, Bookmark, ChatCircle, X } from 'phosphor-react';
 import { IProduct } from '@/interface';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
+import { Messages } from '@/lib/messages';
 
 interface IProductDetails {
   product: IProduct;
@@ -13,6 +14,7 @@ interface IProductDetails {
   addToWishlist: (productUuid: string) => void;
   billerView: boolean;
   setBillerView: (billerView: boolean) => void;
+  role: string;
 }
 
 const ProductDetails = ({
@@ -22,13 +24,21 @@ const ProductDetails = ({
   goToNext,
   addToWishlist,
   billerView,
-  setBillerView
+  setBillerView,
+  role,
 }: IProductDetails) => {
-
   const popupVariants = {
     hidden: { x: '100%', opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 30 } },
-    exit: { x: '100%', opacity: 0, transition: { ease: 'easeInOut', duration: 0.3 } },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 300, damping: 30 },
+    },
+    exit: {
+      x: '100%',
+      opacity: 0,
+      transition: { ease: 'easeInOut', duration: 0.3 },
+    },
   };
 
   return (
@@ -116,9 +126,11 @@ const ProductDetails = ({
 
           <div className="flex items-center gap-4 bg-slate-50 px-4 min-h-14 justify-between">
             <div className="flex items-center gap-4">
-
               <Image
-                src={product?.user.profileUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s"} 
+                src={
+                  product?.user.profileUrl ||
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s'
+                }
                 width={36}
                 height={36}
                 alt="User Profile"
@@ -129,69 +141,106 @@ const ProductDetails = ({
               </p>
             </div>
             <div className="shrink-0">
-              <CaretRight size={24} color="#0d141c" onClick={()=>setBillerView(true)} className='hover:cursor-pointer'/>
+              <CaretRight
+                size={24}
+                color="#0d141c"
+                onClick={() => setBillerView(true)}
+                className="hover:cursor-pointer"
+              />
             </div>
           </div>
         </div>
       </div>
       {/* Popup View */}
       <AnimatePresence>
-      {billerView && (
-        <motion.div
-        className="fixed top-0 right-0 w-[300px] h-full bg-white shadow-lg z-50 p-6"
-        variants={popupVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-      >
-        <div className="fixed top-0 right-0 w-[300px] h-full bg-white shadow-lg z-50 p-6">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-bold text-[#0d141c]">Seller&apos;s Profile</h3>
-            <X size={24} color="#0d141c" onClick={()=>setBillerView(false)} className="cursor-pointer" />
-          </div>
-          <div className="mt-4 p-4 border border-gray-300 rounded-lg shadow-sm bg-white">
-            <div className="flex justify-center mb-4">
-              <Image
-                src={product?.user.profileUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s"} 
-                width={36}
-                height={36}
-                alt="User Profile"
-                className="w-32 h-32 rounded-full shadow-md"
-              />
+        {billerView && (
+          <motion.div
+            className="fixed top-0 right-0 w-[300px] h-full bg-white shadow-lg z-50 p-6"
+            variants={popupVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="fixed top-0 right-0 w-[300px] h-full bg-white shadow-lg z-50 p-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-bold text-[#0d141c]">
+                  Seller&apos;s Profile
+                </h3>
+                <X
+                  size={24}
+                  color="#0d141c"
+                  onClick={() => setBillerView(false)}
+                  className="cursor-pointer"
+                />
+              </div>
+              <div className="mt-4 p-4 border border-gray-300 rounded-lg shadow-sm bg-white">
+                <div className="flex justify-center mb-4">
+                  <Image
+                    src={
+                      product?.user.profileUrl ||
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s'
+                    }
+                    width={36}
+                    height={36}
+                    alt="User Profile"
+                    className="w-32 h-32 rounded-full shadow-md"
+                  />
+                </div>
+                <hr className="border-t border-gray-200 my-2" />
+                <div className="flex items-center mb-3">
+                  <p className="text-sm font-medium text-gray-700 min-w-16">
+                    Name
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {product?.user.firstName}
+                  </p>
+                </div>
+                <hr className="border-t border-gray-200 my-2" />
+
+                <div className="flex items-center mb-3">
+                  <p className="text-sm font-medium text-gray-700 min-w-16">
+                    Email
+                  </p>
+                  <p className="text-sm text-gray-600 word-wrap">
+                    {product?.user.email}
+                  </p>
+                </div>
+                <hr className="border-t border-gray-200 my-2" />
+
+                <div className="flex items-center">
+                  <p className="text-sm font-medium text-gray-700 min-w-16">
+                    Phone
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {product?.user.address.length > 0 &&
+                      product?.user.address[0].mobileNumber}
+                  </p>
+                </div>
+                <hr className="border-t border-gray-200 my-2" />
+
+                <div className="flex items-center">
+                  <p className="text-sm font-medium text-gray-700 min-w-16">
+                    College
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {product?.user.college}
+                  </p>
+                </div>
+                <hr className="border-t border-gray-200 my-2" />
+
+                <div className="flex">
+                  <p className="text-sm font-medium text-gray-700 min-w-16">
+                    Address
+                  </p>
+                  <p className="text-sm text-gray-600 max-w-[188px]">
+                    {product?.user.address.length > 0 &&
+                      product?.user.address[0].address}{' '}
+                  </p>
+                </div>
+              </div>
             </div>
-            <hr className="border-t border-gray-200 my-2" />
-            <div className="flex items-center mb-3">
-              <p className="text-sm font-medium text-gray-700 min-w-16">Name</p>
-              <p className="text-sm text-gray-600">{product?.user.firstName}</p>
-            </div>
-            <hr className="border-t border-gray-200 my-2" />
-            
-            <div className="flex items-center mb-3">
-              <p className="text-sm font-medium text-gray-700 min-w-16">Email</p>
-              <p className="text-sm text-gray-600 word-wrap">{product?.user.email}</p>
-            </div>
-            <hr className="border-t border-gray-200 my-2" />
-            
-            <div className="flex items-center">
-              <p className="text-sm font-medium text-gray-700 min-w-16">Phone</p>
-              <p className="text-sm text-gray-600">{product?.user.address.length>0 && product?.user.address[0].mobileNumber}</p>
-            </div>
-            <hr className="border-t border-gray-200 my-2" />
-            
-            <div className="flex items-center">
-              <p className="text-sm font-medium text-gray-700 min-w-16">College</p>
-              <p className="text-sm text-gray-600">{product?.user.college}</p>
-            </div>
-            <hr className="border-t border-gray-200 my-2" />
-            
-            <div className="flex">
-              <p className="text-sm font-medium text-gray-700 min-w-16">Address</p>
-              <p className="text-sm text-gray-600 max-w-[188px]">{product?.user.address.length>0 && product?.user.address[0].address} </p>
-            </div>
-          </div>
-        </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
       </AnimatePresence>
       <div className="flex-row sm:flex px-4 py-3 justify-end">
         <div className="pb-2 pr-2 sm:px-2 flex">
@@ -200,21 +249,28 @@ const ProductDetails = ({
             <span className="truncate">Report</span>
           </button>
         </div>
-        <div className="pb-2 pr-2 sm:px-2">
-          <button onClick={()=>addToWishlist(product.id)} className="flex min-w-[84px] ml-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]">
-            <Bookmark size={20} color="#0d141c" />
-            <span className="truncate">Save</span>
-          </button>
-        </div>
-        <div className="pr-2 sm:px-2">
-          <Link
-            href={`/chat`}
-            className="flex w-[130px] ml-auto cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#2589f4] text-white gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
-          >
-            <ChatCircle size={20} color="white" />
-            <span className="truncate">Message</span>
-          </Link>
-        </div>
+        {role === Messages.user && (
+          <>
+            <div className="pb-2 pr-2 sm:px-2">
+              <button
+                onClick={() => addToWishlist(product.id)}
+                className="flex min-w-[84px] ml-auto max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
+              >
+                <Bookmark size={20} color="#0d141c" />
+                <span className="truncate">Save</span>
+              </button>
+            </div>
+            <div className="pr-2 sm:px-2">
+              <Link
+                href={`/chat`}
+                className="flex w-[130px] ml-auto cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#2589f4] text-white gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
+              >
+                <ChatCircle size={20} color="white" />
+                <span className="truncate">Message</span>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

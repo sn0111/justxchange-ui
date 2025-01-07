@@ -1,4 +1,5 @@
 import { ProductDetails } from '@/app/_components/product_view';
+import { useAuth } from '@/app/context/AuthContext';
 import LoaderComponent from '@/components/LoaderComponent';
 import { IProduct } from '@/interface';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
@@ -14,14 +15,15 @@ const ProductViewContainer = () => {
   // variables , api calls, function declarations should be in this file
   const [product, setProduct] = useState<IProduct>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [billerView, setBillerView] = useState<boolean>(false)
+  const [billerView, setBillerView] = useState<boolean>(false);
   const searchParams = useSearchParams();
+  const { role } = useAuth();
 
   useEffect(() => {
     const productId = searchParams.get('productId') || '';
-    if(productId){
+    if (productId) {
       getProductInfo(productId);
-      localStorage.setItem("productId", productId)
+      localStorage.setItem('productId', productId);
     }
   }, [searchParams]);
 
@@ -79,7 +81,7 @@ const ProductViewContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const addToWishlist = async (productUuid: string)=>{
+  const addToWishlist = async (productUuid: string) => {
     const url = API_ENDPOINTS.product.addToWishlist(productUuid);
     const config = {
       method: 'get',
@@ -89,7 +91,7 @@ const ProductViewContainer = () => {
       setIsLoading(true);
       const responseData = await makeRequest(config);
       if (responseData) {
-        notifySuccess(responseData.data)
+        notifySuccess(responseData.data);
       }
     } catch (err) {
       const error = err as IAxiosError;
@@ -99,7 +101,7 @@ const ProductViewContainer = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div>
@@ -113,6 +115,7 @@ const ProductViewContainer = () => {
           addToWishlist={addToWishlist}
           billerView={billerView}
           setBillerView={setBillerView}
+          role={role}
         />
       )}
     </div>

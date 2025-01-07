@@ -17,6 +17,7 @@ import iconImage from '../public/images/icon.jpeg';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { Messages } from '@/lib/messages';
 
 const SearchButton = () => (
   <Link href="/search">
@@ -29,7 +30,7 @@ export const Header = () => {
   const nodeRef = useRef(null);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { authenticationToken, logout } = useAuth();
+  const { authenticationToken, logout, role } = useAuth();
   const currentPath = usePathname();
   useEffect(() => {
     console.log(currentPath);
@@ -60,27 +61,29 @@ export const Header = () => {
       <div className="flex items-center gap-4 flex-1 justify-end">
         {authenticationToken && (
           <>
-            <div className="hidden md:flex items-center gap-3">
-              <Link href="/add-product">
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
-                  <span>Sell</span>
-                </button>
-              </Link>
-            </div>
+            {role === Messages.user && (
+              <div className="hidden md:flex items-center gap-3">
+                <Link href="/add-product">
+                  <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-700 focus:outline-none">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                    <span>Sell</span>
+                  </button>
+                </Link>
+              </div>
+            )}
 
             {/* Conditionally hide SearchButton */}
             {!currentPath.includes('/search') && (

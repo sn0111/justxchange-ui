@@ -1,10 +1,7 @@
 import { ProfileDetails } from '@/app/_components/profile_view';
+import { useAuth } from '@/app/context/AuthContext';
 import LoaderComponent from '@/components/LoaderComponent';
-import {
-  IProduct,
-  IUser,
-  IUserFormValues,
-} from '@/interface';
+import { IProduct, IUser, IUserFormValues } from '@/interface';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
 import { Messages } from '@/lib/messages';
 import { notifyError, notifySuccess } from '@/lib/utils';
@@ -33,8 +30,8 @@ const userSchema = yup.object().shape({
     .string()
     // .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
     .required('Contact number is required'),
-    is2FAEnabled: yup.boolean().default(false),
-  profileUrl: yup.string().required("Profile image required")
+  is2FAEnabled: yup.boolean().default(false),
+  profileUrl: yup.string().required('Profile image required'),
 });
 
 const ProfileContainer = () => {
@@ -42,10 +39,11 @@ const ProfileContainer = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [wishLists, setWishLists] = useState<IProduct[]>([]);
   const router = useRouter();
-  const [step, setStep] = useState<number>(0);
+  const { role } = useAuth();
+
+  const [step, setStep] = useState<number>(role === 'user' ? 0 : 1);
   const [selectedPage, setSelectedPage] = useState<number>(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
 
   const profileForm = useForm<IUserFormValues>({
     resolver: yupResolver(userSchema),
@@ -85,7 +83,7 @@ const ProfileContainer = () => {
       const responseData: { imageUrl: string; message: string } =
         await makeRequest(config);
       if (responseData) {
-        profileForm.setValue('profileUrl', responseData.imageUrl)
+        profileForm.setValue('profileUrl', responseData.imageUrl);
         notifySuccess('Image uploaded successfully');
       }
     } catch (err) {
@@ -97,6 +95,7 @@ const ProfileContainer = () => {
   };
 
   const getUserProducts = async () => {
+    if (role !== 'user') return;
     const url = API_ENDPOINTS.product.getUserProducts();
     console.log(url);
     const config = {
@@ -138,7 +137,7 @@ const ProfileContainer = () => {
           contactNumber:
             user.address.length > 0 ? user.address[0].mobileNumber : '',
           is2FAEnabled: user.is2FAEnabled,
-          profileUrl: user.profileUrl
+          profileUrl: user.profileUrl,
         });
       }
     } catch (err) {
@@ -163,7 +162,7 @@ const ProfileContainer = () => {
       setIsLoading(true);
       const responseData = await makeRequest(config);
       if (responseData) {
-        notifySuccess(responseData.data)
+        notifySuccess(responseData.data);
       }
     } catch (err) {
       const error = err as IAxiosError;
@@ -176,6 +175,7 @@ const ProfileContainer = () => {
   };
 
   const getUserWishlists = async () => {
+    if (role !== 'user') return;
     const url = API_ENDPOINTS.product.getWishlists();
     const config = {
       method: 'get',
@@ -209,6 +209,7 @@ const ProfileContainer = () => {
         wishLists={wishLists}
         fileInputRef={fileInputRef}
         handleFileChange={handleFileChange}
+        role={role}
       />
     </div>
   );

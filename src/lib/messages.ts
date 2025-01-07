@@ -11,4 +11,6 @@ export const Messages = {
   },
   emptyResponseErrorMsg: 'Empty response or non-OK status',
   somethingWentWrong: 'Something went wrong, please try again',
+  admin: 'admin',
+  user: 'user',
 };

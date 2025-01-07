@@ -4,24 +4,24 @@ export const API_ENDPOINTS = {
     getImage: () => `/upload-image`,
     addProduct: () => `/products`,
     getProduct: () => `/products`,
-    getUserProducts: () => `/user/products`,
+    getUserProducts: () => `/products/user`,
     getProductByCategory: (categoryId: number) =>
       `/products/category/${categoryId}`,
     addToWishlist: (productUuid: string) =>
-      `/product/add-wishlist/${productUuid}`,
-    getWishlists: () => `/product/user-wishlists`,
-    filterProducts: () => `/filter/products`,
-    productSuggestions: () => `/product/suggestions`,
+      `/products/add-wishlist/${productUuid}`,
+    getWishlists: () => `/products/user-wishlists`,
+    filterProducts: () => `/products/filter`,
+    productSuggestions: () => `/products/suggestions`,
   },
   category: {
     getCategories: () => `/categories`,
   },
   chat: {
-    createChat: () => `/chat`,
+    createChat: () => `/chats`,
     getChats: () => `/chats`,
-    sendMessage: () => `/message`,
-    getChatMessages: (chatId: number) => `/messages/${chatId}`,
-    getProductChats: (productUuid: string) => `/product/chats/${productUuid}`,
+    sendMessage: () => `/chats/message`,
+    getChatMessages: (chatId: number) => `/chats/messages/${chatId}`,
+    getProductChats: (productUuid: string) => `chats/product/${productUuid}`,
   },
   auth: {
     loginUser: () => `/login-user`,

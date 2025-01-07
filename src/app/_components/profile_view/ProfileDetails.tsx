@@ -1,11 +1,19 @@
 import { IProduct, IUserFormValues } from '@/interface';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { FaHeart, FaHistory, FaListAlt, FaUserAlt } from 'react-icons/fa';
+import {
+  FaHeart,
+  FaHistory,
+  FaListAlt,
+  FaUserAlt,
+  FaUsers,
+  FaStore,
+} from 'react-icons/fa';
 import UserProducts from './UserProducts';
 import UserProfile from './UserProfile';
 import Wishlists from './WishLists';
 import UserTransactions from './UserTransactions';
 import { UseFormReturn } from 'react-hook-form';
+import { Messages } from '@/lib/messages';
 
 interface IProfileView {
   products: IProduct[];
@@ -19,6 +27,7 @@ interface IProfileView {
   wishLists: IProduct[];
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  role: string;
 }
 
 const ProfileDetails = ({
@@ -32,42 +41,73 @@ const ProfileDetails = ({
   onProfileSubmit,
   wishLists,
   fileInputRef,
-  handleFileChange
+  handleFileChange,
+  role,
 }: IProfileView) => {
   return (
-    <div className="flex flex-col lg:flex-row  bg-gray-50 ">
+    <div className="flex flex-col lg:flex-row  bg-gray-50 w-full ">
       {/* Sidebar */}
       <aside className="w-full lg:w-1/4 bg-white p-4 lg:p-6">
-        <h2 className="text-xl font-semibold mb-4 lg:mb-6">Account Details</h2>
+        <h2 className="text-xl font-semibold mb-4 lg:mb-6">
+          {role === Messages.user ? 'Account Details' : 'Admin Panel'}
+        </h2>
         <ul className="space-y-2 lg:space-y-4">
-          <li
-            className={`flex items-center gap-3 p-3 rounded-lg ${step === 0 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
-            onClick={() => setStep(0)}
-          >
-            <FaListAlt className="w-5 h-5" />
-            <span>My Listings</span>
-          </li>
-          <li
-            className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 1 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
-            onClick={() => setStep(1)}
-          >
-            <FaUserAlt className="w-5 h-5" />
-            <span>Profile</span>
-          </li>
-          <li
-            className={`flex items-center gap-3 p-3 rounded-lg ${step === 2 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
-            onClick={() => setStep(2)}
-          >
-            <FaHeart className="w-5 h-5" />
-            <span>Wishlist</span>
-          </li>
-          <li
-            className={`flex items-center gap-3 p-3 rounded-lg ${step === 3 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
-            onClick={() => setStep(3)}
-          >
-            <FaHistory className="w-5 h-5" />
-            <span>Transaction History</span>
-          </li>
+          {role === Messages.user ? (
+            <>
+              <li
+                className={`flex items-center gap-3 p-3 rounded-lg ${step === 0 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
+                onClick={() => setStep(0)}
+              >
+                <FaListAlt className="w-5 h-5" />
+                <span>My Listings</span>
+              </li>
+              <li
+                className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 1 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
+                onClick={() => setStep(1)}
+              >
+                <FaUserAlt className="w-5 h-5" />
+                <span>Profile</span>
+              </li>
+              <li
+                className={`flex items-center gap-3 p-3 rounded-lg ${step === 2 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
+                onClick={() => setStep(2)}
+              >
+                <FaHeart className="w-5 h-5" />
+                <span>Wishlist</span>
+              </li>
+              <li
+                className={`flex items-center gap-3 p-3 rounded-lg ${step === 3 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
+                onClick={() => setStep(3)}
+              >
+                <FaHistory className="w-5 h-5" />
+                <span>Transaction History</span>
+              </li>
+            </>
+          ) : (
+            <ul className="space-y-2 lg:space-y-4">
+              <li
+                className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 1 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
+                onClick={() => setStep(1)}
+              >
+                <FaUserAlt className="w-5 h-5" />
+                <span>Profile</span>
+              </li>
+              <li
+                className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 5 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
+                onClick={() => setStep(5)}
+              >
+                <FaUsers className="w-6 h-6" />
+                <span>Users</span>
+              </li>
+              <li
+                className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 6 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
+                onClick={() => setStep(6)}
+              >
+                <FaStore className="w-5 h-5" />
+                <span>Products</span>
+              </li>
+            </ul>
+          )}
         </ul>
       </aside>
 
@@ -103,6 +143,12 @@ const ProfileDetails = ({
           selectPage={selectPage}
           selectedPage={selectedPage}
         />
+      )}
+      {step == 5 && (
+        <div className=" h-[70vh] pl-[33%] flex items-center">Coming Soon!</div>
+      )}
+      {step == 6 && (
+        <div className=" h-[70vh] pl-[33%] flex items-center">Coming Soon!</div>
       )}
     </div>
   );
