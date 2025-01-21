@@ -92,7 +92,14 @@ export const Header = () => {
               </div>
             )}
             <Link href="/profile">
-              <FaUserCircle className="text-3xl cursor-pointer" />
+              {/* <FaUserCircle className="text-3xl cursor-pointer" /> */}
+              <Image
+                src={`${(localStorage.getItem("profileUrl")!=null && localStorage.getItem("profileUrl")!='' && localStorage.getItem("profileUrl")==undefined) ? localStorage.getItem("profileUrl") :  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s'}`}
+                alt="Profile Picture"
+                className="rounded-full object-cover"
+                height={32} // Adjusted to match `w-24` and `h-24` (96px)
+                width={32}
+              />
             </Link>
             <FaSignOutAlt
               className="text-3xl cursor-pointer"

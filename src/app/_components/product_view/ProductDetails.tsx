@@ -212,7 +212,7 @@ const ProductDetails = ({
                     Phone
                   </p>
                   <p className="text-sm text-gray-600">
-                    {product?.user.address.length > 0 &&
+                    {product?.user.address.length > 0 && product?.user.isContactView &&
                       product?.user.address[0].mobileNumber}
                   </p>
                 </div>

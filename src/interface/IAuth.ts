@@ -43,6 +43,7 @@ export interface IUser {
   address: IAddress[];
   is2FAEnabled: boolean;
   profileUrl: string;
+  isContactView: boolean;
 }
 
 export interface IAddress {

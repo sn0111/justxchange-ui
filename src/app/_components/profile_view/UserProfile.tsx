@@ -19,13 +19,11 @@ const UserProfile = ({
   return (
     <main className="flex-1 p-4 lg:p-6 flex justify-center items-center">
       {/* Header */}
-      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl lg:max-h-[80vh] lg:min-h-[80vh]">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl lg:min-h-[80vh]">
         <div className="flex items-center justify-center mb-6">
           <Image
             src={
               profileForm.watch('profileUrl')
-                ? profileForm.watch('profileUrl')
-                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s'
             } // Replace with actual image path
             alt="Profile Picture"
             className="w-24 h-24 rounded-full object-cover hover:cursor-pointer"
@@ -231,10 +229,11 @@ const UserProfile = ({
 
           <div className="col-span-1 md:col-span-2 flex items-center justify-center">
             <button
+              disabled={!profileForm.formState.isDirty}
               type="submit"
-              className="ml-4 text-blue-500 hover:text-blue-700 border border-blue-500 hover:border-blue-700 px-4 py-2 rounded-lg"
+              className="ml-4 text-blue-500 hover:text-blue-700 border border-blue-500 hover:border-blue-700 px-4 py-2 rounded-lg disabled:cursor-not-allowed"
             >
-              Edit Profile
+              Update
             </button>
           </div>
         </form>

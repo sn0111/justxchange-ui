@@ -139,7 +139,8 @@ const ProfileContainer = () => {
           contactNumber:
             user.address.length > 0 ? user.address[0].mobileNumber : '',
           is2FAEnabled: user.is2FAEnabled,
-          profileUrl: user.profileUrl,
+          profileUrl: user.profileUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s',
+          isContactView: user.isContactView
         });
       }
     } catch (err) {

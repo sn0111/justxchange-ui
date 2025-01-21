@@ -59,6 +59,7 @@ const LoginContainer = () => {
           router.push(`/login/verify?mobileNumber=${data.mobileNumber}`);
           return;
         }
+        localStorage.setItem("profileUrl",responseData.data.profileUrl)
         login(responseData.data.token);
         localStorage.setItem('userId', responseData.data.userId);
         router.push('/home');
