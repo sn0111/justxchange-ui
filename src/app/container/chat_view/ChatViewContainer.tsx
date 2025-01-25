@@ -1,6 +1,7 @@
 'use client';
 import { ChatView } from '@/app/_components/chat_view';
 import LoaderComponent from '@/components/LoaderComponent';
+import { IProduct, IUser } from '@/interface';
 import { IChat, IMessage } from '@/interface/IChat';
 import { API_URL } from '@/lib/constants';
 import { makeRequest } from '@/middleware/axios-helper';
@@ -30,6 +31,8 @@ const ChatViewContainer = () => {
   const [selectedChat, setSelectedChat] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
+  const [buyer, setBuyer] = useState<IUser>()
+  const [product, setProduct] = useState<IProduct>()
   const searchParams = useSearchParams();
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -93,7 +96,7 @@ const ChatViewContainer = () => {
   const createChat = async () => {
     const url = API_ENDPOINTS.chat.createChat();
     const productUuid =
-      localStorage.getItem('productId') || searchParams.get('productId');
+      searchParams.get('productId') || localStorage.getItem('productId');
     const config = {
       method: 'post',
       url: url,
@@ -134,7 +137,10 @@ const ChatViewContainer = () => {
         const chatIndex = responseData.data.findIndex(
           (chat) => chat.id === chatUuid
         );
-        console.log(chatUuid);
+        console.log(responseData.data[0])
+        console.log(chatUuid)
+        setBuyer(responseData.data[chatIndex].buyer)
+        setProduct(responseData.data[chatIndex].product)
         setChatMessages(responseData.data[chatIndex].message);
       }
     } catch (err) {
@@ -191,30 +197,12 @@ const ChatViewContainer = () => {
     }
   };
 
-  // const getChatMessages = async () => {
-  //   const url = API_ENDPOINTS.chat.getChatMessages(1);
-  //   const config = {
-  //     method: 'get',
-  //     url: url,
-  //   };
-  //   try {
-  //     // setIsLoading(true);
-  //     const responseData: { data: [] } = await makeRequest(config);
-  //     if (responseData) {
-  //       setUserChats(responseData.data);
-  //       console.log(responseData.data);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   } finally {
-  //     // setIsLoading(false);
-  //   }
-  // };
-
   const handleSelectChat = (id: string) => {
     setSelectedChat(id);
     const chatIndex = userChats.findIndex((chat) => chat.id === id);
     setChatMessages(userChats[chatIndex].message);
+    setBuyer(userChats[chatIndex].buyer)
+    setProduct(userChats[chatIndex].product)
   };
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -241,6 +229,8 @@ const ChatViewContainer = () => {
         setMessage={setMessage}
         chatMessages={chatMessages}
         chatContainerRef={chatContainerRef}
+        buyer={buyer}
+        product={product}
       />
     </div>
   );

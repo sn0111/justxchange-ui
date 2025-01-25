@@ -1,3 +1,4 @@
+import { IProduct, IUser } from '@/interface';
 import { IChat, IMessage } from '@/interface/IChat';
 import { RefObject } from 'react';
 import { IoSend } from 'react-icons/io5';
@@ -13,6 +14,8 @@ interface IChatView {
   setMessage: (message: string) => void;
   chatMessages: IMessage[];
   chatContainerRef: RefObject<HTMLDivElement>;
+  buyer: IUser | undefined;
+  product: IProduct | undefined
 }
 
 const ChatView = ({
@@ -25,9 +28,16 @@ const ChatView = ({
   message,
   setMessage,
   chatMessages,
-  chatContainerRef
+  chatContainerRef,
+  buyer,
+  product
 }: IChatView) => {
-
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent a new line in the textarea
+      sendMessage(event);
+    }
+  };
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
       <div className="flex flex-col lg:flex-row p-6">
@@ -60,7 +70,7 @@ const ChatView = ({
                       {chat.product.productName}
                     </p>
                     <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
-                      Hey, I&apos;m interested in the textbook. Can you do $40?
+                    {chat.product.userId != Number(localStorage.getItem("userId")) ? chat.product.description : chat.buyer.firstName}
                     </p>
                   </div>
                 )}
@@ -72,7 +82,7 @@ const ChatView = ({
           {/* Chat Header */}
           <div className="flex flex-wrap justify-between items-center gap-3 py-4 px-6 border-b border-[#E4E9F1]">
             <p className="text-[#141C24] text-[18px] md:text-[22px] font-bold leading-tight">
-              Negotiate details for Biology Textbook
+              Negotiate chat for {product?.productName}
             </p>
           </div>
 
@@ -86,12 +96,16 @@ const ChatView = ({
                       className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
                       style={{
                         backgroundImage:
-                          'url("https://cdn.usegalileo.ai/stability/1a46c76c-ecaa-48af-aa38-ecb4bcc99d2d.png")',
+                          `url(${
+                          buyer?.userId !== Number(localStorage.getItem("userId"))
+                            ? buyer?.profileUrl
+                            : product?.user.profileUrl
+                        })`
                       }}
                     ></div>
                     <div className="flex flex-1 flex-col gap-1 items-start">
                       <p className="text-[#3F5374] text-[13px] font-normal leading-normal max-w-[360px]">
-                        Siqi Chen
+                        {buyer?.userId != Number(localStorage.getItem("userId")) ? buyer?.firstName : product?.user.firstName }
                       </p>
                       <p className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#E4E9F1] text-[#141C24]">
                         {msg.message}
@@ -101,7 +115,7 @@ const ChatView = ({
                 ):<div key={index} className="flex items-end gap-3 p-4 justify-end">
                 <div className="flex flex-1 flex-col gap-1 items-end">
                   <p className="text-[#3F5374] text-[13px] font-normal leading-normal max-w-[360px] text-right">
-                    Diane Smith
+                  {buyer?.userId == Number(localStorage.getItem("userId")) ? buyer?.firstName : product?.user.firstName }
                   </p>
                   <p className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#F4C753] text-[#141C24]">
                     {msg.message}
@@ -111,7 +125,11 @@ const ChatView = ({
                   className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 shrink-0"
                   style={{
                     backgroundImage:
-                      'url("https://cdn.usegalileo.ai/sdxl10/559d5a52-d216-481a-bf44-a4a16128965d.png")',
+                      `url(${
+                        buyer?.userId === Number(localStorage.getItem("userId"))
+                          ? buyer.profileUrl
+                          : product?.user.profileUrl
+                      })`,
                   }}
                 >  
                 </div>
@@ -121,13 +139,17 @@ const ChatView = ({
 
           {/* Chat Input */}
           <div className="flex items-center px-4 py-3 gap-3 border-t border-[#E4E9F1]">
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 h-10 shrink-0"
-              style={{
-                backgroundImage:
-                  'url("https://cdn.usegalileo.ai/stability/3667371a-9186-4b73-9d33-9f37593c2eaf.png")',
-              }}
-            ></div>
+          <div
+            className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-10 h-10 shrink-0"
+            style={{
+              backgroundImage: `url(${
+                buyer?.userId === Number(localStorage.getItem("userId"))
+                  ? buyer.profileUrl
+                  : product?.user.profileUrl
+              })`,
+            }}
+          ></div>
+
 
             <form onSubmit={sendMessage} className="flex flex-1 items-center bg-[#E4E9F1] rounded-xl px-4">
               <textarea
@@ -141,6 +163,7 @@ const ChatView = ({
                   target.style.height = `${target.scrollHeight}px`; // Set height to scrollHeight
                 }}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
               <button
                 className="ml-3 min-w-[44px] h-8 flex items-center justify-center bg-[#F4C753] text-[#141C24] rounded-xl"
