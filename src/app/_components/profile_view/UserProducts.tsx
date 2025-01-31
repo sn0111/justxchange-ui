@@ -21,7 +21,6 @@ const UserProducts = ({
 }: IUserProducts) => {
   return (
     <main className="flex-1 p-4 lg:p-6 bg-gray-50">
-
       {/* Listings */}
       <div className=" max-h-[70vh] min-h-[70vh] ">
         <div className="space-y-4 max-h-[62vh] min-h-[62vh] overflow-y-scroll">
@@ -32,12 +31,11 @@ const UserProducts = ({
             >
               <div className="flex items-center gap-4">
                 <div
-                className="w-12 h-12 bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer"
-                style={{
-                  backgroundImage: `url("${item.images[0]}")`,
-                }}
-                >
-                </div>
+                  className="w-12 h-12 bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer"
+                  style={{
+                    backgroundImage: `url("${item.images[0]}")`,
+                  }}
+                ></div>
                 <div>
                   <p className="text-lg font-medium">
                     {item.productName} ₹{item.amount}
@@ -47,22 +45,22 @@ const UserProducts = ({
                   </p>
                 </div>
               </div>
-              <div className='flex'>
-                <div className='pr-3'>
-                <FaInfoCircle
-                  className="text-xl cursor-pointer"
-                  onClick={() =>
-                    router.push(`/add-product?productId=${item.id}`)
-                  }
-                />
+              <div className="flex">
+                <div className="pr-3">
+                  <FaInfoCircle
+                    className="text-xl cursor-pointer"
+                    title="View/Edit"
+                    onClick={() =>
+                      router.push(`/add-product?productId=${item.id}`)
+                    }
+                  />
                 </div>
-                <div className='pr-3'>
-                <IoIosChatbubbles
-                  className="text-xl cursor-pointer"
-                  onClick={() =>
-                    router.push(`/chat?productId=${item.id}`)
-                  }
-                />
+                <div className="pr-3">
+                  <IoIosChatbubbles
+                    title="View Chats"
+                    className="text-xl cursor-pointer"
+                    onClick={() => router.push(`/chat?productId=${item.id}`)}
+                  />
                 </div>
               </div>
               {/* <p className="text-lg font-medium">{item.amount}</p> */}

@@ -30,15 +30,15 @@ const LoginView = ({
         <div className="mb-2">
           <input
             {...loginForm.register('mobileNumber')}
-            placeholder="Mobile number (10 digits)"
+            placeholder="Username"
             className="w-full p-2 border rounded-lg"
-            maxLength={10}
-            type="tel"
-            inputMode="numeric"
-            onInput={(e: React.FormEvent<HTMLInputElement>) => {
-              const target = e.currentTarget;
-              target.value = target.value.replace(/[^0-9]/g, '');
-            }}
+            // maxLength={10}
+            type="text"
+            // inputMode="numeric"
+            // onInput={(e: React.FormEvent<HTMLInputElement>) => {
+            //   const target = e.currentTarget;
+            //   target.value = target.value.replace(/[^0-9]/g, '');
+            // }}
           />
           {loginForm.formState.errors.mobileNumber && (
             <p className="text-red-500 text-xs">

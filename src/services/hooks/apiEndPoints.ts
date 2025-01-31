@@ -26,7 +26,7 @@ export const API_ENDPOINTS = {
   auth: {
     loginUser: () => `/login-user`,
     saveUser: () => `/save-user`,
-    sendOtp: (mobileNumber: string) => `/signup/${mobileNumber}`,
+    sendOtp: () => `/signup`,
     verifyOtp: () => `/verify-otp`,
     forgotPassword: () => `/forgot-password`,
   },

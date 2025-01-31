@@ -16,8 +16,8 @@ import { Messages } from '@/lib/messages';
 const loginSchema = yup.object().shape({
   mobileNumber: yup
     .string()
-    .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
-    .required('Mobile number is required'),
+    // .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
+    .required('Username is required'),
   password: yup
     .string()
     .min(6, 'Password must be at least 6 characters')
@@ -47,7 +47,10 @@ const LoginContainer = () => {
       url: url,
       data: {
         ...data,
-        mobileNumber: '+91' + data.mobileNumber,
+        ...(process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+          ? { mobileNumber: '+91' + data.mobileNumber }
+          : { email: data.mobileNumber }),
+        emailOrSms: process.env.NEXT_PUBLIC_EMAIL_OR_SMS || 'Email',
       },
     };
     try {
@@ -59,7 +62,7 @@ const LoginContainer = () => {
           router.push(`/login/verify?mobileNumber=${data.mobileNumber}`);
           return;
         }
-        localStorage.setItem("profileUrl",responseData.data.profileUrl)
+        localStorage.setItem('profileUrl', responseData.data.profileUrl);
         login(responseData.data.token);
         localStorage.setItem('userId', responseData.data.userId);
         router.push('/home');

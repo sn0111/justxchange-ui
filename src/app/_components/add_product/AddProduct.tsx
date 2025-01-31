@@ -24,6 +24,7 @@ interface IAddProduct {
   closeImageModal: () => void;
   clearProduct: () => void;
   productEdit: boolean;
+  updateImage: boolean;
 }
 
 const AddProduct = ({
@@ -41,6 +42,7 @@ const AddProduct = ({
   closeImageModal,
   clearProduct,
   productEdit,
+  updateImage,
 }: IAddProduct) => {
   useEffect(() => {
     console.log(images);
@@ -279,7 +281,7 @@ const AddProduct = ({
           )}
           <button
             type="button"
-            disabled={!productForm.formState.isDirty}
+            disabled={!productForm.formState.isDirty && !updateImage}
             onClick={productForm.handleSubmit(addProduct)}
             className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >

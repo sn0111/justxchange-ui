@@ -1,4 +1,4 @@
-import { IUser } from "./IAuth";
+import { IUser } from './IAuth';
 
 export interface IProduct {
   id: string;
@@ -44,4 +44,15 @@ export interface IProductForm {
   brand: string;
   size: string;
   color: string;
+}
+
+export interface INotifications {
+  id: string;
+  notificationId: number;
+  productId: string;
+  message: string;
+  userId: number;
+  createdDate: Date;
+  updatedDate: Date;
+  isRead: boolean;
 }

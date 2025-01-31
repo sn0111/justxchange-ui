@@ -3,8 +3,9 @@ export interface ILoginFormValues {
   password: string;
 }
 
-export interface IMobileFormValues {
+export interface ISignUpFormValues {
   mobileNumber: string;
+  email: string;
 }
 
 export interface IOTPFormValues {
@@ -13,7 +14,7 @@ export interface IOTPFormValues {
 
 export interface IProfileFormValues {
   firstName: string;
-  email: string;
+  mobileNumber: string;
   password: string;
   college: string;
 }

@@ -44,6 +44,7 @@ const AddProductContainer = () => {
   const [selectedImage, setSelectedImage] = useState('');
   const searchParams = useSearchParams();
   const [productEdit, setProductEdit] = useState<boolean>(false);
+  const [updateImage, setUpdateImage] = useState<boolean>(false);
 
   useEffect(() => {
     const productId = searchParams.get('productId') || '';
@@ -133,20 +134,6 @@ const AddProductContainer = () => {
     }
   };
 
-  // const handleInputChange = (
-  //   event: React.ChangeEvent<
-  //     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-  //   >
-  // ) => {
-  //   const { name, value } = event.target;
-
-  //   // If the event target is a select element, handle its value correctly
-  //   setFormState((prevState) => ({
-  //     ...prevState,
-  //     [name]: value || '',
-  //   }));
-  // };
-
   const uploadProductImage = async (file: File) => {
     const url = API_ENDPOINTS.product.getImage();
     const formData = new FormData();
@@ -169,6 +156,7 @@ const AddProductContainer = () => {
         const newImages = [...images];
         newImages[imageIndex] = responseData.imageUrl || '';
         setImages(newImages);
+        setUpdateImage(true);
         notifySuccess('Image uploaded successfully');
       }
     } catch (err) {
@@ -200,7 +188,8 @@ const AddProductContainer = () => {
         await makeRequest(config);
       if (responseData) {
         productForm.reset();
-        setImages(['', '', '', '', '']);
+        if (!updateImage) setImages(['', '', '', '', '']);
+        else setUpdateImage(false);
         notifySuccess(responseData.message);
       }
     } catch (err) {
@@ -251,6 +240,7 @@ const AddProductContainer = () => {
         closeImageModal={closeImageModal}
         clearProduct={clearProduct}
         productEdit={productEdit}
+        updateImage={updateImage}
       />
     </div>
   );

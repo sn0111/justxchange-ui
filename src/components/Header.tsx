@@ -18,6 +18,9 @@ import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Messages } from '@/lib/messages';
+import { INotifications } from '@/interface';
+import { API_URL } from '@/lib/constants';
+import { io, Socket } from 'socket.io-client';
 
 const SearchButton = () => (
   <Link href="/search">
@@ -27,8 +30,9 @@ const SearchButton = () => (
   </Link>
 );
 export const Header = () => {
+  const [notifications, setNotifications] = useState<INotifications[]>([]);
   const nodeRef = useRef(null);
-
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { authenticationToken, logout, role } = useAuth();
   const currentPath = usePathname();
@@ -40,6 +44,39 @@ export const Header = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
+  useEffect(() => {
+    const socket = io(API_URL, {
+      transports: ['websocket', 'polling'], // Ensure proper transport
+    });
+    setSocket(socket);
+    socket.emit('subscribe', localStorage.getItem('userId'));
+
+    socket.on('notification', (notification: INotifications) => {
+      setNotifications((prev) => [notification, ...prev]);
+    });
+
+    socket.on(
+      'unread-notifications',
+      (unreadNotifications: INotifications[]) => {
+        setNotifications(unreadNotifications);
+      }
+    );
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const markAsRead = (notificationIds: string[]) => {
+    if (socket) {
+      socket.emit('mark-as-read', notificationIds);
+      setNotifications((prev) =>
+        prev.map((n) =>
+          notificationIds.includes(n.id) ? { ...n, isRead: true } : n
+        )
+      );
+    }
+  };
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f5] px-4 py-3 lg:px-10">
       {/* Logo Section */}
@@ -87,14 +124,14 @@ export const Header = () => {
 
             {/* Conditionally hide SearchButton */}
             {!currentPath.includes('/search') && (
-              <div className="sm:flex">
+              <div className="sm:flex" title="Search">
                 <SearchButton />
               </div>
             )}
-            <Link href="/profile">
+            <Link href="/profile" title="Profile">
               {/* <FaUserCircle className="text-3xl cursor-pointer" /> */}
               <Image
-                src={`${(localStorage.getItem("profileUrl")!=null && localStorage.getItem("profileUrl")!='' && localStorage.getItem("profileUrl")==undefined) ? localStorage.getItem("profileUrl") :  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s'}`}
+                src={`${localStorage.getItem('profileUrl') != null && localStorage.getItem('profileUrl') != '' && localStorage.getItem('profileUrl') == undefined ? localStorage.getItem('profileUrl') : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s'}`}
                 alt="Profile Picture"
                 className="rounded-full object-cover"
                 height={32} // Adjusted to match `w-24` and `h-24` (96px)
