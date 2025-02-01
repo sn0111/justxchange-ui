@@ -1,7 +1,6 @@
 import React from 'react';
-
+import imageSrc from '../public/images/404_page.png'
 interface DefaultNotFoundProps {
-  imageSrc: string;
   text: string;
   textSize?: string;
   containerHeight?: string;
@@ -10,7 +9,6 @@ interface DefaultNotFoundProps {
 }
 
 const DefaultNotFound=({
-  imageSrc ='https://justxchange-1.s3.ap-south-1.amazonaws.com/uploads/1735562621067_default.png',
   text = '',
   textSize = 'text-xl', // Default text size
   textColor = 'text-gray-800', // Default text color
@@ -19,7 +17,7 @@ const DefaultNotFound=({
     <div className={`justify-center relative flex items-center p-2`}>
     <div
       className={` h-72 w-72  bg-cover bg-center rounded-lg`}
-      style={{ backgroundImage: `url(${imageSrc})` }}
+      style={{ backgroundImage: `url(${imageSrc.src})` }}
     >
       
     </div>

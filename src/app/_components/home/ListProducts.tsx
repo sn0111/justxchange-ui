@@ -33,7 +33,7 @@ const ListProducts = ({ router, products }: IListProducts) => {
         </div>
       ))}
     </div>
-    {products.length < 1 && <DefaultNotFound imageSrc='https://justxchange-1.s3.ap-south-1.amazonaws.com/uploads/1735562621067_default.png' text='No Products found' containerHeight='min-h-[60vh]'/>}
+    {products.length < 1 && <DefaultNotFound text='No Products found' containerHeight='min-h-[60vh]'/>}
     </>
   );
 };

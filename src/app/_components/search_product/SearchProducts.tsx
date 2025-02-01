@@ -149,7 +149,7 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
                 </div>
               ))}
             </div>}
-            {products.length < 1 && <DefaultNotFound imageSrc='https://justxchange-1.s3.ap-south-1.amazonaws.com/uploads/1735562621067_default.png' text='No Products found'/>}
+            {products.length < 1 && <DefaultNotFound text='No Products found'/>}
             <div className="pt-3">
               {Math.ceil(productsCount / 10) > 0 && (
                 <Pagination

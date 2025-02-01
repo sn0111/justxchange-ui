@@ -7,6 +7,7 @@ import {
   FaSearch,
   FaUserCircle,
   FaSignOutAlt,
+  FaBell,
 } from 'react-icons/fa';
 import { CSSTransition } from 'react-transition-group';
 import { AiTwotoneHome } from 'react-icons/ai';
@@ -34,6 +35,7 @@ export const Header = () => {
   const nodeRef = useRef(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNotification, setIsNotification] = useState(false);
   const { authenticationToken, logout, role } = useAuth();
   const currentPath = usePathname();
   useEffect(() => {
@@ -48,6 +50,13 @@ export const Header = () => {
     const socket = io(API_URL, {
       transports: ['websocket', 'polling'], // Ensure proper transport
     });
+    socket.on('connect', () => {
+      console.log('Connected to the server:', socket.id);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from the server');
+    });
     setSocket(socket);
     socket.emit('subscribe', localStorage.getItem('userId'));
 
@@ -58,6 +67,7 @@ export const Header = () => {
     socket.on(
       'unread-notifications',
       (unreadNotifications: INotifications[]) => {
+        console.log(unreadNotifications)
         setNotifications(unreadNotifications);
       }
     );
@@ -121,6 +131,52 @@ export const Header = () => {
                 </Link>
               </div>
             )}
+
+        <div className="relative cursor-pointer">
+          <div onClick={()=>setIsNotification(!isNotification)}>
+            <FaBell className="text-2xl text-gray-700"/>
+            {notifications.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                {notifications.length}
+              </span>
+            )}
+          </div>
+          {isNotification && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3">
+                    <h3 className="text-sm font-bold">Notifications</h3>
+                    {notifications.length > 0 ? (
+                      <ul>
+                        {notifications.map((n) => (
+                          <li
+                            key={n.id}
+                            className={`p-2 border-b ${
+                              n.isRead ? "text-gray-400" : "font-semibold"
+                            }`}
+                            onClick={()=>markAsRead([n.id])}
+                          >
+                            <p className="text-xs font-bold text-gray-700">{n.productId}</p>
+                            <p
+                              className="text-sm text-gray-500 truncate"
+                              title={n.message} // Show full message on hover
+                            >
+                              {n.message.length > 30 ? `${n.message.substring(0, 30)}...` : n.message}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-gray-500">No notifications</p>
+                    )}
+                    <button
+                      className="mt-2 text-blue-500 text-sm"
+                      onClick={()=>markAsRead(notifications.map(n=>n.id))}
+                    >
+                      Mark all as read
+                    </button>
+                  </div>
+                  
+                )}
+            </div>
 
             {/* Conditionally hide SearchButton */}
             {!currentPath.includes('/search') && (

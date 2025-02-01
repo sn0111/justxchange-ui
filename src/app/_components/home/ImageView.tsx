@@ -1,3 +1,4 @@
+import iconImage from '../../../public/images/home.jpg';
 const ImageView = () => {
   return (
     <div className="@container">
@@ -6,7 +7,7 @@ const ImageView = () => {
           className="flex min-h-[300px] md:min-h-[480px] flex-col gap-4 md:gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 rounded-xl items-start justify-end px-4 pb-8 @[480px]:pb-10 @[480px]:px-10"
           style={{
             backgroundImage:
-              'linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://justxchange-1.s3.ap-south-1.amazonaws.com/uploads/istockphoto-1333039919-612x612.jpg")',
+              `linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("${iconImage.src}")`,
           }}
         >
           <div className="flex flex-col gap-2 text-left">
