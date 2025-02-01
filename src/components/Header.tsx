@@ -12,16 +12,17 @@ import {
 import { CSSTransition } from 'react-transition-group';
 import { AiTwotoneHome } from 'react-icons/ai';
 import { LiaSellcast } from 'react-icons/lia';
-import { IoIosHeartEmpty } from 'react-icons/io';
 import Link from 'next/link';
 import iconImage from '../public/images/icon.jpeg';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Messages } from '@/lib/messages';
 import { INotifications } from '@/interface';
 import { API_URL } from '@/lib/constants';
 import { io, Socket } from 'socket.io-client';
+import { UserCircle } from 'lucide-react';
+import { SignOut } from 'phosphor-react';
 
 const SearchButton = () => (
   <Link href="/search">
@@ -32,12 +33,14 @@ const SearchButton = () => (
 );
 export const Header = () => {
   const [notifications, setNotifications] = useState<INotifications[]>([]);
+  const auth = useAuth();
   const nodeRef = useRef(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
   const { authenticationToken, logout, role } = useAuth();
   const currentPath = usePathname();
+   const router = useRouter();
   useEffect(() => {
     console.log(currentPath);
   }, [currentPath]);
@@ -75,9 +78,9 @@ export const Header = () => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [auth.authenticationToken]);
 
-  const markAsRead = (notificationIds: string[]) => {
+  const markAsRead = (notificationIds: string[],productId: string) => {
     if (socket) {
       socket.emit('mark-as-read', notificationIds);
       setNotifications((prev) =>
@@ -86,6 +89,8 @@ export const Header = () => {
         )
       );
     }
+    if(productId)
+      router.push(`/view?productId=${productId}`)
   };
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f5] px-4 py-3 lg:px-10">
@@ -152,9 +157,9 @@ export const Header = () => {
                             className={`p-2 border-b ${
                               n.isRead ? "text-gray-400" : "font-semibold"
                             }`}
-                            onClick={()=>markAsRead([n.id])}
+                            onClick={()=>markAsRead([n.id], n.productId)}
                           >
-                            <p className="text-xs font-bold text-gray-700">{n.productId}</p>
+                            <p className="text-xs font-bold text-gray-700">{n.productName}</p>
                             <p
                               className="text-sm text-gray-500 truncate"
                               title={n.message} // Show full message on hover
@@ -169,7 +174,7 @@ export const Header = () => {
                     )}
                     <button
                       className="mt-2 text-blue-500 text-sm"
-                      onClick={()=>markAsRead(notifications.map(n=>n.id))}
+                      onClick={()=>markAsRead(notifications.map(n=>n.id),"")}
                     >
                       Mark all as read
                     </button>
@@ -184,7 +189,7 @@ export const Header = () => {
                 <SearchButton />
               </div>
             )}
-            <Link href="/profile" title="Profile">
+            <Link href="/profile" title="Profile" className='hidden md:block'>
               {/* <FaUserCircle className="text-3xl cursor-pointer" /> */}
               <Image
                 src={`${localStorage.getItem('profileUrl') != null && localStorage.getItem('profileUrl') != '' && localStorage.getItem('profileUrl') == undefined ? localStorage.getItem('profileUrl') : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLU5_eUUGBfxfxRd4IquPiEwLbt4E_6RYMw&s'}`}
@@ -195,7 +200,7 @@ export const Header = () => {
               />
             </Link>
             <FaSignOutAlt
-              className="text-3xl cursor-pointer"
+              className="hidden md:block text-3xl cursor-pointer"
               onClick={logout}
               title="Logout"
             />
@@ -235,7 +240,7 @@ export const Header = () => {
                 width={40}
               />
               <h2 className="text-lg font-bold leading-tight tracking-[-0.015em] lg:text-xl">
-                Campus Bazaar
+                JustXchange
               </h2>
             </div>
             <FaTimes
@@ -269,16 +274,16 @@ export const Header = () => {
               </Link>
             </li>
             <li className="flex items-center gap-3">
-              <IoIosHeartEmpty className="text-xl" />
-              <Link href="/wishlist">
-                <span className="text-sm font-medium">Wishlist</span>
+              <UserCircle className="text-xl" />
+              <Link href="/profile">
+                <span className="text-sm font-medium">Profile</span>
               </Link>
             </li>
             <li className="flex items-center gap-3">
-              <FaSignOutAlt className="text-3xl cursor-pointer" />
+              <SignOut className="text-xl cursor-pointer" />
               <button
                 className="text-sm font-medium"
-                onClick={logout}
+                onClick={()=>{setIsMenuOpen(false);logout()}}
                 title="Logout"
               >
                 Logout

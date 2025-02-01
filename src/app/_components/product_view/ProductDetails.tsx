@@ -43,10 +43,10 @@ const ProductDetails = ({
 
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
-      <h2 className="pl-6 text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em]">
+      <h2 className="pl-6 text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em] pt-3">
         {product?.productName}
       </h2>
-      <div className="flex flex-col md:flex-row w-full p-6">
+      <div className="flex flex-col md:flex-row w-full p-6 pt-3">
         <div
           className="relative md:h-full w-[100%] md:w-2/3 bg-center bg-no-repeat bg-cover aspect-[3/2] rounded-xl"
           style={{

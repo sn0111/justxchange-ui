@@ -50,6 +50,7 @@ export interface INotifications {
   id: string;
   notificationId: number;
   productId: string;
+  productName: string;
   message: string;
   userId: number;
   createdDate: Date;
