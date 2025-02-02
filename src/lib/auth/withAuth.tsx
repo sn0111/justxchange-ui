@@ -23,8 +23,8 @@ const withAuth = <P extends object>(
         login(localStorage.getItem('token') || '');
       }
       // If there is an allowedRole, check if role matches
-      if (allowedRole && role !== allowedRole) {
-        router.replace(`${currentPath}/un-authorized`);
+      if (allowedRole && localStorage.getItem("role") !== allowedRole) {
+        router.push(`${currentPath}/un-authorized`);
         return;
       }
 
