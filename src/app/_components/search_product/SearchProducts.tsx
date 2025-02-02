@@ -153,6 +153,7 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
             <div className="pt-3">
               {Math.ceil(productsCount / 10) > 0 && (
                 <Pagination
+                  totalRecords={productsCount}
                   count={Math.ceil(productsCount / 10)}
                   selectPage={selectPage}
                   selectedPage={selectedPage}

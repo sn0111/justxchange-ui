@@ -43,6 +43,7 @@ const Wishlists = ({
         <div className="pt-3">
           {Math.ceil(products.length / 10) > 0 && (
             <Pagination
+              totalRecords={products.length}
               count={Math.ceil(products.length / 10)}
               selectPage={selectPage}
               selectedPage={selectedPage}

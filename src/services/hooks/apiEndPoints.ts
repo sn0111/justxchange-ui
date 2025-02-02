@@ -34,4 +34,7 @@ export const API_ENDPOINTS = {
     userprofile: () => `/user-profile`,
     saveProfile: () => '/save-profile',
   },
+  logs: {
+    auditLogs: `/audit/logs`,
+  },
 };

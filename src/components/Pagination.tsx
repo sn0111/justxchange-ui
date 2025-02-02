@@ -3,14 +3,16 @@ import React from 'react';
 interface IPagination {
   count: number;
   selectedPage: number;
+  totalRecords: number;
   selectPage: (pageNumber: number) => void;
 }
 
-const Pagination = ({ count, selectedPage = 1, selectPage }: IPagination) => {
+const Pagination = ({ count, selectedPage = 1, selectPage, totalRecords=0 }: IPagination) => {
   return (
     <div className="flex items-center justify-center p-4 bg-white shadow-md rounded-lg">
       {/* Pagination Controls */}
       <div className="flex items-center gap-2">
+        <p className='font-semibold'>Total Records: {totalRecords}</p>
         {/* Left Arrow */}
         <button
           className="w-8 h-8 flex items-center justify-center rounded border border-gray-300 text-gray-500 hover:bg-gray-100 disabled:opacity-50"
@@ -35,7 +37,7 @@ const Pagination = ({ count, selectedPage = 1, selectPage }: IPagination) => {
             </span>
 
             {/* Last Page */}
-            <button className="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-100">
+            <button onClick={() => selectPage(count)} className="w-8 h-8 flex items-center justify-center rounded border border-gray-300 hover:bg-gray-100">
               {count}
             </button>
           </>

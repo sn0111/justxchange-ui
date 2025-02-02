@@ -1,6 +1,6 @@
 import {
   IForgotPasswordFormValues,
-  IMobileFormValues,
+  ISignUpFormValues,
   IOTPFormValues,
 } from '@/interface';
 import { motion } from 'framer-motion';
@@ -16,9 +16,9 @@ import {
 
 interface IForgotPasswordProps {
   mobileNumber: string;
-  mobileForm: UseFormReturn<IMobileFormValues>;
+  signUpForm: UseFormReturn<ISignUpFormValues>;
   otpForm: UseFormReturn<IOTPFormValues>;
-  onSubmitMobile: (data: IMobileFormValues) => void;
+  onSubmitMobile: (data: ISignUpFormValues) => void;
   onSubmitOtp: (data: IOTPFormValues) => void;
   togglePasswordVisibility: () => void;
   showPassword: boolean;
@@ -27,7 +27,7 @@ interface IForgotPasswordProps {
   onSubmitPassword: (data: IForgotPasswordFormValues) => void;
 }
 const ForgotPassword = ({
-  mobileForm,
+  signUpForm,
   onSubmitMobile,
   step,
   mobileNumber,
@@ -48,24 +48,59 @@ const ForgotPassword = ({
       <h1 className="text-2xl font-bold mb-6">Forgot Password</h1>
       {step === 1 && (
         <form
-          onSubmit={mobileForm.handleSubmit(onSubmitMobile)}
+          onSubmit={signUpForm.handleSubmit(onSubmitMobile)}
           className="w-full"
         >
-          <input
-            {...mobileForm.register('mobileNumber')}
-            className="w-full p-2 border rounded-lg"
-            placeholder="Mobile number (10 digits)"
-            maxLength={10}
-            type="tel"
-            inputMode="numeric"
-            onInput={(e: React.FormEvent<HTMLInputElement>) => {
-              const target = e.currentTarget;
-              target.value = target.value.replace(/[^0-9]/g, '');
-            }}
-          />
-          {mobileForm.formState.errors.mobileNumber && (
+          {process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? (
+            <input
+              {...signUpForm.register('mobileNumber', {
+                required: 'Mobile number is required',
+              })}
+              className="w-full p-2 border rounded-lg"
+              placeholder="Mobile number (10 digits)"
+              maxLength={10}
+              type="tel"
+              inputMode="numeric"
+              onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                const target = e.currentTarget;
+                target.value = target.value.replace(/[^0-9]/g, '');
+              }}
+            />
+          ) : (
+            <input
+              {...signUpForm.register('email', {
+                required: 'Email is required',
+                validate: (value) => {
+                  if (!value) {
+                    return 'Email is required';
+                  }
+                  const validDomains = ['@rguktn.ac.in', '@rgukts.ac.in'];
+                  const emailRegex = new RegExp(
+                    `^[a-zA-Z0-9._%+-]+${validDomains.map((d) => d.replace('.', '\\.')).join('|')}$`
+                  );
+                  return (
+                    emailRegex.test(value) ||
+                    'Email must end with @rguktn.ac.in or @rgukts.ac.in'
+                  );
+                },
+              })}
+              type="email"
+              className="w-full p-2 border rounded-lg"
+              placeholder="Enter the College email"
+              onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                const target = e.currentTarget;
+                target.value = target.value.replace(/[^a-zA-Z0-9@._+-]/g, ''); // Allow valid email characters
+              }}
+            />
+          )}
+          {signUpForm.formState.errors.email && (
             <p className="text-red-500 text-xs w-full">
-              {mobileForm.formState.errors.mobileNumber.message}
+              {signUpForm.formState.errors.email.message}
+            </p>
+          )}
+          {signUpForm.formState.errors.mobileNumber && (
+            <p className="text-red-500 text-xs w-full">
+              {signUpForm.formState.errors.mobileNumber.message}
             </p>
           )}
           <button

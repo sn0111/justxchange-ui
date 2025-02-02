@@ -2,8 +2,8 @@ import { ForgotPassword } from '@/app/_components/forgot-password';
 import LoaderComponent from '@/components/LoaderComponent';
 import {
   IForgotPasswordFormValues,
-  IMobileFormValues,
   IOTPFormValues,
+  ISignUpFormValues,
 } from '@/interface';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
 import { Messages } from '@/lib/messages';
@@ -15,13 +15,6 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
-const mobileSchema = yup.object().shape({
-  mobileNumber: yup
-    .string()
-    .required('Mobile number is required')
-    .matches(/^[0-9]{10}$/, 'Mobile number must be 10 digits'),
-});
 
 const otpSchema = yup.object().shape({
   otp: yup
@@ -47,8 +40,8 @@ const ForgotPasswordContainer = () => {
   const [step, setStep] = useState(1);
   const router = useRouter();
 
-  const mobileForm = useForm({
-    resolver: yupResolver(mobileSchema),
+  const signUpForm = useForm({
+    defaultValues: { email: '', mobileNumber: '' },
   });
 
   const otpForm = useForm({
@@ -60,14 +53,24 @@ const ForgotPasswordContainer = () => {
     mode: 'onChange',
   });
 
-  const onSubmitMobile = async (data: IMobileFormValues) => {
-    console.log(`Sending OTP to ${data.mobileNumber}`);
-    setMobileNumber(data.mobileNumber);
+  const onSubmitMobile = async (data: ISignUpFormValues) => {
+    setMobileNumber(
+      process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+        ? data.mobileNumber
+        : data.email
+    );
 
-    const url = API_ENDPOINTS.auth.sendOtp('+91' + data.mobileNumber);
+    const url = API_ENDPOINTS.auth.sendOtp();
     const config = {
-      method: 'get',
+      method: 'post',
       url: url,
+      data: {
+        signUpValue:
+          process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+            ? '+91' + data.mobileNumber
+            : data.email,
+        emailOrSms: process.env.NEXT_PUBLIC_EMAIL_OR_SMS || 'Email',
+      },
     };
     try {
       setIsLoading(true);
@@ -152,7 +155,7 @@ const ForgotPasswordContainer = () => {
 
       <ForgotPassword
         mobileNumber={mobileNumber}
-        mobileForm={mobileForm}
+        signUpForm={signUpForm}
         otpForm={otpForm}
         onSubmitMobile={onSubmitMobile}
         onSubmitOtp={onSubmitOtp}

@@ -17,23 +17,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-const signUpSchema = yup
-  .object()
-  .shape({
-    mobileNumber: yup
-      .string()
-      .matches(/^[0-9]{10}$/, 'Mobile number must be 10 digits')
-      .notRequired(),
-    email: yup.string().email('Invalid email format').notRequired(),
-  })
-  .test(
-    'mobile-or-email',
-    'Either mobile number or email is required',
-    (value) => {
-      return !!value?.mobileNumber || !!value?.email; // Ensure at least one is present
-    }
-  );
-
 const otpSchema = yup.object().shape({
   otp: yup
     .string()

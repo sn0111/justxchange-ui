@@ -5,7 +5,6 @@ import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-// import { useState } from 'react';
 
 
 const SearchProductsContainer = () => {
@@ -33,7 +32,7 @@ const SearchProductsContainer = () => {
       categoryUuid: categoryUuid,
       condition: condition,
       isFilter: filter,
-      page: 1,
+      page: selectedPage,
       searchQuery: searchQuery,
       size: 10
     }
