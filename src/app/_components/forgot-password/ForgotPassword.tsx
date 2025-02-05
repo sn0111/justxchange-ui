@@ -217,7 +217,7 @@ const ForgotPassword = ({
 
       <p className="mt-4 text-gray-600">
         {`Remember your password? `}
-        <Link href="/login" className="text-blue-600 hover:underline">
+        <Link href="/welcome" className="text-blue-600 hover:underline">
           Login
         </Link>
       </p>

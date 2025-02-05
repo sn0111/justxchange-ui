@@ -19,7 +19,7 @@ export const makeRequest = async (options: AxiosRequestConfig) => {
     });
     if (response.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      window.location.href = '/welcome';
       return;
     }
     // if (response.status !== 200) {
@@ -33,7 +33,7 @@ export const makeRequest = async (options: AxiosRequestConfig) => {
 
       if (status === 401) {
         localStorage.removeItem('token');
-        window.location.href = '/login';
+        window.location.href = '/welcome';
         return;
       }
 

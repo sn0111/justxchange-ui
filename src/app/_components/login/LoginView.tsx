@@ -1,14 +1,17 @@
-import { ILoginFormValues } from '@/interface';
-import { motion } from 'framer-motion';
+import React from 'react';
+import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { UseFormReturn } from 'react-hook-form';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { ILoginFormValues } from '@/interface';
+import Button from '@/components/Button';
 
 interface ILoginView {
   loginForm: UseFormReturn<ILoginFormValues>;
   loginSubmit: (data: ILoginFormValues) => void;
   togglePasswordVisibility: () => void;
   showPassword: boolean;
+  isLoading: boolean;
 }
 
 const LoginView = ({
@@ -16,81 +19,114 @@ const LoginView = ({
   loginSubmit,
   togglePasswordVisibility,
   showPassword,
+  isLoading,
 }: ILoginView) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center w-full max-w-md p-6 bg-white rounded-lg shadow-md"
-    >
-      {/* {isLoading && <LoaderComponent />} */}
-      <h1 className="text-2xl font-bold mb-6">Login</h1>
-      <form onSubmit={loginForm.handleSubmit(loginSubmit)} className="w-full">
-        <div className="mb-2">
-          <input
-            {...loginForm.register('mobileNumber')}
-            placeholder="Username"
-            className="w-full p-2 border rounded-lg"
-            // maxLength={10}
-            type="text"
-            // inputMode="numeric"
-            // onInput={(e: React.FormEvent<HTMLInputElement>) => {
-            //   const target = e.currentTarget;
-            //   target.value = target.value.replace(/[^0-9]/g, '');
-            // }}
-          />
-          {loginForm.formState.errors.mobileNumber && (
-            <p className="text-red-500 text-xs">
-              {loginForm.formState.errors.mobileNumber.message}
-            </p>
-          )}
-        </div>
-        <div className="relative w-full ">
-          <input
-            type={showPassword ? 'text' : 'password'}
-            {...loginForm.register('password')}
-            placeholder="Password"
-            className="w-full p-2 border rounded-lg"
-          />
-          <div
-            className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
-            onClick={togglePasswordVisibility}
+    <div className="flex items-center justify-center">
+      <div className="w-full max-w-md">
+        {/* Gradient Border Effect */}
+        <div className="relative group">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
+
+          <motion.div
+            className="relative bg-black/80 p-8 rounded-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            {showPassword ? (
-              <AiOutlineEyeInvisible className="w-5 h-5 text-gray-500" />
-            ) : (
-              <AiOutlineEye className="w-5 h-5 text-gray-500" />
-            )}
-          </div>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-white mb-2">
+                Welcome Back
+              </h2>
+              <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+                Sign in to your account
+              </p>
+            </div>
+
+            <form className="space-y-6">
+              {/* Email Input */}
+              <div className="relative">
+                <input
+                  {...loginForm.register('mobileNumber')}
+                  type="email"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
+                    [&:-webkit-autofill]:bg-black/10 
+                    [&:-webkit-autofill]:text-white 
+                    [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
+                    [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
+                  placeholder="Email"
+                />
+                {loginForm.formState.errors.mobileNumber && (
+                  <p className="text-pink-400 text-sm mt-1">
+                    {loginForm.formState.errors.mobileNumber.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Password Input */}
+              <div className="relative">
+                <input
+                  {...loginForm.register('password')}
+                  type={showPassword ? 'text' : 'password'}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 pr-12
+                    [&:-webkit-autofill]:bg-black/10 
+                    [&:-webkit-autofill]:text-white 
+                    [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
+                    [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
+                  placeholder="Password"
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+                {loginForm.formState.errors.password && (
+                  <p className="text-pink-400 text-sm mt-1">
+                    {loginForm.formState.errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Forgot Password */}
+              <div className="text-right">
+                <Link
+                  href="/forgot-password"
+                  className="text-purple-400 hover:text-purple-300 transition-colors text-sm"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+
+              {/* Login Button */}
+              <Button
+                icon={<ArrowRight />}
+                isLoading={isLoading}
+                className="w-full py-3 h-12 flex items-center justify-center"
+                borderRadius="roundedXl"
+                onClick={loginForm.handleSubmit(loginSubmit)}
+              >
+                Login
+              </Button>
+
+              {/* Sign Up Link */}
+              <div className="text-center mt-8">
+                <span className="text-gray-400">
+                  {`Don't have an account? `}
+                </span>
+                <Link
+                  href="/signup"
+                  className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
+                >
+                  Sign up
+                </Link>
+              </div>
+            </form>
+          </motion.div>
         </div>
-        {loginForm.formState.errors.password && (
-          <p className="text-red-500 text-xs">
-            {loginForm.formState.errors.password.message}
-          </p>
-        )}
-
-        <button
-          type="submit"
-          className="w-full p-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-        >
-          Login
-        </button>
-        <Link
-          href="/forgot-password"
-          className="text-blue-600 text-sm hover:underline flex justify-end mt-1"
-        >
-          Forgot Password?
-        </Link>
-      </form>
-
-      <p className="mt-4 text-gray-600">
-        {`Don't have an account? `}
-        <Link href="/signup" className="text-blue-600 hover:underline">
-          Sign up
-        </Link>
-      </p>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

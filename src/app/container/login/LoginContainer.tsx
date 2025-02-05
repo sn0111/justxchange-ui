@@ -8,7 +8,6 @@ import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { notifyError } from '@/lib/utils';
 import { makeRequest } from '@/middleware/axios-helper';
 import { ILoginFormValues } from '@/interface';
-import LoaderComponent from '@/components/LoaderComponent';
 import { LoginView } from '@/app/_components/login';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
 import { Messages } from '@/lib/messages';
@@ -24,7 +23,10 @@ const loginSchema = yup.object().shape({
     .required('Password is required'),
 });
 
-const LoginContainer = () => {
+interface ILoginContainerProps {
+  setDialogOpen: (value: boolean) => void;
+}
+const LoginContainer = ({ setDialogOpen }: ILoginContainerProps) => {
   const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -66,6 +68,7 @@ const LoginContainer = () => {
         login(responseData.data.token);
         localStorage.setItem('userId', responseData.data.userId);
         router.push('/home');
+        setDialogOpen(false);
       }
     } catch (err) {
       const error = err as IAxiosError;
@@ -82,8 +85,9 @@ const LoginContainer = () => {
   };
   return (
     <div>
-      {isLoading && <LoaderComponent />}
+      {/* {isLoading && <LoaderComponent />} */}
       <LoginView
+        isLoading={isLoading}
         loginForm={loginForm}
         loginSubmit={onSubmit}
         togglePasswordVisibility={togglePasswordVisibility}

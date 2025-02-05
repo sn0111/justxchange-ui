@@ -134,7 +134,7 @@ const ForgotPasswordContainer = () => {
       const responseData = await makeRequest(config);
       if (responseData) {
         notifySuccess(responseData.data.message);
-        router.push('/login');
+        router.push('/welcome');
       }
     } catch (err) {
       const error = err as IAxiosError;

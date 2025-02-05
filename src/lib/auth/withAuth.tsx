@@ -17,13 +17,13 @@ const withAuth = <P extends object>(
     const currentPath = usePathname();
     useEffect(() => {
       if (!authenticationToken && localStorage.getItem('token') === '') {
-        router.replace('/login');
+        router.replace('/welcome');
         return;
       } else {
         login(localStorage.getItem('token') || '');
       }
       // If there is an allowedRole, check if role matches
-      if (allowedRole && localStorage.getItem("role") !== allowedRole) {
+      if (allowedRole && localStorage.getItem('role') !== allowedRole) {
         router.push(`${currentPath}/un-authorized`);
         return;
       }

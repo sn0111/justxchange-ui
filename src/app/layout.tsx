@@ -40,16 +40,18 @@ export default function RootLayout({
       >
         <AuthProvider>
           {/* Global Loader */}
-          <Suspense><Loading /></Suspense>
+          <Suspense>
+            <Loading />
+          </Suspense>
 
-          {/* Header Section */}
+          {/* Header Section
           <div className="fixed top-0 left-0 w-full z-10 bg-white shadow-md">
             <Header />
-          </div>
-
+          </div> */}
+          <Header />
           {/* Main Content Section */}
-          <div className="flex-1 pt-[80px] pb-[20px] overflow-auto">
-            <div className="layout-content-container flex flex-col max-w-[1150px] mx-auto">
+          <div className="flex-1 pt-16 overflow-auto ">
+            <div className="layout-content-container flex flex-col  mx-auto">
               {children}
             </div>
           </div>

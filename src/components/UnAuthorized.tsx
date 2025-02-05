@@ -9,7 +9,7 @@ const UnauthorizedPage = () => {
   const { authenticationToken } = useAuth();
   useEffect(() => {
     if (!authenticationToken) {
-      router.replace('/login');
+      router.replace('/welcome');
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

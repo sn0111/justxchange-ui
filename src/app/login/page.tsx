@@ -1,7 +1,5 @@
 'use client';
 
-import { LoginContainer } from '../container/login';
-
 const LoginPage = () => {
   return (
     <div
@@ -9,7 +7,7 @@ const LoginPage = () => {
       style={{ height: '60vh' }}
     >
       {/* <Login /> */}
-      <LoginContainer />
+      {/* <LoginContainer /> */}
     </div>
   );
 };

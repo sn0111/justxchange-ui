@@ -218,7 +218,7 @@ const SignUpView = ({
 
       <p className="mt-4 text-gray-600">
         {`Already have an account? `}
-        <Link href="/login" className="text-blue-600 hover:underline">
+        <Link href="/welcome" className="text-blue-600 hover:underline">
           Login
         </Link>
       </p>

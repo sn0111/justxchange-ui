@@ -54,7 +54,7 @@ export const AuthProvider = ({
       }
     } else {
       console.log('No token found in localStorage');
-      router.push('/login');
+      router.push('/welcome');
     }
 
     return () => {
@@ -96,7 +96,7 @@ export const AuthProvider = ({
     setAuthenticationToken('');
     setRole('');
     if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current); // Clear the timeout on logout
-    router.push('/login');
+    router.push('/welcome');
   };
 
   return (

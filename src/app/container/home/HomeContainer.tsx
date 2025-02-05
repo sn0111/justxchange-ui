@@ -15,11 +15,11 @@ const HomeContainer = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectCategory, setSelectCategory] = useState<string>('');
+  // const [selectCategory, setSelectCategory] = useState<string>('');
 
   useEffect(() => {
     getCategories();
-    getProductsByCategory('', '', '', false)
+    getProductsByCategory('', '', '', false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,18 +42,23 @@ const HomeContainer = () => {
     }
   };
 
-  const getProductsByCategory=(categoryUuid: string, searchQuery: string, condition: string, filter: boolean)=>{
-    const body: IProductFilters={
+  const getProductsByCategory = (
+    categoryUuid: string,
+    searchQuery: string,
+    condition: string,
+    filter: boolean
+  ) => {
+    const body: IProductFilters = {
       productUuid: '',
       categoryUuid: categoryUuid,
       condition: condition,
       isFilter: filter,
       page: 1,
       searchQuery: searchQuery,
-      size: 10
-    }
+      size: 10,
+    };
     getProducts(body);
-  }
+  };
 
   const getProducts = async (body: IProductFilters) => {
     const url = API_ENDPOINTS.product.filterProducts();
@@ -81,8 +86,8 @@ const HomeContainer = () => {
   };
 
   const handleSelectCategory = async (uuid: string) => {
-    setSelectCategory(uuid);
-    getProductsByCategory(uuid, '', '', true)
+    // setSelectCategory(uuid);
+    getProductsByCategory(uuid, '', '', true);
     // const url = API_ENDPOINTS.product.getProductByCategory(id);
     // const config = {
     //   method: 'get',
@@ -111,7 +116,6 @@ const HomeContainer = () => {
       <ImageView />
       <ListCategories
         categories={categories}
-        selectCategory={selectCategory}
         handleSelectCategory={handleSelectCategory}
       />
       <ListProducts router={router} products={products} />
