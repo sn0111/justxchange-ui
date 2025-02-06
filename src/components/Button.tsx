@@ -26,7 +26,7 @@ const Button: React.FC<ButtonProps> = ({
   icon,
   iconPlacement = 'right',
   loaderSize = 8,
-  iconClassName = `${iconPlacement === 'left' ? 'mr-2' : 'ml-2'}`,
+  iconClassName = `${iconPlacement === 'left' ? 'mr-2' : 'ml-2 group-hover:translate-x-1 transition-transform'}`,
   ...props
 }) => {
   const baseClasses =
@@ -79,7 +79,7 @@ const Button: React.FC<ButtonProps> = ({
           {children}
           {iconPlacement === 'right' && icon && (
             <span
-              className={`${children ? iconClassName : ''} flex items-center`}
+              className={`${children ? iconClassName : ''}   flex items-center`}
             >
               {icon}
             </span>
