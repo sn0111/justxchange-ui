@@ -1,6 +1,5 @@
 import React from 'react';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { UseFormReturn } from 'react-hook-form';
 import { ILoginFormValues } from '@/interface';
@@ -12,6 +11,8 @@ interface ILoginView {
   togglePasswordVisibility: () => void;
   showPassword: boolean;
   isLoading: boolean;
+  setSignUpDialogOpen: (event: React.FormEvent) => void;
+  setForgotPasswordDialogOpen: (event: React.FormEvent) => void;
 }
 
 const LoginView = ({
@@ -20,9 +21,11 @@ const LoginView = ({
   togglePasswordVisibility,
   showPassword,
   isLoading,
+  setSignUpDialogOpen,
+  setForgotPasswordDialogOpen
 }: ILoginView) => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center w-96">
       <div className="w-full max-w-md">
         {/* Gradient Border Effect */}
         <div className="relative group">
@@ -91,12 +94,12 @@ const LoginView = ({
 
               {/* Forgot Password */}
               <div className="text-right">
-                <Link
-                  href="/forgot-password"
+                <button
+                  onClick={setForgotPasswordDialogOpen}
                   className="text-purple-400 hover:text-purple-300 transition-colors text-sm"
                 >
                   Forgot Password?
-                </Link>
+                </button>
               </div>
 
               {/* Login Button */}
@@ -115,12 +118,12 @@ const LoginView = ({
                 <span className="text-gray-400">
                   {`Don't have an account? `}
                 </span>
-                <Link
-                  href="/signup"
+                <button
+                  onClick={setSignUpDialogOpen}
                   className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
                 >
                   Sign up
-                </Link>
+                </button>
               </div>
             </form>
           </motion.div>

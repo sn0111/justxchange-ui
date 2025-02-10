@@ -1,19 +1,11 @@
-import {
-  ISignUpFormValues,
-  IOTPFormValues,
-  IProfileFormValues,
-} from '@/interface';
+import React from 'react';
+import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { UseFormReturn } from 'react-hook-form';
-import {
-  AiOutlineCheck,
-  AiOutlineEye,
-  AiOutlineEyeInvisible,
-} from 'react-icons/ai';
-import { OtpVerifier } from '../otp_verifier/OtpVerifier';
+import { ISignUpFormValues, IOTPFormValues, IProfileFormValues } from '@/interface';
+import Button from '@/components/Button';
 
-interface ISignUpView {
+interface ISignupView {
   step: number;
   mobileNumber: string;
   signUpForm: UseFormReturn<ISignUpFormValues>;
@@ -24,8 +16,10 @@ interface ISignUpView {
   onSubmitProfile: (data: IProfileFormValues) => void;
   togglePasswordVisibility: () => void;
   showPassword: boolean;
+  setLoginDialogOpen: (event: React.FormEvent) => void;
 }
-const SignUpView = ({
+
+const SignupView = ({
   step,
   mobileNumber,
   signUpForm,
@@ -36,194 +30,242 @@ const SignUpView = ({
   onSubmitProfile,
   togglePasswordVisibility,
   showPassword,
-}: ISignUpView) => {
+  setLoginDialogOpen
+}: ISignupView) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center w-[20rem] p-6 bg-white rounded-lg shadow-md"
-    >
-      <h1 className="text-2xl font-bold mb-6">Sign Up</h1>
+    <div className="flex items-center justify-center w-96">
+      <div className="w-full max-w-md">
+        {/* Gradient Border Effect */}
+        <div className="relative group">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
 
-      {step === 1 && (
-        <form
-          onSubmit={signUpForm.handleSubmit(onSubmitSignup)}
-          className="w-full"
-        >
-          {process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? (
-            <input
-              {...signUpForm.register('mobileNumber', {
-                required: 'Mobile number is required',
-              })}
-              className="w-full p-2 border rounded-lg"
-              placeholder="Mobile number (10 digits)"
-              maxLength={10}
-              type="tel"
-              inputMode="numeric"
-              onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                const target = e.currentTarget;
-                target.value = target.value.replace(/[^0-9]/g, '');
-              }}
-            />
-          ) : (
-            <input
-              {...signUpForm.register('email', {
-                required: 'Email is required',
-                validate: (value) => {
-                  if (!value) {
-                    return 'Email is required';
-                  }
-                  const validDomains = ['@rguktn.ac.in', '@rgukts.ac.in'];
-                  const emailRegex = new RegExp(
-                    `^[a-zA-Z0-9._%+-]+${validDomains.map((d) => d.replace('.', '\\.')).join('|')}$`
-                  );
-                  return (
-                    emailRegex.test(value) ||
-                    'Email must end with @rguktn.ac.in or @rgukts.ac.in'
-                  );
-                },
-              })}
-              type="email"
-              className="w-full p-2 border rounded-lg"
-              placeholder="Enter the College email"
-              onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                const target = e.currentTarget;
-                target.value = target.value.replace(/[^a-zA-Z0-9@._+-]/g, ''); // Allow valid email characters
-              }}
-            />
-          )}
-          {signUpForm.formState.errors.email && (
-            <p className="text-red-500 text-xs w-full">
-              {signUpForm.formState.errors.email.message}
-            </p>
-          )}
-          {signUpForm.formState.errors.mobileNumber && (
-            <p className="text-red-500 text-xs w-full">
-              {signUpForm.formState.errors.mobileNumber.message}
-            </p>
-          )}
-          <button
-            type="submit"
-            className="w-full mt-2 p-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            Send OTP
-          </button>
-        </form>
-      )}
-
-      {step === 2 && (
-        <OtpVerifier
-          mobileNumber={mobileNumber}
-          onOtpSubmit={otpForm.handleSubmit(onSubmitOtp)}
-          otpForm={otpForm}
-        />
-      )}
-
-      {step === 3 && (
-        <form
-          onSubmit={profileForm.handleSubmit(onSubmitProfile)}
-          className="w-full"
-        >
           <motion.div
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
+            className="relative bg-black/80 p-8 rounded-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full"
           >
-            <div className="relative w-full">
-              <input
-                value={mobileNumber}
-                disabled
-                placeholder="Mobile number (10 digits)"
-                maxLength={10}
-                type="tel"
-                inputMode="numeric"
-                onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                  const target = e.currentTarget;
-                  target.value = target.value.replace(/[^0-9]/g, '');
-                }}
-                className="w-full p-2 border rounded-lg shadow-sm focus:outline-none 
-           focus:ring-2 focus:ring-green-500 border-gray-300 
-           disabled:bg-gray-100 disabled:cursor-not-allowed"
-              />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <AiOutlineCheck className="w-5 h-5 text-green-500" />
-              </div>
-            </div>
+            {step === 1 && (
+              <div>
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-bold text-white mb-2">
+                    Sign Up
+                  </h2>
+                  <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+                    Create a new account
+                  </p>
+                </div>
 
-            <div className="relative w-full">
-              <input
-                {...profileForm.register('password')}
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                className="w-full p-2 mt-2 border rounded-lg mb-2"
-              />
-              <div
-                className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
-                onClick={togglePasswordVisibility}
+                <form className="space-y-6">
+                  {/* Email/Mobile Input */}
+                  <div className="relative">
+                    <input
+                      {...signUpForm.register(`${process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'mobileNumber' : 'email'}` as 'email')}
+                      type={process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'tel' : 'email'}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
+                        [&:-webkit-autofill]:bg-black/10 
+                        [&:-webkit-autofill]:text-white 
+                        [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
+                        [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
+                      placeholder={process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'Mobile Number' : 'Email'}
+                    />
+
+                    {signUpForm.formState.errors.email && (
+                      <p className="text-pink-400 text-sm mt-1">
+                        {signUpForm.formState.errors.email.message}
+                      </p>
+                    )}
+                    {signUpForm.formState.errors.mobileNumber && (
+                      <p className="text-pink-400 text-sm mt-1">
+                        {signUpForm.formState.errors.mobileNumber.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Signup Button */}
+                  <Button
+                    icon={<ArrowRight />}
+                    className="w-full py-3 h-12 flex items-center justify-center"
+                    borderRadius="roundedXl"
+                    onClick={signUpForm.handleSubmit(onSubmitSignup)}
+                  >
+                    Next
+                  </Button>
+                </form>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div>
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-bold text-white mb-2">
+                    Verify OTP
+                  </h2>
+                  <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+                    Enter the OTP sent to {mobileNumber}
+                  </p>
+                </div>
+
+                <form className="space-y-6">
+                  {/* OTP Input */}
+                  <div className="relative">
+                    <input
+                      {...otpForm.register('otp')}
+                      type="text"
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
+                        [&:-webkit-autofill]:bg-black/10 
+                        [&:-webkit-autofill]:text-white 
+                        [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
+                        [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
+                      placeholder="OTP"
+                    />
+                    {otpForm.formState.errors.otp && (
+                      <p className="text-pink-400 text-sm mt-1">
+                        {otpForm.formState.errors.otp.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Verify OTP Button */}
+                  <Button
+                    icon={<ArrowRight />}
+                    className="w-full py-3 h-12 flex items-center justify-center"
+                    borderRadius="roundedXl"
+                    onClick={otpForm.handleSubmit(onSubmitOtp)}
+                  >
+                    Verify
+                  </Button>
+                </form>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div>
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-bold text-white mb-2">
+                    Complete Profile
+                  </h2>
+                  <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+                    Enter your details to complete the signup
+                  </p>
+                </div>
+
+                <form className="space-y-6">
+                  {/* Name Input */}
+                  <div className="relative">
+                    <input
+                      {...profileForm.register('firstName')}
+                      type="text"
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
+                        [&:-webkit-autofill]:bg-black/10 
+                        [&:-webkit-autofill]:text-white 
+                        [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
+                        [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
+                      placeholder="Name"
+                    />
+                    {profileForm.formState.errors.firstName && (
+                      <p className="text-pink-400 text-sm mt-1">
+                        {profileForm.formState.errors.firstName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Mobile/Email Input */}
+                  <div className="relative">
+                    <input
+                      {...profileForm.register(
+                        'mobileNumber'
+                      )}
+                      type='tel'
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
+                        [&:-webkit-autofill]:bg-black/10 
+                        [&:-webkit-autofill]:text-white 
+                        [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
+                        [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
+                      placeholder={process.env.NEXT_PUBLIC_EMAIL_OR_SMS !== 'SMS' ? 'Mobile Number' : 'Email'}
+                    />
+                    {profileForm.formState.errors.mobileNumber && (
+                      <p className="text-pink-400 text-sm mt-1">
+                        {profileForm.formState.errors.mobileNumber.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Password Input */}
+                  <div className="relative">
+                    <input
+                      {...profileForm.register('password')}
+                      type={showPassword ? 'text' : 'password'}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 pr-12
+                        [&:-webkit-autofill]:bg-black/10 
+                        [&:-webkit-autofill]:text-white 
+                        [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
+                        [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
+                      placeholder="Password"
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                    {profileForm.formState.errors.password && (
+                      <p className="text-pink-400 text-sm mt-1">
+                        {profileForm.formState.errors.password.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* College Input */}
+                  <div className="relative">
+                    <input
+                      {...profileForm.register('college')}
+                      type="text"
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
+                        [&:-webkit-autofill]:bg-black/10 
+                        [&:-webkit-autofill]:text-white 
+                        [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
+                        [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
+                      placeholder="College"
+                    />
+                    {profileForm.formState.errors.college && (
+                      <p className="text-pink-400 text-sm mt-1">
+                        {profileForm.formState.errors.college.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Complete Signup Button */}
+                  <Button
+                    icon={<ArrowRight />}
+                    className="w-full py-3 h-12 flex items-center justify-center"
+                    borderRadius="roundedXl"
+                    onClick={profileForm.handleSubmit(onSubmitProfile)}
+                  >
+                    Complete Signup
+                  </Button>
+                </form>
+              </div>
+            )}
+
+            {/* Login Link */}
+            <div className="text-center mt-8">
+              <span className="text-gray-400">
+                {`Already have an account? `}
+              </span>
+              <button
+                onClick={setLoginDialogOpen}
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
               >
-                {showPassword ? (
-                  <AiOutlineEyeInvisible className="w-5 h-5 text-gray-500" />
-                ) : (
-                  <AiOutlineEye className="w-5 h-5 text-gray-500" />
-                )}
-              </div>
+                Login
+              </button>
             </div>
-            {profileForm.formState.errors.password && (
-              <p className="text-red-500">
-                {profileForm.formState.errors.password.message}
-              </p>
-            )}
-            <input
-              {...profileForm.register('firstName')}
-              placeholder="Full Name"
-              className="w-full p-2 border rounded-lg mb-2"
-            />
-            {profileForm.formState.errors.firstName && (
-              <p className="text-red-500">
-                {profileForm.formState.errors.firstName.message}
-              </p>
-            )}
-            <input
-              {...profileForm.register('mobileNumber')}
-              placeholder="Mobile Number"
-              className="w-full p-2 border rounded-lg mb-2"
-            />
-            {profileForm.formState.errors.mobileNumber && (
-              <p className="text-red-500">
-                {profileForm.formState.errors.mobileNumber.message}
-              </p>
-            )}
-            <input
-              {...profileForm.register('college')}
-              placeholder="College"
-              className="w-full p-2 border rounded-lg mb-2"
-            />
-            {profileForm.formState.errors.college && (
-              <p className="text-red-500">
-                {profileForm.formState.errors.college.message}
-              </p>
-            )}
           </motion.div>
-          <button
-            type="submit"
-            className="w-full p-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-          >
-            Create Profile
-          </button>
-        </form>
-      )}
-
-      <p className="mt-4 text-gray-600">
-        {`Already have an account? `}
-        <Link href="/welcome" className="text-blue-600 hover:underline">
-          Login
-        </Link>
-      </p>
-    </motion.div>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default SignUpView;
+export default SignupView;

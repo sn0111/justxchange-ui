@@ -1,13 +1,6 @@
 import { IProduct, IUserFormValues } from '@/interface';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import {
-  FaHeart,
-  FaHistory,
-  FaListAlt,
-  FaUserAlt,
-  FaUsers,
-  FaStore,
-} from 'react-icons/fa';
+import { List, User, Heart, History, Users, Store } from 'lucide-react'; // Import Lucid icons
 import UserProducts from './UserProducts';
 import UserProfile from './UserProfile';
 import Wishlists from './WishLists';
@@ -28,6 +21,7 @@ interface IProfileView {
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   role: string;
+  isLoading: boolean;
 }
 
 const ProfileDetails = ({
@@ -43,6 +37,7 @@ const ProfileDetails = ({
   fileInputRef,
   handleFileChange,
   role,
+  isLoading
 }: IProfileView) => {
   return (
     <div className="flex flex-col lg:flex-row  bg-gray-50 w-full ">
@@ -58,52 +53,52 @@ const ProfileDetails = ({
                 className={`flex items-center gap-3 p-3 rounded-lg ${step === 0 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
                 onClick={() => setStep(0)}
               >
-                <FaListAlt className="w-5 h-5" />
+                <List className="w-5 h-5" />
                 <span>My Listings</span>
               </li>
               <li
-                className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 1 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
+                className={`flex items-center gap-3 p-3 rounded-lg ${step === 1 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
                 onClick={() => setStep(1)}
               >
-                <FaUserAlt className="w-5 h-5" />
+                <User  className="w-5 h-5" />
                 <span>Profile</span>
               </li>
               <li
                 className={`flex items-center gap-3 p-3 rounded-lg ${step === 2 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
                 onClick={() => setStep(2)}
               >
-                <FaHeart className="w-5 h-5" />
+                <Heart className="w-5 h-5" />
                 <span>Wishlist</span>
               </li>
               <li
                 className={`flex items-center gap-3 p-3 rounded-lg ${step === 3 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
                 onClick={() => setStep(3)}
               >
-                <FaHistory className="w-5 h-5" />
+                <History className="w-5 h-5" />
                 <span>Transaction History</span>
               </li>
             </>
           ) : (
             <ul className="space-y-2 lg:space-y-4">
               <li
-                className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 1 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
+                className={`flex items-center gap-3 p-3 rounded-lg ${step === 1 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
                 onClick={() => setStep(1)}
               >
-                <FaUserAlt className="w-5 h-5" />
+                <User  className="w-5 h-5" />
                 <span>Profile</span>
               </li>
               <li
-                className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 5 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
+                className={`flex items-center gap-3 p-3 rounded-lg ${step === 5 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
                 onClick={() => setStep(5)}
               >
-                <FaUsers className="w-6 h-6" />
+                <Users className="w-5 h-5" />
                 <span>Users</span>
               </li>
               <li
-                className={`hover:cursor-pointer flex items-center gap-3 p-3 rounded-lg ${step === 6 && 'bg-gray-100'} text-black font-medium hover:bg-gray-100`}
+                className={`flex items-center gap-3 p-3 rounded-lg ${step === 6 && 'bg-gray-100'} text-black font-medium hover:cursor-pointer hover:bg-gray-100`}
                 onClick={() => setStep(6)}
               >
-                <FaStore className="w-5 h-5" />
+                <Store className="w-5 h-5" />
                 <span>Products</span>
               </li>
             </ul>
@@ -126,6 +121,7 @@ const ProfileDetails = ({
           onProfileSubmit={onProfileSubmit}
           fileInputRef={fileInputRef}
           handleFileChange={handleFileChange}
+          isLoading={isLoading}
         />
       )}
       {step == 2 && (

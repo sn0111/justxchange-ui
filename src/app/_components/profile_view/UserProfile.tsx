@@ -1,3 +1,4 @@
+import Button from '@/components/Button';
 import { IUserFormValues } from '@/interface';
 import Image from 'next/image';
 import React from 'react';
@@ -8,6 +9,7 @@ interface IUserProfile {
   onProfileSubmit: (data: IUserFormValues) => void;
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isLoading: boolean;
 }
 
 const UserProfile = ({
@@ -15,16 +17,23 @@ const UserProfile = ({
   onProfileSubmit,
   fileInputRef,
   handleFileChange,
+  isLoading
 }: IUserProfile) => {
+
+  const inputClass = `w-full px-4 py-3 bg-white/10 border border-black/20 rounded-xl text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
+  hover:border-purple-500  // Add this line for hover border color
+  [&:-webkit-autofill]:bg-black/10
+  [&:-webkit-autofill]:text-black
+  [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0,0,0/0.1)_inset]
+  [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]`;
+
   return (
     <main className="flex-1 p-4 lg:p-6 flex justify-center items-center">
       {/* Header */}
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl lg:min-h-[80vh]">
         <div className="flex items-center justify-center mb-6">
           <Image
-            src={
-              profileForm.watch('profileUrl')
-            } // Replace with actual image path
+            src={profileForm.watch('profileUrl')}
             alt="Profile Picture"
             className="w-24 h-24 rounded-full object-cover hover:cursor-pointer"
             height={24}
@@ -40,30 +49,26 @@ const UserProfile = ({
           />
         </div>
         <form
-          onSubmit={profileForm.handleSubmit(onProfileSubmit)}
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <div>
-            <label
-              className="block text-gray-600 text-sm mb-2"
-              htmlFor="firstName"
-            >
-              User Name
-            </label>
+            <label className="block text-black text-sm font-bold mb-1">
+                User Name
+              </label>
             <input
               {...profileForm.register('firstName')}
               type="text"
               id="firstName"
-              className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className={inputClass}
             />
             {profileForm.formState.errors.firstName && (
-              <p className="text-red-500 text-xs">
+              <p className="text-pink-400 text-xs mt-1">
                 {profileForm.formState.errors.firstName.message}
               </p>
             )}
           </div>
           <div>
-            <label className="block text-gray-600 text-sm mb-2" htmlFor="email">
+            <label className="block text-black text-sm font-bold mb-1" htmlFor="email">
               Email
             </label>
             <input
@@ -71,102 +76,84 @@ const UserProfile = ({
               type="email"
               id="email"
               disabled
-              className="border block disabled:opacity-50 disabled:pointer-events-none disabled:bg-gray-100 w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className={inputClass}
             />
             {profileForm.formState.errors.email && (
-              <p className="text-red-500 text-xs">
+              <p className="text-pink-400 text-xs mt-1">
                 {profileForm.formState.errors.email.message}
               </p>
             )}
           </div>
-          <div className="">
-            <label
-              className="block text-gray-600 text-sm mb-2"
-              htmlFor="contactNumber"
-            >
+          <div>
+            <label className="block text-black text-sm font-bold mb-1" htmlFor="mobileNumber">
               Registered Number
             </label>
             <input
               {...profileForm.register('mobileNumber')}
               type="tel"
-              id="registeredNumber"
+              id="mobileNumber"
               disabled
-              className="border block disabled:opacity-50 disabled:pointer-events-none disabled:bg-gray-100 w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className={inputClass}
             />
             {profileForm.formState.errors.mobileNumber && (
-              <p className="text-red-500 text-xs">
+              <p className="text-pink-400 text-xs mt-1">
                 {profileForm.formState.errors.mobileNumber.message}
               </p>
             )}
           </div>
-          <div className="">
-            <label
-              className="block text-gray-600 text-sm mb-2"
-              htmlFor="contactNumber"
-            >
+          <div>
+            <label className="block text-black text-sm font-bold mb-1" htmlFor="contactNumber">
               Contact Number
             </label>
             <input
               {...profileForm.register('contactNumber')}
               type="tel"
               id="contactNumber"
-              placeholder=""
-              className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className={inputClass}
             />
             {profileForm.formState.errors.contactNumber && (
-              <p className="text-red-500 text-xs">
+              <p className="text-pink-400 text-xs mt-1">
                 {profileForm.formState.errors.contactNumber.message}
               </p>
             )}
           </div>
           <div className="col-span-1 md:col-span-2">
-            <label
-              className="block text-gray-600 text-sm mb-2"
-              htmlFor="address"
-            >
-              Collage
+            <label className="block text-black text-sm font-bold mb-1" htmlFor="college">
+              College
             </label>
             <input
               {...profileForm.register('college')}
               type="text"
-              className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className={inputClass}
             />
             {profileForm.formState.errors.college && (
-              <p className="text-red-500 text-xs">
+              <p className="text-pink-400 text-xs mt-1">
                 {profileForm.formState.errors.college.message}
               </p>
             )}
           </div>
           <div className="col-span-1 md:col-span-2">
-            <label
-              className="block text-gray-600 text-sm mb-2"
-              htmlFor="address"
-            >
+            <label className="block text-black text-sm font-bold mb-1" htmlFor="address">
               Address
             </label>
             <textarea
               {...profileForm.register('address')}
-              className="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className={inputClass}
             />
             {profileForm.formState.errors.address && (
-              <p className="text-red-500 text-xs">
+              <p className="text-pink-400 text-xs mt-1">
                 {profileForm.formState.errors.address.message}
               </p>
             )}
           </div>
           <div className="sm:flex">
             <div className="col-span-1 md:col-span-2 flex">
-              <label
-                className="block text-gray-600 text-sm mb-2 pr-3"
-                htmlFor="is2FAEnabled"
-              >
+              <label className="block text-black text-sm font-bold mb-1 pr-3" htmlFor="is2FAEnabled">
                 Enable 2FA
               </label>
               <div
                 className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full ${
-                  profileForm.watch('is2FAEnabled')
-                    ? 'bg-blue-500'
-                    : 'bg-gray-300'
+                  profileForm.watch('is2FAEnabled') ? 'bg-purple-500' : 'bg-gray-300'
                 }`}
                 onClick={() =>
                   profileForm.setValue(
@@ -177,9 +164,7 @@ const UserProfile = ({
               >
                 <span
                   className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
-                    profileForm.watch('is2FAEnabled')
-                      ? 'translate-x-5'
-                      : 'translate-x-1'
+                    profileForm.watch('is2FAEnabled') ? 'translate-x-5' : 'translate-x-1'
                   }`}
                 ></span>
               </div>
@@ -191,17 +176,12 @@ const UserProfile = ({
               />
             </div>
             <div className="col-span-1 md:col-span-2 flex sm:pl-5">
-              <label
-                className="block text-gray-600 text-sm mb-2 pr-3"
-                htmlFor="isContactView"
-              >
+              <label className="block text-black text-sm font-bold mb-1 pr-3" htmlFor="isContactView">
                 Contact No View
               </label>
               <div
                 className={`relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full ${
-                  profileForm.watch('isContactView')
-                    ? 'bg-blue-500'
-                    : 'bg-gray-300'
+                  profileForm.watch('isContactView') ? 'bg-purple-500' : 'bg-gray-300'
                 }`}
                 onClick={() =>
                   profileForm.setValue(
@@ -209,12 +189,10 @@ const UserProfile = ({
                     !profileForm.getValues('isContactView')
                   )
                 }
-              >
+              > 
                 <span
                   className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
-                    profileForm.watch('isContactView')
-                      ? 'translate-x-5'
-                      : 'translate-x-1'
+                    profileForm.watch('isContactView') ? 'translate-x-5' : 'translate-x-1'
                   }`}
                 ></span>
               </div>
@@ -228,13 +206,14 @@ const UserProfile = ({
           </div>
 
           <div className="col-span-1 md:col-span-2 flex items-center justify-center">
-            <button
-              disabled={!profileForm.formState.isDirty}
-              type="submit"
-              className="ml-4 text-blue-500 hover:text-blue-700 border border-blue-500 hover:border-blue-700 px-4 py-2 rounded-lg disabled:cursor-not-allowed"
+            <Button
+              isLoading={isLoading}
+              className="w-full py-3 h-12 flex items-center justify-center"
+              borderRadius="roundedXl"
+              onClick={profileForm.handleSubmit(onProfileSubmit)}
             >
               Update
-            </button>
+            </Button>
           </div>
         </form>
       </div>

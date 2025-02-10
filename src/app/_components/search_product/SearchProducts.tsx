@@ -1,8 +1,10 @@
+import { motion } from 'framer-motion';
 import DefaultNotFound from '@/components/DefaultNotFound';
 import Pagination from '@/components/Pagination';
 import { ICategory, IProduct, ISuggesions } from '@/interface';
 import { categoryIcons } from '@/lib/constants';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { AiOutlineArrowRight } from 'react-icons/ai';
 import {
   FiSearch,
   FiTable,
@@ -65,20 +67,6 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
             </div>
           </div>
           <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            {/* <div className="px-4 py-3">
-              <label className="flex flex-col min-w-40 h-12 w-full">
-                <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
-                  <div className="text-[#49719c] flex border-none bg-[#e7edf4] items-center justify-center pl-4 rounded-l-xl border-r-0">
-                    <FiSearch size={24} />
-                  </div>
-                  <input
-                    placeholder="Search by item name, description, etc."
-                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#0d141c] focus:outline-0 focus:ring-0 border-none bg-[#e7edf4] focus:border-none h-full placeholder:text-[#49719c] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
-                    // value=""
-                  />
-                </div>
-              </label>
-            </div> */}
             <div className="px-4 py-3 relative">
               <label className="flex flex-col min-w-40 h-12 w-full">
                 <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
@@ -129,24 +117,39 @@ const SearchProducts = ({ router, categories, products, selectCategory,  getProd
             </div>
             {products.length > 0 && <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4 min-h-[73vh] overflow-y-scroll">
               {products.map((item) => (
-                <div key={item.id} className="flex flex-col gap-3 pb-3">
+                <motion.div
+                  key={item.id}
+                  className="flex flex-col gap-3 pb-3 group"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => router.push(`/view?productId=${item.id}`)}
+                >
                   <div
-                    className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer"
-                    style={{ backgroundImage: `url("${item.images[0]}")` }}
-                    onClick={() => router.push(`/view?productId=${item.id}`)}
+                    className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl cursor-pointer group-hover:scale-105 transition-transform"
+                    style={{
+                      backgroundImage: `url("${
+                        item.images && item.images.length > 0 ? item?.images[0] : ''
+                      }")`,
+                    }}
                   ></div>
                   <div>
-                    <p className="text-[#111418] text-base font-medium leading-normal">
+                    <p className="text-white text-base font-medium leading-normal group-hover:text-pink-500 transition-colors">
                       {item.productName}
                     </p>
-                    <p className="text-[#60758a] text-sm font-normal leading-normal">
-                      {item.amount}
-                    </p>
-                    <p className="text-[#60758a] text-sm font-normal leading-normal">
-                      {item.condition}
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-gray-400 text-sm font-normal leading-normal">
+                        {item.amount}
+                      </p>
+                      <p className="text-gray-400 text-sm font-normal leading-normal">
+                        {item.condition}
+                      </p>
+                    </div>
+                    <button className="flex items-center gap-2 text-pink-500 font-medium hover:text-pink-400 transition-colors">
+                      View Details
+                      <AiOutlineArrowRight />
+                    </button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>}
             {products.length < 1 && <DefaultNotFound text='No Products found'/>}

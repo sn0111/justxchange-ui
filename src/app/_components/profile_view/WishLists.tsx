@@ -17,8 +17,8 @@ const Wishlists = ({
 }: IWishLists) => {
   return (
     <div className="flex-1 p-4 lg:p-6 bg-gray-50">
-      <div className=" max-h-[70vh] min-h-[70vh] ">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4 max-h-[62vh] min-h-[62vh] overflow-y-scroll">
+      <div className=" max-h-[90vh] min-h-[90vh] ">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 p-4 max-h-[80vh] min-h-[80vh] overflow-y-scroll">
           {products.map((item) => (
             <div key={item.productName} className="flex flex-col gap-3 pb-3">
               <div

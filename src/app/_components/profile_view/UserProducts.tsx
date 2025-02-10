@@ -1,10 +1,9 @@
 import Pagination from '@/components/Pagination';
 import { IProduct } from '@/interface';
 import { formatProductDate } from '@/lib/utils';
+import { Info, MessageCircle } from 'lucide-react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import React from 'react';
-import { FaInfoCircle } from 'react-icons/fa';
-import { IoIosChatbubbles } from 'react-icons/io';
 
 interface IUserProducts {
   products: IProduct[];
@@ -22,8 +21,8 @@ const UserProducts = ({
   return (
     <main className="flex-1 p-4 lg:p-6 bg-gray-50">
       {/* Listings */}
-      <div className=" max-h-[70vh] min-h-[70vh] ">
-        <div className="space-y-4 max-h-[62vh] min-h-[62vh] overflow-y-scroll">
+      <div className=" max-h-[90vh] min-h-[90vh] ">
+        <div className="space-y-4 max-h-[80vh] min-h-[80vh] overflow-y-scroll">
           {products.map((item, index) => (
             <div
               key={index}
@@ -45,22 +44,26 @@ const UserProducts = ({
                   </p>
                 </div>
               </div>
-              <div className="flex">
-                <div className="pr-3">
-                  <FaInfoCircle
-                    className="text-xl cursor-pointer"
-                    title="View/Edit"
+              <div className="flex relative">
+                <div className="pr-3 group relative">
+                  <Info
+                    className="text-xl cursor-pointer text-[#0d141c] hover:text-[#2589f4] transition duration-200"
                     onClick={() =>
                       router.push(`/add-product?productId=${item.id}`)
                     }
                   />
+                  <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                    View/Edit
+                  </div>
                 </div>
-                <div className="pr-3">
-                  <IoIosChatbubbles
-                    title="View Chats"
-                    className="text-xl cursor-pointer"
+                <div className="pr-3 group relative">
+                  <MessageCircle
+                    className="text-xl cursor-pointer text-[#0d141c] hover:text-[#2589f4] transition duration-200"
                     onClick={() => router.push(`/chat?productId=${item.id}`)}
                   />
+                  <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                    View Chats
+                  </div>
                 </div>
               </div>
               {/* <p className="text-lg font-medium">{item.amount}</p> */}

@@ -1,6 +1,5 @@
 import { ProfileDetails } from '@/app/_components/profile_view';
 import { useAuth } from '@/app/context/AuthContext';
-import LoaderComponent from '@/components/LoaderComponent';
 import { IProduct, IUser, IUserFormValues } from '@/interface';
 import { IAxiosError } from '@/interface/IAxiosErrRes';
 import { Messages } from '@/lib/messages';
@@ -199,7 +198,7 @@ const ProfileContainer = () => {
 
   return (
     <div>
-      {isLoading && <LoaderComponent />}
+      {/* {isLoading && <LoaderComponent />} */}
       <ProfileDetails
         products={products}
         router={router}
@@ -213,6 +212,7 @@ const ProfileContainer = () => {
         fileInputRef={fileInputRef}
         handleFileChange={handleFileChange}
         role={role}
+        isLoading= {isLoading}
       />
     </div>
   );

@@ -151,26 +151,27 @@ const ChatView = ({
           ></div>
 
 
-            <form onSubmit={sendMessage} className="flex flex-1 items-center bg-[#E4E9F1] rounded-xl px-4">
-              <textarea
-                placeholder="Type here"
-                className="form-input w-full flex-1 resize-none overflow-hidden text-[#141C24] bg-[#E4E9F1] placeholder:text-[#3F5374] rounded-xl focus:outline-none focus:ring-0 border-none h-12 max-h-32"
-                rows={1}
-                value={message}
-                onInput={(e) => {
-                  const target = e.target as HTMLTextAreaElement; // Type assertion to HTMLTextAreaElement
-                  target.style.height = '30px'; // Reset height to auto before calculating new height
-                  target.style.height = `${target.scrollHeight}px`; // Set height to scrollHeight
-                }}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-              <button
-                className="ml-3 min-w-[44px] h-8 flex items-center justify-center bg-[#F4C753] text-[#141C24] rounded-xl"
-              >
-                <IoSend size={20} />
-              </button>
-            </form>
+<form onSubmit={sendMessage} className="flex flex-1 items-center bg-[#E4E9F1] rounded-xl px-4">
+      <textarea
+        placeholder="Type here"
+        className="form-input w-full flex-1 resize-none overflow-hidden text-[#141C24] bg-[#E4E9F1] placeholder:text-[#3F5374] rounded-xl focus:outline-none focus:ring-0 border-none h-12 max-h-32"
+        rows={1}
+        value={message}
+        onInput={(e) => {
+          const target = e.target as HTMLTextAreaElement; // Type assertion to HTMLTextAreaElement
+          target.style.height = '30px'; // Reset height to auto before calculating new height
+          target.style.height = `${target.scrollHeight}px`; // Set height to scrollHeight
+        }}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
+      />
+      <button
+        type="submit" // Ensure the button submits the form
+        className="ml-3 min-w-[44px] h-8 flex items-center justify-center bg-gradiant-theme text-white hover:bg-gradiant-theme-btn rounded-xl transition-transform duration-200 hover:scale-105"
+      >
+        <IoSend size={20} />
+      </button>
+    </form>
           </div>
         </div>
       </div>

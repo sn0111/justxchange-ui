@@ -31,7 +31,11 @@ const profileSchema = yup.object().shape({
   college: yup.string().required('College is required'),
 });
 
-const SignUpContainer = () => {
+interface ISignUpContainerProps {
+  setLoginDialogOpen: (event: React.FormEvent) => void;
+}
+
+const SignUpContainer = ({setLoginDialogOpen}: ISignUpContainerProps) => {
   const { login } = useAuth();
   const [step, setStep] = useState(1);
   const [mobileNumber, setMobileNumber] = useState('');
@@ -61,7 +65,7 @@ const SignUpContainer = () => {
 
   // Handlers
   const onSubmitSignup = async (data: ISignUpFormValues) => {
-    // console.log(`Sending OTP to ${data.mobileNumber}`);
+
     setMobileNumber(
       process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
         ? data.mobileNumber
@@ -97,8 +101,6 @@ const SignUpContainer = () => {
   };
 
   const onSubmitOtp = async (data: IOTPFormValues) => {
-    console.log(`Verifying OTP: ${data.otp}`);
-    // Simulate OTP verification here, if needed
 
     const url = API_ENDPOINTS.auth.verifyOtp();
     const config = {
@@ -180,6 +182,7 @@ const SignUpContainer = () => {
         onSubmitProfile={onSubmitProfile}
         togglePasswordVisibility={togglePasswordVisibility}
         showPassword={showPassword}
+        setLoginDialogOpen={setLoginDialogOpen}
       />
     </div>
   );

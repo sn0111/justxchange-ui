@@ -25,8 +25,10 @@ const loginSchema = yup.object().shape({
 
 interface ILoginContainerProps {
   setDialogOpen: (value: boolean) => void;
+  setSignUpDialogOpen: (event: React.FormEvent) => void;
+  setForgotPasswordDialogOpen: (event: React.FormEvent) => void;
 }
-const LoginContainer = ({ setDialogOpen }: ILoginContainerProps) => {
+const LoginContainer = ({ setDialogOpen, setSignUpDialogOpen, setForgotPasswordDialogOpen }: ILoginContainerProps) => {
   const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -90,8 +92,10 @@ const LoginContainer = ({ setDialogOpen }: ILoginContainerProps) => {
         isLoading={isLoading}
         loginForm={loginForm}
         loginSubmit={onSubmit}
+        setSignUpDialogOpen={setSignUpDialogOpen}
         togglePasswordVisibility={togglePasswordVisibility}
         showPassword={showPassword}
+        setForgotPasswordDialogOpen={setForgotPasswordDialogOpen}
       />
     </div>
   );

@@ -33,7 +33,10 @@ const forgotPasswordSchema = yup.object().shape({
     .required('Password confirmation is required')
     .oneOf([yup.ref('password')], 'Passwords must match'),
 });
-const ForgotPasswordContainer = () => {
+interface IForgetPasswordContainerProps {
+  setLoginDialogOpen: (event: React.FormEvent) => void;
+}
+const ForgotPasswordContainer = ({setLoginDialogOpen}:IForgetPasswordContainerProps) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -164,6 +167,7 @@ const ForgotPasswordContainer = () => {
         step={step}
         forgotPasswordForm={forgotPasswordForm}
         onSubmitPassword={onSubmitPassword}
+        setLoginDialogOpen={setLoginDialogOpen}
       />
     </div>
   );
