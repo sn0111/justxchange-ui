@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { UseFormReturn } from 'react-hook-form';
-import { ISignUpFormValues, IOTPFormValues, IForgotPasswordFormValues } from '@/interface';
+import {
+  ISignUpFormValues,
+  IOTPFormValues,
+  IForgotPasswordFormValues,
+} from '@/interface';
 import Button from '@/components/Button';
 import { OtpVerifier } from '../otp_verifier/OtpVerifier';
 import { AiOutlineCheck } from 'react-icons/ai';
@@ -19,6 +23,8 @@ interface IForgotPasswordProps {
   forgotPasswordForm: UseFormReturn<IForgotPasswordFormValues>;
   onSubmitPassword: (data: IForgotPasswordFormValues) => void;
   setLoginDialogOpen: (event: React.FormEvent) => void;
+  setView: Dispatch<SetStateAction<'login' | 'signup' | 'forgot'>>;
+  isLoading: boolean;
 }
 
 const ForgotPassword = ({
@@ -32,14 +38,15 @@ const ForgotPassword = ({
   showPassword,
   forgotPasswordForm,
   onSubmitPassword,
-  setLoginDialogOpen,
+  setView,
+  isLoading,
 }: IForgotPasswordProps) => {
   return (
     <div className="flex items-center justify-center w-96">
       <div className="w-full max-w-md">
         {/* Gradient Border Effect */}
         <div className="relative group">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
+          <div className="absolute -inset-0.5 bg-gradiant-theme-link rounded-2xl blur opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
 
           <motion.div
             className="relative bg-black/80 p-8 rounded-2xl"
@@ -51,15 +58,13 @@ const ForgotPassword = ({
               <h2 className="text-3xl font-bold text-white mb-2">
                 Forgot Password
               </h2>
-              <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+              <p className="bg-gradiant-theme-link text-transparent bg-clip-text">
                 Reset your password
               </p>
             </div>
 
             {step === 1 && (
-              <form
-                className="space-y-6"
-              >
+              <form className="space-y-6">
                 {/* Email/Mobile Input */}
                 <div className="relative">
                   <input
@@ -68,21 +73,32 @@ const ForgotPassword = ({
                         ? 'mobileNumber'
                         : 'email'
                     )}
-                    type={process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'tel' : 'email'}
+                    type={
+                      process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+                        ? 'tel'
+                        : 'email'
+                    }
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
-                      [&:-webkit-autofill]:bg-black/10 
-                      [&:-webkit-autofill]:text-white 
-                      [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
-                      [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
-                    placeholder={process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'Mobile Number' : 'Email'}
+                      "
+                    placeholder={
+                      process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+                        ? 'Mobile Number'
+                        : 'Email'
+                    }
                   />
                   {signUpForm.formState.errors[
-                    process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'mobileNumber' : 'email'
+                    process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+                      ? 'mobileNumber'
+                      : 'email'
                   ] && (
                     <p className="text-pink-400 text-sm mt-1">
-                      {signUpForm.formState.errors[
-                        process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'mobileNumber' : 'email'
-                      ]?.message}
+                      {
+                        signUpForm.formState.errors[
+                          process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+                            ? 'mobileNumber'
+                            : 'email'
+                        ]?.message
+                      }
                     </p>
                   )}
                 </div>
@@ -93,6 +109,7 @@ const ForgotPassword = ({
                   className="w-full py-3 h-12 flex items-center justify-center"
                   borderRadius="roundedXl"
                   onClick={signUpForm.handleSubmit(onSubmitMobile)}
+                  isLoading={isLoading}
                 >
                   Send OTP
                 </Button>
@@ -108,21 +125,27 @@ const ForgotPassword = ({
             )}
 
             {step === 3 && (
-              <form
-                className="space-y-6"
-              >
+              <form className="space-y-6">
                 {/* Mobile/Email Input */}
                 <div className="relative">
                   <input
                     value={mobileNumber}
                     disabled
-                    type={process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'tel' : 'email'}
+                    type={
+                      process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+                        ? 'tel'
+                        : 'email'
+                    }
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
                       [&:-webkit-autofill]:bg-black/10 
                       [&:-webkit-autofill]:text-white 
                       [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
                       [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
-                    placeholder={process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'Mobile Number' : 'Email'}
+                    placeholder={
+                      process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+                        ? 'Mobile Number'
+                        : 'Email'
+                    }
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                     <AiOutlineCheck className="w-5 h-5 text-green-500" />
@@ -176,7 +199,10 @@ const ForgotPassword = ({
                   </button>
                   {forgotPasswordForm.formState.errors.confirmPassword && (
                     <p className="text-pink-400 text-sm mt-1">
-                      {forgotPasswordForm.formState.errors.confirmPassword.message}
+                      {
+                        forgotPasswordForm.formState.errors.confirmPassword
+                          .message
+                      }
                     </p>
                   )}
                 </div>
@@ -187,6 +213,7 @@ const ForgotPassword = ({
                   className="w-full py-3 h-12 flex items-center justify-center"
                   borderRadius="roundedXl"
                   onClick={forgotPasswordForm.handleSubmit(onSubmitPassword)}
+                  isLoading={isLoading}
                 >
                   Reset Password
                 </Button>
@@ -199,8 +226,8 @@ const ForgotPassword = ({
                 {`Remember your password? `}
               </span>
               <button
-                onClick={setLoginDialogOpen}
-                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
+                onClick={() => setView('login')}
+                className="bg-gradiant-theme-link text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
               >
                 Login
               </button>

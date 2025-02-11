@@ -7,7 +7,7 @@ export const Footer = () => {
       <div className="px-6 mx-auto grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
         {/* About Section */}
         <div className="relative group h-[18rem]">
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur opacity-50 group-hover:opacity-100 transition-all"></div>
+          <div className="absolute inset-0 bg-gradiant-theme-link rounded-2xl blur opacity-50 group-hover:opacity-100 transition-all"></div>
           <div className="relative bg-black/80 p-10 rounded-2xl h-full flex flex-col justify-center">
             <h3 className="text-2xl font-semibold text-white mb-4">
               About JustXchange
@@ -22,7 +22,7 @@ export const Footer = () => {
 
         {/* Quick Links */}
         <div className="relative group h-[18rem]">
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur opacity-50 group-hover:opacity-100 transition-all"></div>
+          <div className="absolute inset-0 bg-gradiant-theme-link rounded-2xl blur opacity-50 group-hover:opacity-100 transition-all"></div>
           <div className="relative bg-black/80 p-10 rounded-2xl h-full flex flex-col justify-center">
             <h3 className="text-2xl font-semibold text-white mb-4">
               Quick Links
@@ -53,7 +53,7 @@ export const Footer = () => {
 
         {/* Support + Social Icons */}
         <div className="relative group h-[18rem]">
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur opacity-50 group-hover:opacity-100 transition-all"></div>
+          <div className="absolute inset-0 bg-gradiant-theme-link rounded-2xl blur opacity-50 group-hover:opacity-100 transition-all"></div>
           <div className="relative bg-black/80 p-10 rounded-2xl h-full flex flex-col justify-center">
             <h3 className="text-2xl font-semibold text-white mb-4">Support</h3>
             <ul className="text-gray-300 space-y-3 text-base leading-relaxed">
@@ -94,7 +94,7 @@ export const Footer = () => {
 
       {/* Copyright Section */}
       <div className="relative mt-4">
-        <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-lg blur opacity-50"></div>
+        <div className="absolute inset-0 bg-gradiant-theme-link rounded-lg blur opacity-50"></div>
         <div className="relative bg-black/80 px-10 py-5">
           <div className="text-center text-gray-300 text-base">
             &copy; {new Date().getFullYear()} JustXchange. All Rights Reserved.

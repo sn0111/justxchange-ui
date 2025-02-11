@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { UseFormReturn } from 'react-hook-form';
@@ -11,8 +11,7 @@ interface ILoginView {
   togglePasswordVisibility: () => void;
   showPassword: boolean;
   isLoading: boolean;
-  setSignUpDialogOpen: (event: React.FormEvent) => void;
-  setForgotPasswordDialogOpen: (event: React.FormEvent) => void;
+  setView: Dispatch<SetStateAction<'login' | 'signup' | 'forgot'>>;
 }
 
 const LoginView = ({
@@ -21,15 +20,14 @@ const LoginView = ({
   togglePasswordVisibility,
   showPassword,
   isLoading,
-  setSignUpDialogOpen,
-  setForgotPasswordDialogOpen
+  setView,
 }: ILoginView) => {
   return (
     <div className="flex items-center justify-center w-96">
       <div className="w-full max-w-md">
         {/* Gradient Border Effect */}
         <div className="relative group">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
+          <div className="absolute -inset-0.5 bg-gradiant-theme-link rounded-2xl blur opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
 
           <motion.div
             className="relative bg-black/80 p-8 rounded-2xl"
@@ -41,7 +39,7 @@ const LoginView = ({
               <h2 className="text-3xl font-bold text-white mb-2">
                 Welcome Back
               </h2>
-              <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+              <p className="bg-gradiant-theme-link text-transparent bg-clip-text">
                 Sign in to your account
               </p>
             </div>
@@ -95,7 +93,7 @@ const LoginView = ({
               {/* Forgot Password */}
               <div className="text-right">
                 <button
-                  onClick={setForgotPasswordDialogOpen}
+                  onClick={() => setView('forgot')}
                   className="text-purple-400 hover:text-purple-300 transition-colors text-sm"
                 >
                   Forgot Password?
@@ -119,8 +117,8 @@ const LoginView = ({
                   {`Don't have an account? `}
                 </span>
                 <button
-                  onClick={setSignUpDialogOpen}
-                  className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
+                  onClick={() => setView('signup')}
+                  className="bg-gradiant-theme-link text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
                 >
                   Sign up
                 </button>

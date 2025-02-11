@@ -37,9 +37,15 @@ export const Header = () => {
   const { authenticationToken, logout, role } = useAuth();
   const currentPath = usePathname();
   const router = useRouter();
+  const [view, setView] = useState<'login' | 'signup' | 'forgot'>('login');
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   useEffect(() => {
     console.log(currentPath);
   }, [currentPath]);
+
+  useEffect(() => {
+    !isLoginOpen && setView('login');
+  }, [isLoginOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -87,28 +93,11 @@ export const Header = () => {
     }
     if (productId) router.push(`/view?productId=${productId}`);
   };
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
-  const [isForgetPasswordOpen, setIsForgetPasswordOpen] = useState(false);
 
-  const setSignUpDialogOpen=(event: React.FormEvent)=>{
-    event.preventDefault();
-    setIsLoginOpen(false);
-    setIsSignUpOpen(true);
-  }
-
-  const setForgotPasswordDialogOpen = (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsLoginOpen(false);
-    setIsForgetPasswordOpen(true);
-  }
-
-  const setLoginDialogOpen=(event: React.FormEvent)=>{
+  const setLoginDialogOpen = (event: React.FormEvent) => {
     event.preventDefault();
     setIsLoginOpen(true);
-    setIsSignUpOpen(false);
-    setIsForgetPasswordOpen(false)
-  }
+  };
 
   return (
     <div>
@@ -269,13 +258,21 @@ export const Header = () => {
         </nav>
       </header>
       <Modal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)}>
-        <LoginContainer setDialogOpen={setIsLoginOpen} setSignUpDialogOpen={setSignUpDialogOpen} setForgotPasswordDialogOpen={setForgotPasswordDialogOpen}/>
-      </Modal>
-      <Modal isOpen={isSignUpOpen} onClose={() => setIsLoginOpen(false)}>
-        <SignUpContainer setLoginDialogOpen={setLoginDialogOpen}/>
-      </Modal>
-      <Modal isOpen={isForgetPasswordOpen} onClose={() => setIsLoginOpen(false)}>
-        <ForgotPasswordContainer setLoginDialogOpen={setLoginDialogOpen}/>
+        {view === 'login' && (
+          <LoginContainer setDialogOpen={setIsLoginOpen} setView={setView} />
+        )}
+        {view === 'signup' && (
+          <SignUpContainer
+            setLoginDialogOpen={setLoginDialogOpen}
+            setView={setView}
+          />
+        )}
+        {view === 'forgot' && (
+          <ForgotPasswordContainer
+            setLoginDialogOpen={setLoginDialogOpen}
+            setView={setView}
+          />
+        )}
       </Modal>
     </div>
   );

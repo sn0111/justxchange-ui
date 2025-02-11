@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAuth } from '@/app/context/AuthContext';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { notifyError } from '@/lib/utils';
@@ -25,10 +25,9 @@ const loginSchema = yup.object().shape({
 
 interface ILoginContainerProps {
   setDialogOpen: (value: boolean) => void;
-  setSignUpDialogOpen: (event: React.FormEvent) => void;
-  setForgotPasswordDialogOpen: (event: React.FormEvent) => void;
+  setView: Dispatch<SetStateAction<'login' | 'signup' | 'forgot'>>;
 }
-const LoginContainer = ({ setDialogOpen, setSignUpDialogOpen, setForgotPasswordDialogOpen }: ILoginContainerProps) => {
+const LoginContainer = ({ setDialogOpen, setView }: ILoginContainerProps) => {
   const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -87,15 +86,13 @@ const LoginContainer = ({ setDialogOpen, setSignUpDialogOpen, setForgotPasswordD
   };
   return (
     <div>
-      {/* {isLoading && <LoaderComponent />} */}
       <LoginView
         isLoading={isLoading}
         loginForm={loginForm}
         loginSubmit={onSubmit}
-        setSignUpDialogOpen={setSignUpDialogOpen}
         togglePasswordVisibility={togglePasswordVisibility}
         showPassword={showPassword}
-        setForgotPasswordDialogOpen={setForgotPasswordDialogOpen}
+        setView={setView}
       />
     </div>
   );

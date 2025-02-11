@@ -29,6 +29,8 @@ const config: Config = {
           'linear-gradient(to right, #b684c3, #7762b1, #4c68ac)',
         'gradiant-theme-btn':
           'linear-gradient(to right, #FF5F6D, #A16AE8, #5A67D8)',
+        'gradiant-theme-link':
+          'linear-gradient(to right, #EC4899, #A855F7, #6366F1)',
       },
     },
   },

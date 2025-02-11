@@ -1,6 +1,5 @@
 import SignUpView from '@/app/_components/signup/SignUpView';
 import { useAuth } from '@/app/context/AuthContext';
-import LoaderComponent from '@/components/LoaderComponent';
 import {
   IOTPFormValues,
   IProfileFormValues,
@@ -13,7 +12,7 @@ import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -33,9 +32,13 @@ const profileSchema = yup.object().shape({
 
 interface ISignUpContainerProps {
   setLoginDialogOpen: (event: React.FormEvent) => void;
+  setView: Dispatch<SetStateAction<'login' | 'signup' | 'forgot'>>;
 }
 
-const SignUpContainer = ({setLoginDialogOpen}: ISignUpContainerProps) => {
+const SignUpContainer = ({
+  setLoginDialogOpen,
+  setView,
+}: ISignUpContainerProps) => {
   const { login } = useAuth();
   const [step, setStep] = useState(1);
   const [mobileNumber, setMobileNumber] = useState('');
@@ -65,7 +68,6 @@ const SignUpContainer = ({setLoginDialogOpen}: ISignUpContainerProps) => {
 
   // Handlers
   const onSubmitSignup = async (data: ISignUpFormValues) => {
-
     setMobileNumber(
       process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
         ? data.mobileNumber
@@ -101,7 +103,6 @@ const SignUpContainer = ({setLoginDialogOpen}: ISignUpContainerProps) => {
   };
 
   const onSubmitOtp = async (data: IOTPFormValues) => {
-
     const url = API_ENDPOINTS.auth.verifyOtp();
     const config = {
       method: 'post',
@@ -170,8 +171,8 @@ const SignUpContainer = ({setLoginDialogOpen}: ISignUpContainerProps) => {
 
   return (
     <div>
-      {isLoading && <LoaderComponent />}
       <SignUpView
+        isLoading={isLoading}
         step={step}
         mobileNumber={mobileNumber}
         signUpForm={signUpForm}
@@ -183,6 +184,7 @@ const SignUpContainer = ({setLoginDialogOpen}: ISignUpContainerProps) => {
         togglePasswordVisibility={togglePasswordVisibility}
         showPassword={showPassword}
         setLoginDialogOpen={setLoginDialogOpen}
+        setView={setView}
       />
     </div>
   );

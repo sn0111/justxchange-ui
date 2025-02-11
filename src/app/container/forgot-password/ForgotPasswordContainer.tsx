@@ -1,5 +1,4 @@
 import { ForgotPassword } from '@/app/_components/forgot-password';
-import LoaderComponent from '@/components/LoaderComponent';
 import {
   IForgotPasswordFormValues,
   IOTPFormValues,
@@ -12,7 +11,7 @@ import { makeRequest } from '@/middleware/axios-helper';
 import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -35,8 +34,12 @@ const forgotPasswordSchema = yup.object().shape({
 });
 interface IForgetPasswordContainerProps {
   setLoginDialogOpen: (event: React.FormEvent) => void;
+  setView: Dispatch<SetStateAction<'login' | 'signup' | 'forgot'>>;
 }
-const ForgotPasswordContainer = ({setLoginDialogOpen}:IForgetPasswordContainerProps) => {
+const ForgotPasswordContainer = ({
+  setLoginDialogOpen,
+  setView,
+}: IForgetPasswordContainerProps) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -154,8 +157,6 @@ const ForgotPasswordContainer = ({setLoginDialogOpen}:IForgetPasswordContainerPr
   };
   return (
     <div>
-      {isLoading && <LoaderComponent />}
-
       <ForgotPassword
         mobileNumber={mobileNumber}
         signUpForm={signUpForm}
@@ -168,6 +169,8 @@ const ForgotPasswordContainer = ({setLoginDialogOpen}:IForgetPasswordContainerPr
         forgotPasswordForm={forgotPasswordForm}
         onSubmitPassword={onSubmitPassword}
         setLoginDialogOpen={setLoginDialogOpen}
+        setView={setView}
+        isLoading={isLoading}
       />
     </div>
   );

@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { UseFormReturn } from 'react-hook-form';
-import { ISignUpFormValues, IOTPFormValues, IProfileFormValues } from '@/interface';
+import {
+  ISignUpFormValues,
+  IOTPFormValues,
+  IProfileFormValues,
+} from '@/interface';
 import Button from '@/components/Button';
 
 interface ISignupView {
@@ -17,6 +21,8 @@ interface ISignupView {
   togglePasswordVisibility: () => void;
   showPassword: boolean;
   setLoginDialogOpen: (event: React.FormEvent) => void;
+  isLoading: boolean;
+  setView: Dispatch<SetStateAction<'login' | 'signup' | 'forgot'>>;
 }
 
 const SignupView = ({
@@ -30,14 +36,15 @@ const SignupView = ({
   onSubmitProfile,
   togglePasswordVisibility,
   showPassword,
-  setLoginDialogOpen
+  isLoading,
+  setView,
 }: ISignupView) => {
   return (
     <div className="flex items-center justify-center w-96">
       <div className="w-full max-w-md">
         {/* Gradient Border Effect */}
         <div className="relative group">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
+          <div className="absolute -inset-0.5 bg-gradiant-theme-link rounded-2xl blur opacity-75 group-hover:opacity-100 transition-all duration-300"></div>
 
           <motion.div
             className="relative bg-black/80 p-8 rounded-2xl"
@@ -51,7 +58,7 @@ const SignupView = ({
                   <h2 className="text-3xl font-bold text-white mb-2">
                     Sign Up
                   </h2>
-                  <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+                  <p className="bg-gradiant-theme-link text-transparent bg-clip-text">
                     Create a new account
                   </p>
                 </div>
@@ -60,14 +67,21 @@ const SignupView = ({
                   {/* Email/Mobile Input */}
                   <div className="relative">
                     <input
-                      {...signUpForm.register(`${process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'mobileNumber' : 'email'}` as 'email')}
-                      type={process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'tel' : 'email'}
+                      {...signUpForm.register(
+                        `${process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'mobileNumber' : 'email'}` as 'email'
+                      )}
+                      type={
+                        process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+                          ? 'tel'
+                          : 'email'
+                      }
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
-                        [&:-webkit-autofill]:bg-black/10 
-                        [&:-webkit-autofill]:text-white 
-                        [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
-                        [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
-                      placeholder={process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS' ? 'Mobile Number' : 'Email'}
+                        "
+                      placeholder={
+                        process.env.NEXT_PUBLIC_EMAIL_OR_SMS === 'SMS'
+                          ? 'Mobile Number'
+                          : 'Email'
+                      }
                     />
 
                     {signUpForm.formState.errors.email && (
@@ -101,7 +115,7 @@ const SignupView = ({
                   <h2 className="text-3xl font-bold text-white mb-2">
                     Verify OTP
                   </h2>
-                  <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+                  <p className="bg-gradiant-theme-link text-transparent bg-clip-text">
                     Enter the OTP sent to {mobileNumber}
                   </p>
                 </div>
@@ -145,7 +159,7 @@ const SignupView = ({
                   <h2 className="text-3xl font-bold text-white mb-2">
                     Complete Profile
                   </h2>
-                  <p className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text">
+                  <p className="bg-gradiant-theme-link text-transparent bg-clip-text">
                     Enter your details to complete the signup
                   </p>
                 </div>
@@ -173,16 +187,18 @@ const SignupView = ({
                   {/* Mobile/Email Input */}
                   <div className="relative">
                     <input
-                      {...profileForm.register(
-                        'mobileNumber'
-                      )}
-                      type='tel'
+                      {...profileForm.register('mobileNumber')}
+                      type="tel"
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
                         [&:-webkit-autofill]:bg-black/10 
                         [&:-webkit-autofill]:text-white 
                         [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0_0_0/0.1)_inset] 
                         [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]"
-                      placeholder={process.env.NEXT_PUBLIC_EMAIL_OR_SMS !== 'SMS' ? 'Mobile Number' : 'Email'}
+                      placeholder={
+                        process.env.NEXT_PUBLIC_EMAIL_OR_SMS !== 'SMS'
+                          ? 'Mobile Number'
+                          : 'Email'
+                      }
                     />
                     {profileForm.formState.errors.mobileNumber && (
                       <p className="text-pink-400 text-sm mt-1">
@@ -242,6 +258,7 @@ const SignupView = ({
                     className="w-full py-3 h-12 flex items-center justify-center"
                     borderRadius="roundedXl"
                     onClick={profileForm.handleSubmit(onSubmitProfile)}
+                    isLoading={isLoading}
                   >
                     Complete Signup
                   </Button>
@@ -255,8 +272,8 @@ const SignupView = ({
                 {`Already have an account? `}
               </span>
               <button
-                onClick={setLoginDialogOpen}
-                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
+                onClick={() => setView('login')}
+                className="bg-gradiant-theme-link text-transparent bg-clip-text font-medium hover:opacity-80 transition-opacity"
               >
                 Login
               </button>
