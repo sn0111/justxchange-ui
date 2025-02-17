@@ -77,42 +77,7 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen  bg-gradiant-header pb-8">
-      {/* Fixed Header */}
-      {/* <header className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-sm border-b border-white/10">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-bold">
-              <span className=" bg-gradiant-theme text-transparent bg-clip-text animate-gradient-x">
-                JustXchange
-              </span>
-            </h1>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setIsLoginOpen(true)}
-              className=" bg-gradiant-theme 
-            text-white px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transform transition-all 
-            duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 
-            hover:animate-gradient-x flex items-center group"
-            >
-              Login
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button
-              onClick={() => null}
-              className=" bg-gradiant-theme 
-            text-white px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transform transition-all 
-            duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 
-            hover:animate-gradient-x flex items-center group"
-            >
-              <span className="hidden sm:inline">Contact</span>
-              <Mail className="ml-2 sm:ml-0 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-        </nav>
-      </header> */}
-
+    <div className="min-h-screen  bg-gradiant-header pb-[2.2rem]">
       {/* Hero Section with Image Carousel */}
       <div className="relative ">
         {/* Image Carousel */}

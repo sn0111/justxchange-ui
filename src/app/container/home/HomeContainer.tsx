@@ -111,7 +111,7 @@ const HomeContainer = () => {
   };
 
   return (
-    <div>
+    <div className="m-3 md:mx-14">
       {isLoading && <LoaderComponent />}
       <ImageView />
       <ListCategories

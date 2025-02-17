@@ -2,7 +2,7 @@ import React from 'react';
 import { SyncLoader } from 'react-spinners';
 
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   children?: React.ReactNode;
   className?: string;
   variant?: 'default' | 'default2';
