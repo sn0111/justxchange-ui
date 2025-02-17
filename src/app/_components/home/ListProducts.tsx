@@ -2,24 +2,12 @@ import { IProduct } from '@/interface';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import DefaultNotFound from '@/components/DefaultNotFound';
 import { ArrowRight } from 'lucide-react';
-import { getConditionStyles } from '@/lib/utils';
+import BadgeComponent from '@/components/Badge';
 
 interface IListProducts {
   router: AppRouterInstance;
   products: IProduct[];
 }
-
-const ConditionBadge = ({ condition }: { condition: string }) => {
-  return (
-    <span
-      className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r ${getConditionStyles(
-        condition
-      )} text-white text-[10px] sm:text-xs font-medium border-[2px]`}
-    >
-      {condition}
-    </span>
-  );
-};
 
 const ListProducts = ({ router, products }: IListProducts) => {
   return (
@@ -73,7 +61,7 @@ const ListProducts = ({ router, products }: IListProducts) => {
                   {/* Enhanced condition badge */}
 
                   {
-                    <ConditionBadge
+                    <BadgeComponent
                       key={item.productId}
                       condition={item.condition ?? ''}
                     />
