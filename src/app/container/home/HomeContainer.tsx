@@ -20,6 +20,7 @@ const HomeContainer = () => {
   useEffect(() => {
     getCategories();
     getProductsByCategory('', '', '', false);
+    localStorage.removeItem('productId');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

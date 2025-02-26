@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { FaBars } from 'react-icons/fa';
+
 import Link from 'next/link';
 import { useAuth } from '@/app/context/AuthContext';
 import Image from 'next/image';
@@ -40,6 +42,26 @@ export const Header = () => {
   const [view, setView] = useState<'login' | 'signup' | 'forgot'>('login');
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        setIsNotification(false);
+      }
+    }
+
+    if (isNotification) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isNotification, setIsNotification]);
 
   useEffect(() => {
     console.log(currentPath);
@@ -349,6 +371,52 @@ export const Header = () => {
                   <Button icon={<LogOut />} onClick={logout}>
                     Logout
                   </Button>
+                  {isNotification && (
+                    <div
+                      ref={popupRef}
+                      className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-3"
+                    >
+                      <h3 className="text-sm font-bold">Notifications</h3>
+                      {notifications.length > 0 ? (
+                        <ul>
+                          {notifications.map((n) => (
+                            <li
+                              key={n.id}
+                              className={`p-2 border-b ${n.isRead ? 'text-gray-400' : 'font-semibold'}`}
+                              onClick={() => markAsRead([n.id], n.productId)}
+                            >
+                              <p className="text-xs font-bold text-gray-700">
+                                {n.productName}
+                              </p>
+                              <p
+                                className="text-sm text-gray-500 truncate"
+                                title={n.message}
+                              >
+                                {n.message.length > 30
+                                  ? `${n.message.substring(0, 30)}...`
+                                  : n.message}
+                              </p>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-gray-500">
+                          No notifications
+                        </p>
+                      )}
+                      <button
+                        className="mt-2 text-blue-500 text-sm"
+                        onClick={() =>
+                          markAsRead(
+                            notifications.map((n) => n.id),
+                            ''
+                          )
+                        }
+                      >
+                        Mark all as read
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
