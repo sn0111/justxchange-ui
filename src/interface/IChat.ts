@@ -11,6 +11,8 @@ export interface IChat {
   product: IProduct;
   buyer: IUser;
   message: IMessage[];
+  userLastSeen: string;
+  buyerLastSeen: string;
 }
 
 export interface IMessage {

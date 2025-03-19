@@ -9,6 +9,8 @@ import { API_ENDPOINTS } from '@/services/hooks/apiEndPoints';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { usePathname } from 'next/navigation';
+import { ChartNoAxesColumnDecreasing } from 'lucide-react';
 
 // Hook to get window size
 function useWindowSize() {
@@ -25,17 +27,25 @@ const ChatViewContainer = () => {
   // const socket = useSocket(Number(1));
   const [isExpanded, setIsExpanded] = useState(true);
   const [width] = useWindowSize();
-  const [imageWidth, setImageWidth] = useState(Number);
+  const [imageWidth, setImageWidth] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userChats, setUserChats] = useState<IChat[]>([]);
   const [selectedChat, setSelectedChat] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
-  const [buyer, setBuyer] = useState<IUser>()
-  const [product, setProduct] = useState<IProduct>()
+  const [buyer, setBuyer] = useState<IUser>();
+  const [product, setProduct] = useState<IProduct>();
   const searchParams = useSearchParams();
   const [socket, setSocket] = useState<Socket | null>(null);
-
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
+  const [buyerLastSeen, setBuyerLastSeen] = useState<string>('');
+  const [userLastSeen, setUserLastSeen] = useState<string>('');
+  const [onlineStatus, setOnlineStatus] = useState<'online' | 'offline'>(
+    'offline'
+  );
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pathname = usePathname(); // Detect route changes
   // Update expanded state based on screen size
   useEffect(() => {
     if (width !== 0) {
@@ -65,8 +75,16 @@ const ChatViewContainer = () => {
       console.log('Connected to the server:', newSocket.id);
     });
 
-    newSocket.on('disconnect', () => {
-      console.log('Disconnected from the server');
+    // newSocket.on('disconnect', () => {
+    //   console.log('Disconnected from the server');
+    // });
+
+    newSocket.on('disconnecting', () => {
+      newSocket.emit('user-disconnect', {
+        chat: selectedChat,
+        userId: localStorage.getItem('userId'),
+        isOwner: isOwner,
+      });
     });
     newSocket.emit('join', selectedChat);
     setSocket(newSocket);
@@ -93,6 +111,26 @@ const ChatViewContainer = () => {
     };
   }, [socket]);
 
+  const handleTyping = () => {
+    if (!socket) return;
+
+    // setIsTyping(true);
+    socket.emit('typing', {
+      chatId: selectedChat,
+      userId: 2,
+    });
+
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+      socket.emit('stopTyping', {
+        chatId: selectedChat,
+        userId: Number(localStorage.getItem('userId')),
+      });
+    }, 2000); // Stop typing after 2 seconds of inactivity
+  };
+
   const createChat = async () => {
     const url = API_ENDPOINTS.chat.createChat();
     const productUuid =
@@ -107,8 +145,16 @@ const ChatViewContainer = () => {
       const responseData: { data: IChat } = await makeRequest(config);
       if (responseData) {
         let chatUuid = responseData.data.id;
-        if (Array.isArray(responseData.data))
+        if (Array.isArray(responseData.data)) {
           chatUuid = responseData.data[0].id;
+          setIsOwner(
+            Number(localStorage.getItem('userId')) ==
+              responseData.data[0].product.userId
+          );
+
+          setUserLastSeen(responseData.data[0].userLastSeen);
+          setBuyerLastSeen(responseData.data[0].buyerLastSeen);
+        }
         await getChats(chatUuid);
         setSelectedChat(chatUuid);
       }
@@ -137,10 +183,10 @@ const ChatViewContainer = () => {
         const chatIndex = responseData.data.findIndex(
           (chat) => chat.id === chatUuid
         );
-        console.log(responseData.data[0])
-        console.log(chatUuid)
-        setBuyer(responseData.data[chatIndex].buyer)
-        setProduct(responseData.data[chatIndex].product)
+        console.log(responseData.data[0]);
+        console.log(chatUuid);
+        setBuyer(responseData.data[chatIndex].buyer);
+        setProduct(responseData.data[chatIndex].product);
         setChatMessages(responseData.data[chatIndex].message);
       }
     } catch (err) {
@@ -199,21 +245,91 @@ const ChatViewContainer = () => {
 
   const handleSelectChat = (id: string) => {
     setSelectedChat(id);
-    const chatIndex = userChats.findIndex((chat) => chat.id === id);
-    setChatMessages(userChats[chatIndex].message);
-    setBuyer(userChats[chatIndex].buyer)
-    setProduct(userChats[chatIndex].product)
+    const chatData = userChats.find((chat) => chat.id === id);
+    if (chatData) {
+      setChatMessages(chatData.message);
+      setBuyer(chatData.buyer);
+      setProduct(chatData.product);
+      setIsOwner(
+        Number(localStorage.getItem('userId')) == chatData.product.userId
+      );
+      setUserLastSeen(chatData.userLastSeen);
+      setBuyerLastSeen(chatData.buyerLastSeen);
+    }
   };
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Scroll to the bottom when messages update
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
     }
-  }, [chatMessages]);
+  }, [chatMessages, isTyping]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('userTyping', ({ chatId, userId }) => {
+      if (chatId === selectedChat && userId !== 11) {
+        setIsTyping(true);
+      }
+    });
+
+    socket.on('userStoppedTyping', ({ chatId, userId }) => {
+      if (
+        chatId === selectedChat &&
+        userId !== Number(localStorage.getItem('userId'))
+      ) {
+        setIsTyping(false);
+      }
+    });
+
+    return () => {
+      socket.off('userTyping');
+      socket.off('userStoppedTyping');
+    };
+  }, [socket, selectedChat]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const userId = Number(localStorage.getItem('userId'));
+
+    socket.emit('setOnline', { userId });
+
+    socket.on('userOnlineStatus', ({ userId, status }) => {
+      if (userId !== Number(localStorage.getItem('userId'))) {
+        setOnlineStatus(status);
+      }
+    });
+
+    const handleBeforeUnload = () => {
+      socket.emit('setOffline', { userId });
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        socket.emit('setOffline', { userId });
+      } else {
+        socket.emit('setOnline', { userId });
+      }
+    };
+    const handleRouteChange = () => {
+      socket.emit('setOffline', { userId });
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      socket.emit('setOffline', { userId });
+      socket.off('userOnlineStatus');
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [socket, pathname]);
 
   return (
     <div>
@@ -226,11 +342,17 @@ const ChatViewContainer = () => {
         setSelectedChat={handleSelectChat}
         sendMessage={sendMessage}
         message={message}
-        setMessage={setMessage}
+        setMessage={(value) => {
+          setMessage(value);
+          handleTyping();
+        }}
         chatMessages={chatMessages}
         chatContainerRef={chatContainerRef}
         buyer={buyer}
         product={product}
+        isTyping={isTyping}
+        lastSeen={isOwner ? buyerLastSeen : userLastSeen}
+        onlineStatus={onlineStatus}
       />
     </div>
   );
