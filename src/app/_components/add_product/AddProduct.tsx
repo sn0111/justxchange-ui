@@ -1,14 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { UseFormReturn } from 'react-hook-form';
-import { AiOutlineClose } from 'react-icons/ai';
 import { ICategory, IProductForm } from '@/interface';
+import {
+  Trash2,
+  Upload,
+  X,
+  Package,
+  PencilRuler,
+  Palette,
+  Tag,
+  BadgeDollarSign,
+} from 'lucide-react';
+import imagePng from '../../../public/images/Placeholder_view_vector.svg';
 import Button from '@/components/Button';
-import { Plus, Trash2 } from 'lucide-react';
-
 interface IAddProduct {
-  images: string[];
+  images: (string | null)[];
   categories: ICategory[];
   productForm: UseFormReturn<IProductForm>;
   fileInputRef: React.RefObject<HTMLInputElement>;
@@ -21,7 +30,6 @@ interface IAddProduct {
   closeImageModal: () => void;
   clearProduct: () => void;
   productEdit: boolean;
-  updateImage: boolean;
   isLoading: boolean;
 }
 
@@ -45,317 +53,336 @@ const AddProduct = ({
     console.log('Current Images:', images);
   }, [images]);
 
-  const inputClass = `w-full px-4 py-3 bg-white/10 border border-black/20 rounded-xl text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300
-  hover:border-purple-500  // Add this line for hover border color
-  [&:-webkit-autofill]:bg-black/10
-  [&:-webkit-autofill]:text-black
-  [&:-webkit-autofill]:shadow-[0_0_0_30px_rgb(0,0,0/0.1)_inset]
-  [&:-webkit-autofill]:[text-fill-color:rgb(255,255,255)]`;
-
   return (
-    <div className="flex items-center justify-center py-12 bg-gray-50">
-      <div className="w-full max-w-3xl">
-        {/* Main Content Container */}
-        <motion.div
-          className="bg-white/60 p-8 rounded-2xl shadow-lg backdrop-blur-md"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-6">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold">
+            {productEdit ? 'Update Product' : 'Add New Product'}
+          </h2>
+          <p className="text-gray-600">
+            Fill in the details to {productEdit ? 'update' : 'add'} your product
+          </p>
+        </div>
+
+        <form
+          className="space-y-6"
+          onSubmit={(e) => {
+            console.log(productForm.formState.errors);
+            productForm.handleSubmit(addProduct)(e);
+          }}
         >
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-black mb-1">
-              {productEdit ? 'Update Product' : 'Add New Product'}
-            </h2>
-            <p className="text-black-300 text-sm">
-              Fill in the details to {productEdit ? 'update' : 'add'} your product
-            </p>
+          {/* Images Section */}
+          <div className="space-y-2">
+            <label className="text-base font-medium">Product Images *</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              {images.map((img, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="relative aspect-[4/3] rounded-lg overflow-hidden group"
+                >
+                  <Image
+                    src={img ?? imagePng}
+                    alt={`Product ${index + 1}`}
+                    layout="fill"
+                    objectFit="cover"
+                    className="transition-transform duration-200 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <div className="absolute inset-0 flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveImage(index);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        className="p-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300"
+                        onClick={() => handleDivClick(index)}
+                      >
+                        <PencilRuler className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+              {images.length < 5 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                >
+                  <button
+                    type="button"
+                    className="w-full h-full aspect-square flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="h-6 w-6" />
+                    <span className="text-xs">Add Image</span>
+                  </button>
+                </motion.div>
+              )}
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+            />
+            {images.every((img) => img === null) &&
+              productForm.formState.errors.images && (
+                <p className="mt-1 text-sm text-red-600">
+                  {productForm.formState.errors.images.message}
+                </p>
+              )}
           </div>
 
-          <form className="space-y-4">
-            {/* Product Name Input */}
-            <div className="relative">
-              <label className="block text-black text-sm font-bold mb-1">
-                Product Name
+          {/* Product Details */}
+          <div className="grid gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Product Name *
               </label>
-              <input
-                {...productForm.register('productName')}
-                type="text"
-                className={inputClass}
-                placeholder="Product Name"
-              />
+              <div className="relative mt-1">
+                <Package className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <input
+                  {...productForm.register('productName')}
+                  className="pl-9 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                  placeholder="Enter product name"
+                />
+              </div>
               {productForm.formState.errors.productName && (
-                <p className="text-red-400 text-xs mt-1">
+                <p className="mt-1 text-sm text-red-600">
                   {productForm.formState.errors.productName.message}
                 </p>
               )}
             </div>
-
-            {/* Description Input */}
-            <div className="relative">
-              <label className="block text-black text-sm font-bold mb-1">
-                Description
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Description *
               </label>
               <textarea
                 {...productForm.register('description')}
-                className={inputClass}
-                placeholder="Description"
-                rows={3}
+                className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 min-h-[100px]"
+                placeholder="Enter product description"
               />
               {productForm.formState.errors.description && (
-                <p className="text-red-400 text-xs mt-1">
+                <p className=" text-sm text-red-600">
                   {productForm.formState.errors.description.message}
                 </p>
               )}
             </div>
-
-            {/* Brand Input */}
-            <div className="relative">
-              <label className="block text-black text-sm font-bold mb-1">
-                Brand
-              </label>
-              <input
-                {...productForm.register('brand')}
-                type="text"
-                className={inputClass}
-                placeholder="Brand"
-              />
-            </div>
-
-            {/* Size and Color Input */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="relative">
-                <label className="block text-black text-sm font-bold mb-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Size
                 </label>
-                <input
-                  {...productForm.register('size')}
-                  type="text"
-                  className={inputClass}
-                  placeholder="Size"
-                />
+                <div className="relative mt-1">
+                  <PencilRuler className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <input
+                    {...productForm.register('size')}
+                    className="pl-9 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                    placeholder="Size"
+                  />
+                </div>
               </div>
-              <div className="relative">
-                <label className="block text-black text-sm font-bold mb-1">
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Color
                 </label>
+                <div className="relative mt-1">
+                  <Palette className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <input
+                    {...productForm.register('color')}
+                    className="pl-9 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                    placeholder="Color"
+                  />
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Brand
+              </label>
+              <div className="relative mt-1">
+                <Tag className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <input
-                  {...productForm.register('color')}
-                  type="text"
-                  className={`${inputClass}`}
-                  placeholder="Color"
+                  {...productForm.register('brand')}
+                  className="pl-9 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                  placeholder="Brand name"
                 />
               </div>
             </div>
 
-            {/* Image Upload */}
-            <div className="relative">
-              <label className="block text-black text-sm font-bold mb-1">
-                Product Images
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Category *
               </label>
-              <p className="text-black-400 text-xs italic mb-2">
-                Upload up to 5 images for your product.
-              </p>
-              <div className="flex space-x-4 overflow-x-auto pb-4">
-                {images?.map((img, index) => (
-                  <div
-                    key={index}
-                    className="relative w-24 h-24 rounded-md overflow-hidden border border-gray-600 cursor-pointer"
-                    onClick={() => handleDivClick(index)}
-                  >
-                    <Image
-                      src={img}
-                      alt={`Product Image ${index + 1}`}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-300 hover:scale-110"
-                    />
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveImage(index);
-                      }}
-                      className="absolute top-1 right-1 bg-red-600 text-black rounded-full p-1 hover:bg-red-700 transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
-                {images.length < 5 && (
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-24 h-24 border-2 border-dashed border-gray-500 rounded-md flex items-center justify-center text-gray-400 hover:text-gray-300 transition-colors"
-                  >
-                    <Plus size={32} />
-                  </button>
-                )}
-              </div>
-              <input
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                ref={fileInputRef}
-                onChange={handleFileChange}
-              />
-            </div>
+              <div className="grid grid-cols-2 gap-4">
+                {categories.map((category) => {
+                  const isChecked =
+                    productForm.watch('categoryId') === category.categoryId;
 
-            {/* Category Selection */}
-            <div className="relative">
-              <label className="block text-black text-sm font-bold mb-1">
-                Category
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                {categories.map((category) => (
-                  <label
-                    key={category.categoryId}
-                    className={`flex items-center p-3 border border-gray-600 rounded-xl cursor-pointer transition-colors transform duration-200 ${
-                      productForm.watch('categoryId') == category.categoryId
-                        ? 'bg-purple-500 text-white' // Highlight color when selected
-                        : 'bg-white/30 text-black hover:bg-purple-200' // Default background color with hover effect
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      {...productForm.register('categoryId')}
-                      value={category.categoryId}
-                      className="hidden" // Hide the default radio button
-                      id={`category-${category.categoryId}`} // Unique ID for accessibility
-                    />
-                    <span
-                      className={`mr-2 w-5 h-5 flex items-center justify-center border-2 rounded-full transition-colors ${
-                        productForm.watch('categoryId') == category.categoryId
-                          ? 'border-white bg-white' // Selected state
-                          : 'border-gray-400 bg-transparent' // Default state
-                      }`}
+                  return (
+                    <label
+                      key={category.categoryId}
+                      className={`relative flex items-center space-x-2 rounded-lg border p-2 cursor-pointer transition-all
+            ${isChecked ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300'}
+          `}
                     >
-                      {productForm.watch('categoryId') == category.categoryId && (
-                        <span className="w-3 h-3 rounded-full bg-purple-500" />
-                      )}
-                    </span>
-                    <span className="text-black">{category.categoryName}</span>
-                  </label>
-                ))}
+                      <input
+                        type="radio"
+                        name="category"
+                        value={category.categoryId}
+                        checked={isChecked}
+                        onChange={() =>
+                          productForm.setValue(
+                            'categoryId',
+                            category.categoryId || 0,
+                            {
+                              shouldValidate: true,
+                            }
+                          )
+                        }
+                        className="h-4 w-4 text-purple-500 border-gray-300 focus:ring-transparent focus:outline-none focus:border-transparent"
+                      />
+                      <span className="font-normal">
+                        {category.categoryName}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
               {productForm.formState.errors.categoryId && (
-                <p className="text-red-400 text-xs mt-1">
+                <p className="mt-1 text-sm text-red-600">
                   {productForm.formState.errors.categoryId.message}
                 </p>
               )}
             </div>
-            {/* Condition Selection */}
-            <div className="relative">
-              <label className="block text-black text-sm font-bold mb-1">
-                Condition
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Condition *
               </label>
-              <div className="grid grid-cols-2 gap-3">
-                {['New', 'Like New', 'Used', 'Heavily Used'].map((condition) => (
-                  <label
-                    key={condition}
-                    className={`flex items-center p-3 border border-gray-600 rounded-xl cursor-pointer transition-colors transform duration-200 ${
-                      productForm.watch('condition') === condition
-                        ? 'bg-purple-500 text-white' // Highlight color when selected
-                        : 'bg-white/30 text-black hover:bg-purple-200' // Default background color with hover effect
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      {...productForm.register('condition')}
-                      value={condition}
-                      className="hidden" // Hide the default radio button
-                      id={`condition-${condition}`} // Unique ID for accessibility
-                    />
-                    <span
-                      className={`mr-2 w-5 h-5 flex items-center justify-center border-2 rounded-full transition-colors ${
-                        productForm.watch('condition') === condition
-                          ? 'border-white bg-white' // Selected state
-                          : 'border-gray-400 bg-transparent' // Default state
-                      }`}
-                    >
-                      {productForm.watch('condition') === condition && (
-                        <span className="w-3 h-3 rounded-full bg-purple-500" />
-                      )}
-                    </span>
-                    <span className="text-black">{condition}</span>
-                  </label>
-                ))}
+              <div className="grid grid-cols-2 gap-4">
+                {['New', 'Like New', 'Used', 'Heavily Used'].map(
+                  (condition) => {
+                    const isChecked =
+                      productForm.watch('condition') === condition;
+
+                    return (
+                      <label
+                        key={condition}
+                        className={`relative flex items-center space-x-2 rounded-lg border p-2 cursor-pointer transition-all
+            ${isChecked ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300'}
+          `}
+                      >
+                        <input
+                          type="radio"
+                          name="condition"
+                          value={condition}
+                          checked={isChecked}
+                          onChange={() =>
+                            productForm.setValue('condition', condition, {
+                              shouldValidate: true,
+                            })
+                          }
+                          className="h-4 w-4 text-purple-500 border-gray-300 focus:ring-transparent focus:outline-none focus:border-transparent"
+                        />
+                        <span className="font-normal">{condition}</span>
+                      </label>
+                    );
+                  }
+                )}
               </div>
               {productForm.formState.errors.condition && (
-                <p className="text-red-400 text-xs mt-1">
+                <p className="mt-1 text-sm text-red-600">
                   {productForm.formState.errors.condition.message}
                 </p>
               )}
             </div>
 
-            {/* Price/Exchange Terms Input */}
-            <div className="relative">
-              <label className="block text-black text-sm font-bold mb-1">
-                Price or Exchange Terms
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Price *
               </label>
-              <input
-                type="number"
-                {...productForm.register('amount')}
-                className={inputClass}
-                placeholder="Price"
-              />
+              <div className="relative mt-1">
+                <BadgeDollarSign className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <input
+                  {...productForm.register('amount')}
+                  className="pl-9 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                  placeholder="Enter desired price"
+                />
+              </div>
               {productForm.formState.errors.amount && (
-                <p className="text-red-400 text-xs mt-1">
+                <p className="mt-1 text-sm text-red-600">
                   {productForm.formState.errors.amount.message}
                 </p>
               )}
             </div>
+          </div>
 
-            {/* Submit Button */}
+          <div className="flex gap-4 pt-4">
             <Button
-                isLoading={isLoading}
-              className="w-full py-3 h-12 flex items-center justify-center"
-              borderRadius="roundedXl"
-              onClick={productForm.handleSubmit(addProduct)}
+              type="submit"
+              borderRadius="squared"
+              className="w-full flex items-center justify-center"
+              isLoading={isLoading}
             >
               {productEdit ? 'Update Product' : 'Add Product'}
             </Button>
-              {!productEdit && (
-                <button
+
+            {!productEdit && (
+              <button
                 type="button"
-                className="bg-gray-300 text-black hover:text-black px-6 py-2 rounded-lg hover:bg-gray-400"
+                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                 onClick={clearProduct}
-                >
-                  Clear
-                </button>
-              )}
-          </form>
-        </motion.div>
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </form>
       </div>
 
       <AnimatePresence>
         {viewImageModal && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="relative max-w-md mx-auto bg-black rounded-lg overflow-hidden"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-              transition={{ duration: 0.3 }}
+              className="relative max-w-4xl w-full mx-4 bg-white rounded-lg overflow-hidden"
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25 }}
             >
               <button
-                type="button"
+                className="absolute top-4 right-4 z-10 p-2 hover:bg-gray-100 rounded-full"
                 onClick={closeImageModal}
-                className="absolute top-3 right-3 p-1 bg-black bg-opacity-70 rounded-full text-black"
               >
-                <AiOutlineClose size={20} />
+                <X className="h-4 w-4" />
               </button>
-              <Image
-                src={selectedImage}
-                alt="Selected"
-                className="w-full h-auto"
-                height={500}
-                width={500}
-              />
+              <div className="relative aspect-video">
+                <Image
+                  src={selectedImage}
+                  alt="Selected product image"
+                  layout="fill"
+                  objectFit="contain"
+                  className="bg-gray-100"
+                />
+              </div>
             </motion.div>
           </motion.div>
         )}

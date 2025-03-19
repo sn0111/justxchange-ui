@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/app/context/AuthContext';
-import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { Messages } from '@/lib/messages';
 import { INotifications } from '@/interface';
@@ -24,7 +23,6 @@ import {
 import Modal from '@/app/_components/dialog/Dialog';
 import { LoginContainer } from '@/app/container/login';
 import Button from './Button';
-import UserPng from '@/public/images/user.png';
 import { SignUpContainer } from '@/app/_components/signup';
 import ForgotPasswordContainer from '@/app/container/forgot-password/ForgotPasswordContainer';
 

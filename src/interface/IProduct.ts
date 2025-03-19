@@ -5,7 +5,7 @@ export interface IProduct {
   productId: number;
   description: string;
   productName: string;
-  amount: number;
+  amount: string;
   categoryId: number;
   userId: number;
   images: string[];
@@ -38,12 +38,13 @@ export interface ISuggesions {
 export interface IProductForm {
   productName: string;
   description: string;
-  amount: number;
+  amount: string;
   categoryId: number;
   condition: string;
   brand: string;
   size: string;
   color: string;
+  images: string[];
 }
 
 export interface INotifications {

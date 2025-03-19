@@ -13,9 +13,11 @@ interface ButtonProps {
   loaderSize?: number;
   iconPlacement?: 'left' | 'right';
   iconClassName?: string;
+  type?: 'button' | 'submit';
 }
 
 const Button: React.FC<ButtonProps> = ({
+  type = 'button',
   onClick,
   children,
   className = '',
@@ -54,8 +56,17 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
+      type={type}
       disabled={isLoading}
-      onClick={onClick}
+      onClick={(e) => {
+        if (type === 'submit') {
+          const form = (e.target as HTMLButtonElement).form;
+          form?.requestSubmit();
+        }
+        if (onClick) {
+          onClick();
+        }
+      }}
       className={`
        ${baseClasses}
        ${variantClasses[variant]}

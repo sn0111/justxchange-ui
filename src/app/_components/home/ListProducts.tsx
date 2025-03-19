@@ -1,8 +1,9 @@
 import { IProduct } from '@/interface';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import DefaultNotFound from '@/components/DefaultNotFound';
 import { ArrowRight } from 'lucide-react';
 import BadgeComponent from '@/components/Badge';
+import NoproductsPng from '../../../public/images/latest.png';
+import Image from 'next/image';
 
 interface IListProducts {
   router: AppRouterInstance;
@@ -86,14 +87,15 @@ const ListProducts = ({ router, products }: IListProducts) => {
       {products.length < 1 && (
         <div className="min-h-[80vh] flex items-center justify-center">
           <div className="text-center space-y-4">
-            <div className="w-24 h-24 mx-auto bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
+            <Image src={NoproductsPng} height={300} width={300} alt="default" />
+            {/* <div className="w-24 h-24 mx-auto bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
               <div className="w-20 h-20 bg-[#1a0d35] rounded-full flex items-center justify-center">
                 <span className="text-4xl">🔍</span>
               </div>
             </div>
             <h3 className="text-2xl font-bold text-[#1a0d35]">
               No Products Found
-            </h3>
+            </h3> */}
             {/* <p className="text-gray-400">
               Try adjusting your search or filters
             </p> */}

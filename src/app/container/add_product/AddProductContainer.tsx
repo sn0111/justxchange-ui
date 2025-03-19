@@ -15,12 +15,24 @@ import * as yup from 'yup';
 const productSchema = yup.object().shape({
   productName: yup.string().required('Product name is required'),
   description: yup.string().required('Description is required'),
-  amount: yup.number().required('Amount is required'),
+  amount: yup
+    .string()
+    .required('Price is required')
+    .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid number'),
+
   categoryId: yup.number().required('Category is required'),
   condition: yup.string().required('Condition is required'),
   brand: yup.string().optional().default('None'),
   size: yup.string().optional().default('None'),
   color: yup.string().optional().default('None'),
+  images: yup
+    .array()
+    .test(
+      'at-least-one-image',
+      'At least one image is required',
+      (value) => Array.isArray(value) && value.some((img) => img !== null)
+    )
+    .required('At least one image is required'),
 });
 
 const AddProductContainer = () => {
@@ -36,15 +48,29 @@ const AddProductContainer = () => {
     resolver: yupResolver(productSchema),
   });
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [images, setImages] = useState<string[]>(['', '', '', '', '']);
+  const [images, setImages] = useState<(string | null)[]>([
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]);
   const [imageIndex, setImageIndex] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAddProductLoading, setAddProductLoading] = useState(false);
   const [viewImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const searchParams = useSearchParams();
   const [productEdit, setProductEdit] = useState<boolean>(false);
   const [updateImage, setUpdateImage] = useState<boolean>(false);
+
+  useEffect(() => {
+    productForm.setValue('images', images as string[], {
+      shouldValidate: productForm.formState.isSubmitted,
+      shouldTouch: productForm.formState.isSubmitted,
+    });
+  }, [images, productForm]);
 
   useEffect(() => {
     const productId = searchParams.get('productId') || '';
@@ -71,7 +97,7 @@ const AddProductContainer = () => {
         productForm.reset({
           productName: product.productName || '',
           description: product.description || '',
-          amount: product.amount || 0.0,
+          amount: (product.amount || '0.0').toString(),
           categoryId: Number(product.categoryId),
           condition: product.condition || '',
           brand: product.brand || '',
@@ -111,7 +137,7 @@ const AddProductContainer = () => {
   };
 
   const handleDivClick = (index: number) => {
-    if (images[index] !== '') {
+    if (images[index] !== null) {
       setSelectedImage(images[index]);
       setShowImageModal(true);
     } else {
@@ -168,50 +194,56 @@ const AddProductContainer = () => {
   };
 
   const addProduct = async (data: IProductForm) => {
-    let url = API_ENDPOINTS.product.addProduct();
-    const productId = searchParams.get('productId') || '';
-    let method = 'post';
-    if (productId) {
-      method = 'put';
-      url = url + '/' + productId;
-    }
-    const body = { ...data, images: images.filter((img) => img !== '') };
+    const productId = searchParams.get('productId') ?? '';
+    const method = productId ? 'put' : 'post';
+    const url = productId
+      ? `${API_ENDPOINTS.product.addProduct()}/${productId}`
+      : API_ENDPOINTS.product.addProduct();
+
+    const validImages = images.filter((img): img is string => Boolean(img)); // Ensure non-null images
+    const body = { ...data, images: validImages };
+
     console.log(body);
-    const config = {
-      method: method,
-      url: url,
-      data: body,
-    };
+
+    const config = { method, url, data: body };
+
     try {
-      setIsLoading(true);
+      setAddProductLoading(true);
       const responseData: { data: IProduct; message: string } =
         await makeRequest(config);
-      if (responseData) {
-        productForm.reset();
-        if (!updateImage) setImages(['', '', '', '', '']);
-        else setUpdateImage(false);
-        notifySuccess(responseData.message);
+
+      productForm.reset();
+      if (!updateImage) {
+        setImages([null, null, null, null, null]);
       }
+      setUpdateImage(false); // Always reset updateImage
+
+      notifySuccess(responseData.message);
     } catch (err) {
       const error = err as IAxiosError;
       notifyError(
-        error.response?.data.exceptionMessage ?? Messages.somethingWentWrong
+        error.response?.data?.exceptionMessage ?? Messages.somethingWentWrong
       );
     } finally {
-      setIsLoading(false);
+      setAddProductLoading(false);
     }
   };
 
   const handleRemoveImage = (index: number) => {
     const updatedImages = [...images]; // Create a shallow copy of the array
-    updatedImages[index] = ''; // Update the specific index
+    updatedImages[index] = null; // Update the specific index
     console.log(updatedImages);
     setImages(updatedImages); // React will detect the change and re-render
+    productForm.setValue(
+      'images',
+      updatedImages.filter((img) => img !== null)
+    );
+    productForm.trigger('images');
   };
 
   const clearProduct = () => {
     productForm.reset({
-      amount: 0,
+      amount: '',
       brand: '',
       categoryId: 0,
       color: '',
@@ -220,7 +252,7 @@ const AddProductContainer = () => {
       productName: '',
       size: '',
     });
-    setImages(['', '', '', '', '']);
+    setImages([null, null, null, null, null]);
   };
   return (
     <div>
@@ -240,7 +272,8 @@ const AddProductContainer = () => {
         closeImageModal={closeImageModal}
         clearProduct={clearProduct}
         productEdit={productEdit}
-        updateImage={updateImage}
+        isLoading={isAddProductLoading}
+        // updateImage={updateImage}
       />
     </div>
   );
